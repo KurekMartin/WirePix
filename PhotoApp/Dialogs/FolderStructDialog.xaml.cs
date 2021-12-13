@@ -18,18 +18,18 @@ namespace PhotoApp.Dialogs
         private int selectedFolderLevel = 0; //index vybrané složky
         private int selectedTag = 0; //index vybraneho tagu
 
-        public FolderStructDialog(MainWindow window, Point gridSize, List<ButtonGroupStruct> groupList, string initStructure = "")
+        public FolderStructDialog(MainWindow window, List<ButtonGroupStruct> groupList, string initStructure = "")
         {
             InitializeComponent();
             mainWindow = window;
 
-            Grid groupGrid = BaseStructDialog.CreateMainGrid(gridSize, groupList, Button_Click);
+            Grid groupGrid = BaseStructDialog.CreateMainGrid(groupList, Button_Click);
 
             grdMain.Children.Add(groupGrid);
 
-            BaseStructDialog.FillComboBox(cbYear,   Properties.Resources.Year);
+            BaseStructDialog.FillComboBox(cbYear, Properties.Resources.Year);
             BaseStructDialog.FillComboBox(cbMonth, Properties.Resources.Month);
-            BaseStructDialog.FillComboBox(cbDay,   Properties.Resources.Day);
+            BaseStructDialog.FillComboBox(cbDay, Properties.Resources.Day);
 
             while (initStructure.Length > 0)
             {

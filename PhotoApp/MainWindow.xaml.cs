@@ -428,31 +428,40 @@ namespace PhotoApp
             {
                 new ButtonGroupStruct(
                     "Datum",
-                    new List<string>(){ "YYYY","MM","DD"},
+                    new List<string>(){
+                        Properties.Resources.YearLong,
+                        Properties.Resources.Month,
+                        Properties.Resources.Day},
                     new Point(0,0)),
 
                 new ButtonGroupStruct(
                     "Vlastní",
-                    new List<string>(){ "STR"},
+                    new List<string>(){
+                        Properties.Resources.CustomText},
                     new Point(1,0)),
 
                 new ButtonGroupStruct(
                     "Zařízení",
-                    new List<string>(){ "DN","DM"},
+                    new List<string>(){
+                        Properties.Resources.DeviceName,
+                        Properties.Resources.DeviceManuf},
                     new Point(0,1)),
 
                 new ButtonGroupStruct(
                     "Složka",
-                    new List<string>(){ "NF"},
+                    new List<string>(){
+                        Properties.Resources.NewFolder},
                     new Point(0,2)),
 
                 new ButtonGroupStruct(
                     "Oddělovač",
-                    new List<string>(){ "HYP","UNDS"},
+                    new List<string>(){
+                        Properties.Resources.Hyphen,
+                        Properties.Resources.Underscore},
                     new Point(1,1))
             };
 
-            FolderStructDialog nameDialog = new FolderStructDialog(this, new Point(2, 3), buttonGroups, Settings.Paths.FolderTags);
+            FolderStructDialog nameDialog = new FolderStructDialog(this, buttonGroups, Settings.Paths.FolderTags);
             await DialogHost.Show(nameDialog, "RootDialog");
 
         }
@@ -505,31 +514,41 @@ namespace PhotoApp
             {
                 new ButtonGroupStruct(
                     "Datum",
-                    new List<string>(){ "YYYY","MM","DD"},
+                    new List<string>(){
+                        Properties.Resources.YearLong,
+                        Properties.Resources.Month,
+                        Properties.Resources.Day},
                     new Point(0,0)),
 
                 new ButtonGroupStruct(
                     "Ostatní",
-                    new List<string>(){ "STR","FN"},
+                    new List<string>(){
+                        Properties.Resources.CustomText,
+                        Properties.Resources.FileName},
                     new Point(1,0)),
 
                 new ButtonGroupStruct(
                     "Zařízení",
-                    new List<string>(){ "DN","DM"},
+                    new List<string>(){
+                        Properties.Resources.DeviceName,
+                        Properties.Resources.DeviceManuf},
                     new Point(0,1)),
 
-                new ButtonGroupStruct(
-                    "Číslování",
-                    new List<string>(){ "SN"},
-                    new Point(0,2)),
+                // new ButtonGroupStruct(
+                //     "Číslování",
+                //     new List<string>(){ 
+                //         Properties.Resources.SequenceNum},
+                //     new Point(0,2)),
 
                 new ButtonGroupStruct(
                     "Oddělovač",
-                    new List<string>(){ "HYP","UNDS"},
+                    new List<string>(){
+                        Properties.Resources.Hyphen,
+                        Properties.Resources.Underscore},
                     new Point(1,1))
             };
 
-            FileStructDialog nameDialog = new FileStructDialog(this, new Point(2, 3), buttonGroups, Settings.Paths.FileTags);
+            FileStructDialog nameDialog = new FileStructDialog(this, buttonGroups, Settings.Paths.FileTags);
             await DialogHost.Show(nameDialog, "RootDialog");
         }
 
@@ -719,9 +738,9 @@ namespace PhotoApp
         public static void ClearTemp()
         {
             Parallel.ForEach(Directory.EnumerateFiles(tmpFolder), (file) =>
-             {
-                 File.Delete(file);
-             });
+            {
+                File.Delete(file);
+            });
         }
     }
 }

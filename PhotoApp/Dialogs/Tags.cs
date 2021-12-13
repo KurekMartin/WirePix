@@ -147,7 +147,7 @@ namespace PhotoApp
                 filename = Path.GetFileNameWithoutExtension(filePath);
             }
 
-            if (codeTag == Properties.Resources.Year)
+            if (codeTag == Properties.Resources.YearLong)
             {
                 return date.Year.ToString();
             }

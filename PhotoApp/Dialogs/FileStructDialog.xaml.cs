@@ -18,12 +18,12 @@ namespace PhotoApp.Dialogs
 
         private int selectedTag = 0; //index vybraneho tagu
 
-        public FileStructDialog(MainWindow window, Point gridSize, List<ButtonGroupStruct> groupList, string initStructure = "")
+        public FileStructDialog(MainWindow window, List<ButtonGroupStruct> groupList, string initStructure = "")
         {
             InitializeComponent();
             mainWindow = window;
 
-            Grid groupGrid = BaseStructDialog.CreateMainGrid(gridSize, groupList, Button_Click);
+            Grid groupGrid = BaseStructDialog.CreateMainGrid(groupList, Button_Click);
 
             grdMain.Children.Add(groupGrid);
 

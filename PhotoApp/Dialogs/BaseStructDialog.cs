@@ -24,8 +24,11 @@ namespace PhotoApp.Dialogs
     static class BaseStructDialog
     {
         //vytvoreni hlavni mrizky s tlacitky
-        public static Grid CreateMainGrid(Point gridSize, List<ButtonGroupStruct> groupList, RoutedEventHandler ClickFunction)
+        public static Grid CreateMainGrid(List<ButtonGroupStruct> groupList, RoutedEventHandler ClickFunction)
         {
+            Point gridSize = new Point();
+            gridSize.X = groupList.Max(x => x.gridPosition.X) + 1;
+            gridSize.Y = groupList.Max(x => x.gridPosition.Y) + 1;
             //mrizka pro skupiny tlacitek
             Grid groupGrid = NewGridSize(gridSize);
             groupGrid.Name = "grdGroupGrid";
@@ -157,7 +160,7 @@ namespace PhotoApp.Dialogs
                     cr.tags.Add(insertValue);
                     return cr;
                 }
-                if (cr.tags.Count() == 0)
+                if (cr.tags.Count() == 0) //tagy, které neobsahují {} (např. - _)
                 {
                     cr.error = $"Nelze použít {Tags.GetTagByVisibleText(insertValue).visibleText} na začátku názvu.";
                     return cr;
