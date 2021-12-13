@@ -1,0 +1,345 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:PhotoApp"
+    xmlns:converters="clr-namespace:PhotoApp.Converters"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" x:Class="PhotoApp.MainWindow"
+        mc:Ignorable="d"
+        Title="MainWindow"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        TextElement.FontWeight="Regular"
+        TextElement.FontSize="13"
+        TextOptions.TextFormattingMode="Ideal" 
+        TextOptions.TextRenderingMode="Auto"        
+        Background="{DynamicResource MaterialDesignPaper}"
+        FontFamily="{DynamicResource MaterialDesignFont}" MinWidth="800" MinHeight="600" Height="623" Width="800" SizeToContent="Height" ResizeMode="CanMinimize" Closing="Window_Closing">
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVisConverter" />
+        <local:EnumToBoleanConverter x:Key="EnumToBool"/>
+        <converters:IntToStatusConverter x:Key="IntToStatus"/>
+        <converters:ListToStringConverter x:Key="ListToString"/>
+        <converters:ArrayToProgress x:Key="ArrToProgress"/>
+        <converters:LastBackupConverter x:Key="LastBckp"/>
+    </Window.Resources>
+    <materialDesign:DialogHost x:Name="dhDialog" Identifier="RootDialog">
+        <Grid Width="Auto" Height="Auto">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <!--<Menu Grid.Row="0"
+  IsMainMenu="True" VerticalAlignment="Top" Height="30" BorderBrush="#4C000000" BorderThickness="0,0,0,1">
+                <MenuItem
+    Header="_File" Height="30">
+                    <MenuItem
+      Header="Save">
+                        <MenuItem.Icon>
+                            <materialDesign:PackIcon
+          Kind="ContentSave" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem
+      Header="Save As.." />
+                    <MenuItem
+      Header="Exit"
+      InputGestureText="Ctrl+E">
+                        <MenuItem.Icon>
+                            <materialDesign:PackIcon
+          Kind="ExitToApp" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <Separator />
+                    <MenuItem
+      Header="Excellent"
+      IsCheckable="True"
+      IsChecked="True" />
+                    <MenuItem
+      Header="Rubbish"
+      IsCheckable="True" />
+                    <MenuItem
+      Header="Dig Deeper"
+      InputGestureText="Ctrl+D">
+                        <MenuItem
+        Header="Enlightenment?"
+        IsCheckable="True" />
+                        <MenuItem
+        Header="Disappointment"
+        IsCheckable="True" />
+                    </MenuItem>
+                    <MenuItem
+      Header="Look Deeper"
+      InputGestureText="Ctrl+D">
+                        <MenuItem
+        Header="Plain" />
+                        <MenuItem
+        Header="Ice Cream" />
+                    </MenuItem>
+                </MenuItem>
+                <MenuItem
+    Header="_Edit" Height="30">
+                    <MenuItem
+      Header="_Cut"
+      Command="Cut">
+                        <MenuItem.Icon>
+                            <materialDesign:PackIcon
+          Kind="ContentCut" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem
+      Header="_Copy"
+      Command="Copy">
+                        <MenuItem.Icon>
+                            <materialDesign:PackIcon
+          Kind="ContentCopy" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem
+      Header="_Paste"
+      Command="Paste">
+                        <MenuItem.Icon>
+                            <materialDesign:PackIcon
+          Kind="ContentPaste" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                </MenuItem>
+            </Menu>-->
+            <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Width="Auto">
+                <Grid x:Name="Window" Margin="0" VerticalAlignment="Top">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <materialDesign:Card Margin="10,5" Grid.Row="0" UniformCornerRadius="5">
+                        <StackPanel Orientation="Vertical">
+
+                            <StackPanel Orientation="Horizontal" Margin="5,5,5,10" VerticalAlignment="Top" Height="Auto">
+                                <StackPanel Orientation="Vertical" Margin="5,0">
+                                    <ListBox x:Name="ListBoxDevices" ItemsSource="{Binding DeviceList.ConnectedDevicesInfo,UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Height="100" VerticalAlignment="Top" Width="Auto" MinWidth="150" SelectionChanged="ListBoxDevices_SelectionChanged" Background="#00000000" BorderThickness="1" BorderBrush="Black">
+                                        <ListBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="{Binding Name}"/>
+                                            </DataTemplate>
+                                        </ListBox.ItemTemplate>
+                                    </ListBox>
+                                    <TextBlock x:Name="tbSelectDeviceError" Foreground="Red" TextWrapping="Wrap" Visibility="Collapsed"/>
+                                    <Button Content="Obnovit" Margin="0,5,0,0" VerticalAlignment="Top" Click="Refresh_Click" Height="Auto"/>
+                                </StackPanel>
+
+                                <StackPanel Orientation="Horizontal" x:Name="spDeviceInfo">
+                                    <StackPanel x:Name="spBasicInfo" Margin="5,0" Height="Auto" VerticalAlignment="Top" >
+                                        <StackPanel Orientation="Horizontal" Margin="0,3">
+                                            <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}" Text="Název zařízení: " FontWeight="Bold"/>
+                                            <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}" x:Name="lblDeviceName" Text="{Binding DeviceList.SelectedDevice.Name,UpdateSourceTrigger=PropertyChanged}"/>
+                                        </StackPanel>
+                                        <StackPanel Orientation="Horizontal" Margin="0,3">
+                                            <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}" Text="Poslední záloha: " FontWeight="Bold"/>
+                                            <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}" x:Name="lblLastBackup" Text="{Binding DeviceList.SelectedDeviceInfo.LastBackup,Converter={StaticResource LastBckp}}"/>
+                                        </StackPanel>
+                                        <StackPanel Orientation="Horizontal" Margin="0,3">
+                                            <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}" Text="Stav: " FontWeight="Bold"/>
+                                            <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}" x:Name="lblDeviceStatus" Text="{Binding DeviceList.SelectedDevice.Status,Converter={StaticResource IntToStatus},UpdateSourceTrigger=PropertyChanged}"/>
+                                        </StackPanel>
+                                        <StackPanel Orientation="Horizontal" Margin="0,3">
+                                            <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}" Text="Výrobce: " HorizontalAlignment="Left" VerticalAlignment="Top" FontWeight="Bold"/>
+                                            <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}" x:Name="lblManu" Text="{Binding DeviceList.SelectedDevice.Manufacturer}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                                        </StackPanel>
+                                        <StackPanel Orientation="Horizontal" Margin="0,3">
+                                            <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}" Text="Umístění médií: " HorizontalAlignment="Left" VerticalAlignment="Top" FontWeight="Bold"/>
+                                            <TextBlock x:Name="tbMediaDir" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Text="{Binding DeviceList.SelectedDevice.MediaDirectories,Converter={StaticResource ListToString}}"/>
+                                        </StackPanel>
+                                    </StackPanel>
+                                    <Separator x:Name="sDivider" Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" Width="1" Margin="0,15"/>
+                                    <StackPanel x:Name="spStorageInfo" Margin="5,0" Height="Auto" VerticalAlignment="Top">
+                                        <StackPanel Orientation="Horizontal" Margin="0,3">
+                                            <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}" Text="Celkové úložiště: " HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold"/>
+                                            <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}" x:Name="lblTotalSpace" Text="{Binding DeviceList.SelectedDevice.Space[0],StringFormat={}{0} GB}" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                                        </StackPanel>
+
+                                        <StackPanel Orientation="Vertical" x:Name="spSpace" Margin="15,0">
+                                            <StackPanel Orientation="Horizontal">
+                                                <Ellipse Fill="#FF1DDA26" Height="12" Width="12" VerticalAlignment="Center" Margin="3,0"/>
+                                                <TextBlock Style="{StaticResource MaterialDesignCaptionTextBlock}" Text="Volné místo: " HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="11" FontWeight="Bold"/>
+                                                <TextBlock Style="{StaticResource MaterialDesignCaptionTextBlock}" x:Name="lblFreeSpace" Text="{Binding DeviceList.SelectedDevice.Space[1],StringFormat={}{0} GB}" VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="11"/>
+                                            </StackPanel>
+                                            <StackPanel Orientation="Horizontal">
+                                                <Ellipse Fill="#FFE63434" Height="12" Width="12" VerticalAlignment="Center" Margin="3,0"/>
+                                                <TextBlock Style="{StaticResource MaterialDesignCaptionTextBlock}" Text="Obsazené místo: " HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="11" FontWeight="Bold"/>
+                                                <TextBlock Style="{StaticResource MaterialDesignCaptionTextBlock}" x:Name="lblUsedSpace" Text="{Binding DeviceList.SelectedDevice.Space[2],StringFormat={}{0} GB}" VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="11"/>
+                                            </StackPanel>
+                                            <ProgressBar x:Name="pbSpace" materialDesign:TransitionAssist.DisableTransitions="True" HorizontalAlignment="Left" Height="6" Margin="0,5" VerticalAlignment="Top" Width="253" Value="{Binding DeviceList.SelectedDevice.Space,Converter={StaticResource ArrToProgress},Mode=OneWay}" Background="#FF1DDA26" Foreground="#FFE63434" BorderBrush="{x:Null}" BorderThickness="0"/>
+                                        </StackPanel>
+                                    </StackPanel>
+                                </StackPanel>
+                            </StackPanel>
+                        </StackPanel>
+                    </materialDesign:Card>
+
+                    <Grid Grid.Row="1" Margin="10,5">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="1*"/>
+                        </Grid.ColumnDefinitions>
+                        <materialDesign:Card Margin="0,0,5,0" Grid.Column="0" UniformCornerRadius="5">
+                            <StackPanel Orientation="Vertical" Margin="0,0,0,5">
+                                <TextBlock Style="{StaticResource MaterialDesignHeadline6TextBlock}" Text="Profil" Padding="5" FontSize="15" Background="#FF00BCD4" TextAlignment="Center"/>
+                                <Grid Margin="5">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <ComboBox x:Name="cbProfiles" Grid.Column="0" ItemsSource="{Binding Profiles}" Margin="5" Text="Profil" SelectionChanged="cbProfiles_SelectionChanged"/>
+                                    <Button Style="{StaticResource MaterialDesignFloatingActionMiniButton}"
+                                            ToolTip="Obnovit"
+                                            Grid.Column="1"
+                                            Width="25"
+                                            Height="25"
+                                        x:Name="btnLoad" Visibility="Visible" Click="btnLoad_Click">
+                                        <materialDesign:PackIcon
+                                        Kind="Refresh"
+                                        Height="15"
+                                        Width="15" />
+                                    </Button>
+
+                                </Grid>
+
+                                <Button x:Name="btnSave" Content="Uložit" Height="Auto" Margin="10,5" Visibility="Visible" Click="btnSave_Click"/>
+                                <Button x:Name="btnSaveAs" Content="Uložit jako" Height="Auto" Margin="10,5" Visibility="Visible" Click="btnSaveAs_Click"/>
+                                <Button x:Name="btnDelete" Content="Smazat profil" Height="Auto" Margin="10,5" Visibility="Visible" Click="btnDelete_Click"/>
+                            </StackPanel>
+                        </materialDesign:Card>
+                        <materialDesign:Card Margin="5,0,0,0" Grid.Column="1" UniformCornerRadius="5">
+                            <StackPanel Orientation="Vertical">
+                                <TextBlock Style="{StaticResource MaterialDesignHeadline6TextBlock}" Text="Úložiště" Padding="5" FontSize="15" Background="#FF00BCD4" TextAlignment="Center"/>
+                                <StackPanel Orientation="Horizontal" Margin="10,5">
+                                    <StackPanel Orientation="Vertical">
+                                        <Button Content="Vybrat hlavní složku" x:Name="btnMainFolder" HorizontalAlignment="Left" Margin="0,5,0,0" Padding="15,5" VerticalAlignment="Top" Click="btnMainFolder_Click" Width="Auto" Height="Auto"/>
+                                        <TextBlock x:Name="tbRootError" Foreground="Red" Visibility="Collapsed" Margin="0,0,0,3"/>
+                                        <Button Content="Pojmenování složek" x:Name="btnFolderStruct" HorizontalAlignment="Left" Margin="0,10,0,0" Padding="15,5" VerticalAlignment="Top" Click="btnFolderStruct_Click" Width="Auto" Height="Auto"/>
+                                        <TextBlock x:Name="tbFolderStructError" Foreground="Red" Visibility="Collapsed" Margin="0,0,0,3"/>
+                                        <Button Content="Název souboru" x:Name="btnFileStruct" HorizontalAlignment="Left" Margin="0,10,0,0" Padding="15,5" VerticalAlignment="Top" Width="Auto" Height="Auto" Click="btnFileStruct_Click"/>
+                                        <TextBlock x:Name="tbFileStructError" Foreground="Red" Visibility="Collapsed" Margin="0,0,0,3"/>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" Margin="5">
+                                        <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}" Text="Struktura uložení: " FontWeight="Bold"/>
+                                        <TextBlock x:Name="tbRootDir" Text="{Binding Settings.Paths.Root,UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource MaterialDesignBody2TextBlock}"/>
+                                        <TextBlock x:Name="tbStructure" FontWeight="DemiBold" Style="{StaticResource MaterialDesignBody2TextBlock}"/>
+                                    </StackPanel>
+                                </StackPanel>
+                            </StackPanel>
+                        </materialDesign:Card>
+                    </Grid>
+
+                    <Grid Grid.Row="2" Margin="10,5">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <materialDesign:Card Margin="5,0" UniformCornerRadius="5" Grid.Column="0">
+                            <StackPanel Orientation="Vertical">
+                                <TextBlock Style="{StaticResource MaterialDesignHeadline6TextBlock}" Text="Ostatní" Padding="5" FontSize="15" Background="#FF00BCD4" TextAlignment="Center"/>
+                                <CheckBox Content="Záloha" x:Name="cbBackup" Margin="10,5" IsChecked="{Binding Settings.Backup, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
+                                <StackPanel Orientation="Vertical" Margin="10,0" x:Name="spBackup" Visibility="{Binding Settings.Backup, Converter={StaticResource BoolToVisConverter},UpdateSourceTrigger=PropertyChanged}">
+                                    <StackPanel Orientation="Horizontal" Margin="10,0">
+                                        <Button x:Name="btnChooseBackupDest" Content="Vybrat umístění" HorizontalAlignment="Left"  Width="Auto" Height="Auto" Click="btnChooseBackupDest_Click"/>
+                                        <Grid HorizontalAlignment="Right" MaxWidth="240" Margin="5,0,0,0">
+                                            <TextBlock x:Name="tbBackupDest" Text="{Binding Settings.Paths.Backup,UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Right" Margin="5,0" Style="{StaticResource MaterialDesignBody2TextBlock}" VerticalAlignment="Center"
+                                                       ToolTip="{Binding RelativeSource={RelativeSource Self}, Path=Text}"/>
+                                        </Grid>
+
+                                    </StackPanel>
+                                    <TextBlock x:Name="tbBackupError" Foreground="Red" Visibility="Collapsed" Margin="10,2"/>
+                                    <Separator Margin="5,10" Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" Height="1"/>
+                                </StackPanel>
+
+                                <CheckBox Content="Generovat náhledy" x:Name="cbThumbnails" Margin="10,0" IsChecked="{Binding Settings.Thumbnail,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
+                                <StackPanel Margin="10,5" x:Name="spThumbnail" Visibility="{Binding Settings.Thumbnail, Converter={StaticResource BoolToVisConverter},UpdateSourceTrigger=PropertyChanged}">
+                                    <StackPanel Orientation="Horizontal" Margin="10,0">
+                                        <Button x:Name="btnChooseThumbDest" Content="Vybrat umístění" Width="Auto" Height="Auto" Click="btnChooseThumbDest_Click"/>
+
+                                        <Grid HorizontalAlignment="Right" MaxWidth="240" Margin="5,0,0,0">
+                                            <TextBlock x:Name="tbThumbDest" Text="{Binding Settings.Paths.Thumbnail,UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Right" Margin="5,0" Style="{StaticResource MaterialDesignBody2TextBlock}" VerticalAlignment="Center"
+                                                   ToolTip="{Binding RelativeSource={RelativeSource Self}, Path=Text}"/>
+                                        </Grid>
+                                    </StackPanel>
+                                    <TextBlock x:Name="tbThumbnailDestError" Foreground="Red" Visibility="Collapsed" Margin="10,2"/>
+                                    <StackPanel Orientation="Horizontal" Margin="5,10,5,5">
+                                        <TextBlock Text="Max velikost " Style="{StaticResource MaterialDesignBody2TextBlock}"/>
+                                        <RadioButton Content="Delší strana" x:Name="cbLongSide" IsChecked="{Binding Settings.ThumbnailSettings.Selected,Converter={StaticResource EnumToBool},ConverterParameter=longerSide}" Margin="0,0,5,0" GroupName="rgResize"/>
+                                        <RadioButton Content="Kratší strana" x:Name="cbShortSide" IsChecked="{Binding Settings.ThumbnailSettings.Selected,Converter={StaticResource EnumToBool},ConverterParameter=shorterSide}" Margin="5,0" GroupName="rgResize"/>
+                                    </StackPanel>
+
+                                    <StackPanel Orientation="Horizontal" Margin="5,0,5,15">
+                                        <TextBlock Text="Hodnota: " VerticalAlignment="Center" Style="{StaticResource MaterialDesignBody2TextBlock}"/>
+                                        <TextBox x:Name="tbValue" Width="Auto" MinWidth="100" TextAlignment="Right"
+                                                Text="{Binding Settings.ThumbnailSettings.Value,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                                                PreviewTextInput="tbValue_PreviewTextInput"
+                                                MaxLength="5" PreviewKeyDown="tbValue_PreviewKeyDown" LostFocus="tbValue_LostFocus" GotFocus="tbValue_GotFocus"/>
+                                    </StackPanel>
+                                    <TextBlock x:Name="tbThumbnailError" Foreground="Red" Visibility="Collapsed"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </materialDesign:Card>
+
+                        <materialDesign:Card Margin="5,0" UniformCornerRadius="5" Grid.Column="1">
+                            <StackPanel Orientation="Vertical">
+                                <TextBlock Style="{StaticResource MaterialDesignHeadline6TextBlock}" Text="Stažení" Padding="5" FontSize="15" Background="#FF00BCD4" TextAlignment="Center"/>
+                                <StackPanel Margin="10,5" Orientation="Vertical">
+                                    <CheckBox Content="Kontrola souborů" x:Name="cbCheckFiles" IsChecked="{Binding Settings.CheckFiles,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Margin="0,2"/>
+                                    <CheckBox Content="Smazat stažené soubory ze zařízení" x:Name="cbDeleteFiles" IsChecked="{Binding Settings.DeleteFiles,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Margin="0,2"/>
+                                    <RadioButton Content="Stažení nových souborů od poslední zálohy" x:Name="cbNewFiles" IsChecked="{Binding Settings.DownloadSelect,Converter={StaticResource EnumToBool},ConverterParameter=lastBackup}" Margin="0,2" GroupName="rbgDate" Checked="cbNewFiles_Checked"/>
+                                    <RadioButton Content="Stažení souborů dle data" x:Name="cbDateRange" Margin="0,2" GroupName="rbgDate" IsChecked="{Binding Settings.DownloadSelect,Converter={StaticResource EnumToBool},ConverterParameter=dateRange}" Checked="cbDateRange_Checked"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Vertical" Margin="30,0" x:Name="spDate" Visibility="{Binding ElementName=cbDateRange, Path=IsChecked,Converter={StaticResource BoolToVisConverter},UpdateSourceTrigger=PropertyChanged}" >
+                                    <StackPanel Orientation="Horizontal">
+                                        <Label Content="Od" VerticalAlignment="Center"/>
+                                        <DatePicker x:Name="dpDateFrom"  Width="100" HorizontalAlignment="Left" Margin="5,0" Padding="5,3" VerticalAlignment="Center" Height="Auto" HorizontalContentAlignment="Left" SelectedDate="{Binding Settings.Date.Start,Mode=TwoWay}" DisplayDateEnd="{Binding Settings.Date.End,Mode=TwoWay}" SelectedDateChanged="dpDate_SelectedDateChanged"/>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal">
+                                        <Label Content="Do" VerticalAlignment="Center"/>
+                                        <DatePicker x:Name="dpDateTo" Width="100" HorizontalAlignment="Left" Margin="5,0" Padding="5,3" VerticalAlignment="Center" Height="Auto" HorizontalContentAlignment="Left" SelectedDate="{Binding Settings.Date.End,Mode=TwoWay}" DisplayDateStart="{Binding Settings.Date.Start,Mode=TwoWay}" SelectedDateChanged="dpDate_SelectedDateChanged"/>
+                                    </StackPanel>
+                                    <TextBlock x:Name="tbDateRangeError" Margin="0,3" Foreground="Red" Visibility="Collapsed"/>
+                                </StackPanel>
+
+                                <StackPanel Orientation="Horizontal" Margin="10,5">
+                                    <Button Content="Vyhledat soubory" VerticalAlignment="Center" Click="FindFiles_Click" Margin="5,0"/>
+                                    <Button x:Name="btnCopyFiles" Content="Kopírovat soubory" Margin="5,0" Width="Auto"  VerticalAlignment="Center" Click="CopyFiles_Click"/>
+                                </StackPanel>
+                                <TextBlock x:Name="lblResult" HorizontalAlignment="Left" Margin="10" VerticalAlignment="Top" Height="Auto" Width="Auto" Style="{StaticResource MaterialDesignBody2TextBlock}"/>
+                                <Button x:Name="btnShowLog" Content="Zobrazit log" Margin="10,10" Visibility="Collapsed" Click="btnShowLog_Click"/>
+
+                            </StackPanel>
+                        </materialDesign:Card>
+                    </Grid>
+
+
+                    <StackPanel Grid.Row="3" VerticalAlignment="Top" Height="Auto" Margin="10" Visibility="Collapsed">
+                        <Separator/>
+                        <StackPanel Orientation="Horizontal">
+
+                            <Label Content="Folder structure: " Height="Auto" VerticalAlignment="Center" FontWeight="Bold"/>
+                            <TextBlock x:Name="tbFolderStruct" VerticalAlignment="Center" Height="Auto"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+
+                            <Label Content="File structure: " VerticalAlignment="Center" Height="Auto" FontWeight="Bold"/>
+                            <TextBlock x:Name="tbFileStructure" VerticalAlignment="Center" Height="Auto"/>
+                        </StackPanel>
+
+                    </StackPanel>
+
+
+
+
+
+                </Grid>
+            </ScrollViewer>
+        </Grid>
+
+    </materialDesign:DialogHost>
+</Window>
