@@ -237,7 +237,7 @@ namespace PhotoApp
                 settings.Date.End = settings.Date.End.AddTicks(-1).AddDays(1); // nastavení konce dne
                 _checkDateRange = true;
             }
-            
+
             _device.Connect();
 
             if (!_log.Running) { _log.Start(); }
@@ -250,7 +250,7 @@ namespace PhotoApp
                 {
                     allFiles = allFiles.Concat(GetAllFilesList(dir.FullName, progressArgs, worker, e));
                 }
-                if(_checkDateRange)
+                if (_checkDateRange)
                 {
                     progressArgs.taskName = "Filtrování souborů podle data";
                     worker.ReportProgress(0, progressArgs);
@@ -456,7 +456,7 @@ namespace PhotoApp
                                 continue;
                             }
 
-                            if(!settings.CheckFiles) //hash pro ověření náhledu
+                            if (!settings.CheckFiles) //hash pro ověření náhledu
                             {
                                 origHash = GetFileHash(File.OpenRead(tmpFile));
                             }
@@ -504,7 +504,7 @@ namespace PhotoApp
                 filesCollection.CompleteAdding();
             });
 
-            var options = new ParallelOptions { MaxDegreeOfParallelism = Convert.ToInt32(Math.Ceiling(Environment.ProcessorCount * 1.0)) };
+            ParallelOptions options = new ParallelOptions { MaxDegreeOfParallelism = Convert.ToInt32(Math.Ceiling(Environment.ProcessorCount * 1.0)) };
 
             //zpracování stažených souborů
             Parallel.ForEach(filesCollection.GetConsumingEnumerable(), options, (item, state) =>
@@ -518,12 +518,12 @@ namespace PhotoApp
 
                   if (settings.Thumbnail)
                   {
-                    lock (_lockReport)
-                    {
-                         progressArgs.currentTask = $"Generuji náhled {item.origFile}";
-                         worker.ReportProgress((FilesDone * 100 / FilesToCopyCount), progressArgs);
-                    }
-                    GenerateThumbnail(settings, item.fullDestPath, item.tmpFile, item.origFile, BitConverter.ToString(item.origHash).Replace("-", String.Empty).ToLowerInvariant());
+                      lock (_lockReport)
+                      {
+                          progressArgs.currentTask = $"Generuji náhled {item.origFile}";
+                          worker.ReportProgress((FilesDone * 100 / FilesToCopyCount), progressArgs);
+                      }
+                      GenerateThumbnail(settings, item.fullDestPath, item.tmpFile, item.origFile, BitConverter.ToString(item.origHash).Replace("-", String.Empty).ToLowerInvariant());
                   }
 
 
@@ -583,14 +583,63 @@ namespace PhotoApp
 
         private void GenerateThumbnail(Settings settings, string filePath, string tmpFile, string origFile, string origHash, int attempt = 0, int wait = 2000)
         {
-            
-                var st = new StackTrace();
-                var sf = st.GetFrame(0);
-                var currentMethodName = sf.GetMethod();
 
-                if (!IsImage(origFile))
+            var st = new StackTrace();
+            var sf = st.GetFrame(0);
+            var currentMethodName = sf.GetMethod();
+
+            if (!IsImage(origFile))
+            {
+                string message = $"Could not generate thumbnail for [{origFile}]. Not supported image format.";
+                lock (_lockLog)
                 {
-                    string message = $"Could not generate thumbnail for [{origFile}]. Not supported image format.";
+                    _log.Add(message, LogType.INFO, currentMethodName.Name);
+                }
+                return;
+            }
+
+            try
+            {
+
+
+                string outFile = Path.Combine(settings.Paths.Thumbnail, filePath);
+                outFile = Path.ChangeExtension(outFile, "jpg");
+
+                bool cont = false;
+                if (File.Exists(outFile))
+                {
+                    using (MagickImage image = new MagickImage(outFile))
+                    {
+                        if (image.Comment == origHash)
+                        {
+                            switch (settings.ThumbnailSettings.Selected)
+                            {
+                                case ThumbnailSelect.longerSide:
+                                    if (settings.ThumbnailSettings.Value == Math.Max(image.Width, image.Height)) { cont = true; }
+                                    break;
+                                case ThumbnailSelect.shorterSide:
+                                    if (settings.ThumbnailSettings.Value == Math.Min(image.Width, image.Height)) { cont = true; }
+                                    break;
+                            }
+                        }
+                        else
+                        {
+                            string newFileName = GetUniqueFileName(outFile, tmpFile, true);
+                            if (newFileName == outFile)
+                            {
+                                cont = true;
+                            }
+                            else
+                            {
+                                outFile = newFileName;
+                            }
+                        }
+                    }
+                }
+
+                if (cont)
+                {
+                    string message = $"Thumbnail already exists for file [{origFile}] in [{outFile}]";
                     lock (_lockLog)
                     {
                         _log.Add(message, LogType.INFO, currentMethodName.Name);
@@ -598,104 +647,55 @@ namespace PhotoApp
                     return;
                 }
 
-                try
+                var size = new MagickGeometry(settings.ThumbnailSettings.Value);
+                switch (settings.ThumbnailSettings.Selected)
                 {
-                    
+                    case ThumbnailSelect.longerSide:
+                        size.FillArea = false;
+                        break;
+                    case ThumbnailSelect.shorterSide:
+                        size.FillArea = true;
+                        break;
+                }
 
-                    string outFile = Path.Combine(settings.Paths.Thumbnail, filePath);
-                    outFile = Path.ChangeExtension(outFile, "jpg");
+                var readSettings = new MagickReadSettings();
+                readSettings.SetDefine(MagickFormat.Dng, "use-camera-wb", "true"); //použít vyvážení bílé z metadat
+                using (MagickImage image = new MagickImage(tmpFile, readSettings))
+                {
+                    image.Thumbnail(size);
+                    image.TransformColorSpace(ColorProfile.AdobeRGB1998);
+                    image.AutoLevel();
+                    image.Comment = origHash;
+                    System.IO.Directory.CreateDirectory(Path.GetDirectoryName(outFile));
 
-                    bool cont = false;
-                    if (File.Exists(outFile))
-                    {
-                        using (MagickImage image = new MagickImage(outFile))
-                        {
-                            if (image.Comment == origHash)
-                            {
-                                switch (settings.ThumbnailSettings.Selected)
-                                {
-                                    case ThumbnailSelect.longerSide:
-                                        if (settings.ThumbnailSettings.Value == Math.Max(image.Width, image.Height)) { cont = true; }
-                                        break;
-                                    case ThumbnailSelect.shorterSide:
-                                        if (settings.ThumbnailSettings.Value == Math.Min(image.Width, image.Height)) { cont = true; }
-                                        break;
-                                }
-                            }
-                            else
-                            {
-                                string newFileName = GetUniqueFileName(outFile, tmpFile, true);
-                                if (newFileName == outFile)
-                                {
-                                    cont = true;
-                                }
-                                else
-                                {
-                                    outFile = newFileName;
-                                }
-                            } 
-                        }
-                    }
+                    image.Write(outFile, MagickFormat.Jpg);
+                }
+                var thread = Thread.CurrentThread;
+                Console.WriteLine($"[{thread.ManagedThreadId}] generated thumbnail for file {Path.GetFileName(origFile)}");
 
-                    if (cont)
-                    {
-                        string message = $"Thumbnail already exists for file [{origFile}] in [{outFile}]";
-                        lock (_lockLog)
-                        {
-                            _log.Add(message, LogType.INFO, currentMethodName.Name);
-                        }
-                        return;
-                    }
-
-                    var size = new MagickGeometry(settings.ThumbnailSettings.Value);
-                    switch (settings.ThumbnailSettings.Selected)
-                    {
-                        case ThumbnailSelect.longerSide:
-                            size.FillArea = false;
-                            break;
-                        case ThumbnailSelect.shorterSide:
-                            size.FillArea = true;
-                            break;
-                    }
-
-                    var readSettings = new MagickReadSettings();
-                    readSettings.SetDefine(MagickFormat.Dng, "use-camera-wb", "true"); //použít vyvážení bílé z metadat
-                    using (MagickImage image = new MagickImage(tmpFile, readSettings))
-                    {
-                        image.Thumbnail(size);
-                        image.TransformColorSpace(ColorProfile.AdobeRGB1998);
-                        image.AutoLevel();
-                        image.Comment = origHash;
-                        System.IO.Directory.CreateDirectory(Path.GetDirectoryName(outFile));
-
-                        image.Write(outFile, MagickFormat.Jpg);
-                    }
+            }
+            catch (MagickException ex)
+            {
+                attempt++;
+                if (attempt < maxAttempts)
+                {
+                    Thread.Sleep(wait);
+                    wait *= 2;
                     var thread = Thread.CurrentThread;
-                    Console.WriteLine($"[{thread.ManagedThreadId}] generated thumbnail for file {Path.GetFileName(origFile)}");
-
+                    Console.WriteLine($"[{thread.ManagedThreadId}] thumbnail attempt [{attempt}] for file {Path.GetFileName(origFile)}");
+                    GenerateThumbnail(settings, filePath, tmpFile, origFile, origHash, attempt, wait);
                 }
-                catch (MagickException ex)
+                else
                 {
-                    attempt++;
-                    if (attempt < maxAttempts)
+                    Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-us");
+                    string message = $"could not create thumbnail for {origFile}\n\t{ex.ToString().Replace(Environment.NewLine, Environment.NewLine + "\t")}";
+                    lock (_lockLog)
                     {
-                        Thread.Sleep(wait);
-                        wait *= 2;
-                        var thread = Thread.CurrentThread;
-                        Console.WriteLine($"[{thread.ManagedThreadId}] thumbnail attempt [{attempt}] for file {Path.GetFileName(origFile)}");
-                        GenerateThumbnail(settings, filePath, tmpFile, origFile, origHash, attempt, wait);
-                    }
-                    else
-                    {
-                        Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-us");
-                        string message = $"could not create thumbnail for {origFile}\n\t{ex.ToString().Replace(Environment.NewLine, Environment.NewLine + "\t")}";
-                        lock (_lockLog)
-                        {
-                            Errors++;
-                            _log.Add(message, LogType.ERROR, currentMethodName.Name);
-                        }
+                        Errors++;
+                        _log.Add(message, LogType.ERROR, currentMethodName.Name);
                     }
                 }
+            }
         }
 
         private bool IsImage(string file)
