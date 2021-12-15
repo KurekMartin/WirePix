@@ -95,7 +95,7 @@ namespace PhotoApp
             Properties.Resources.Day,
             Properties.Resources.DayLong,
             Properties.Resources.DayShort
-        }
+        };
 
         public static NameString GetTagByCode(string code)
         {
