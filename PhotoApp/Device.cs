@@ -409,10 +409,6 @@ namespace PhotoApp
                         //timer.Start();
                         if (worker.CancellationPending)
                         {
-                            if (File.Exists(tmpFile))
-                            {
-                                File.Delete(tmpFile);
-                            }
                             e.Cancel = true;
                             filesCollection.CompleteAdding();
                             _device.Disconnect();
@@ -452,7 +448,7 @@ namespace PhotoApp
                                     _log.Add(message, LogType.ERROR, currentMethodName.Name);
                                 }
 
-                                File.Delete(tmpFile);
+                                if (File.Exists(tmpFile)){ File.Delete(tmpFile); }
                                 continue;
                             }
 
@@ -495,10 +491,7 @@ namespace PhotoApp
                             _log.Add(ex.ToString(), LogType.ERROR, currentMethodName.Name);
                             _log.Stop();
                         }
-                        if (File.Exists(tmpFile))
-                        {
-                            File.Delete(tmpFile);
-                        }
+                        if (File.Exists(tmpFile)) { File.Delete(tmpFile); }
                     }
                 }
                 filesCollection.CompleteAdding();
@@ -513,7 +506,7 @@ namespace PhotoApp
                   if (worker.CancellationPending)
                   {
                       e.Cancel = true;
-                      state.Break();
+                      state.Stop();
                   }
 
                   if (settings.Thumbnail)
@@ -521,7 +514,7 @@ namespace PhotoApp
                       lock (_lockReport)
                       {
                           progressArgs.currentTask = $"Generuji náhled {item.origFile}";
-                          worker.ReportProgress((FilesDone * 100 / FilesToCopyCount), progressArgs);
+                          worker.ReportProgress(FilesDone * 100 / FilesToCopyCount, progressArgs);
                       }
                       GenerateThumbnail(settings, item.fullDestPath, item.tmpFile, item.origFile, BitConverter.ToString(item.origHash).Replace("-", String.Empty).ToLowerInvariant());
                   }
@@ -530,7 +523,7 @@ namespace PhotoApp
                   lock (_lockReport)
                   {
                       progressArgs.currentTask = $"Třídím soubor {item.origFile}";
-                      worker.ReportProgress((FilesDone * 100 / FilesToCopyCount), progressArgs);
+                      worker.ReportProgress(FilesDone * 100 / FilesToCopyCount, progressArgs);
                   }
                   bool successSave = SaveFiles(settings, item.fullDestPath, item.tmpFile, item.origFile, item.origHash);
 
@@ -544,8 +537,13 @@ namespace PhotoApp
 
                   }
 
-                  double size = new FileInfo(item.tmpFile).Length / 1048576;
-                  File.Delete(item.tmpFile);
+                  double size = 0;
+                  if (File.Exists(tmpFile))
+                  {
+                      size = new FileInfo(item.tmpFile).Length / 1048576;
+                      File.Delete(item.tmpFile);
+                  }
+
                   DateTime end = DateTime.Now;
                   TimeSpan timeTotal = end - start;
 
@@ -791,16 +789,20 @@ namespace PhotoApp
         private string GetUniqueFileName(string newFile, string tempFile, bool isThumbnail = false)
         {
             int i = 1;
-            while (File.Exists(newFile))
+            try
             {
-                if (isThumbnail || !CheckFileHash(GetFileHash(File.OpenRead(tempFile)), newFile))
+                while (File.Exists(newFile))
                 {
-                    string ext = Path.GetExtension(newFile);
-                    newFile = newFile.Replace(ext, $"({i}){ext}");
+                    if (isThumbnail || !CheckFileHash(GetFileHash(File.OpenRead(tempFile)), newFile))
+                    {
+                        string ext = Path.GetExtension(newFile);
+                        newFile = newFile.Replace(ext, $"({i}){ext}");
+                    }
+                    else { break; }
+                    i++;
                 }
-                else { break; }
-                i++;
             }
+            catch { }
 
             return newFile;
         }

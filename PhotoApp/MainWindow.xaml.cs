@@ -371,13 +371,14 @@ namespace PhotoApp
         private void worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             dhDialog.IsOpen = false;
-            WorkerResult result = (WorkerResult)e.Result;
-
             if (e.Cancelled)
             {
                 lblResult.Text = "Zrušeno";
+                return;
             }
-            else if (result.code == RESULT_ERROR)
+
+            WorkerResult result = (WorkerResult)e.Result;
+           if (result.code == RESULT_ERROR)
             {
                 ErrorDialog("Při získávání souborů došlo k chybě. Prosím zkontrolujte, zda je zařízení připojené a akci zopakujte.");
                 ListConnectedDevices();
