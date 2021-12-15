@@ -515,12 +515,16 @@ namespace PhotoApp
                       e.Cancel = true;
                       state.Break();
                   }
-                  lock (_lockReport)
+
+                  if (settings.Thumbnail)
                   {
-                      progressArgs.currentTask = $"Generuji náhled {item.origFile}";
-                      worker.ReportProgress((FilesDone * 100 / FilesToCopyCount), progressArgs);
+                    lock (_lockReport)
+                    {
+                         progressArgs.currentTask = $"Generuji náhled {item.origFile}";
+                         worker.ReportProgress((FilesDone * 100 / FilesToCopyCount), progressArgs);
+                    }
+                    GenerateThumbnail(settings, item.fullDestPath, item.tmpFile, item.origFile, BitConverter.ToString(item.origHash).Replace("-", String.Empty).ToLowerInvariant());
                   }
-                  GenerateThumbnail(settings, item.fullDestPath, item.tmpFile, item.origFile, BitConverter.ToString(item.origHash).Replace("-", String.Empty).ToLowerInvariant());
 
 
                   lock (_lockReport)
@@ -579,8 +583,7 @@ namespace PhotoApp
 
         private void GenerateThumbnail(Settings settings, string filePath, string tmpFile, string origFile, string origHash, int attempt = 0, int wait = 2000)
         {
-            if (settings.Thumbnail)
-            {
+            
                 var st = new StackTrace();
                 var sf = st.GetFrame(0);
                 var currentMethodName = sf.GetMethod();
@@ -693,7 +696,6 @@ namespace PhotoApp
                         }
                     }
                 }
-            }
         }
 
         private bool IsImage(string file)
