@@ -393,7 +393,10 @@ namespace PhotoApp
                 {
                     lblResult.Text += $"Staženo: {downloaded}/{toDownload}\n" +
                                       $"Chyby: {errors}";
-                    DeviceList.SelectedDeviceInfo.LastBackup = backupStart;
+                    if(downloaded == toDownload)
+                    {
+                        DeviceList.SelectedDeviceInfo.LastBackup = backupStart;
+                    }                 
                     OnPropertyChanged("SelectedDeviceInfo");
                     DeviceList.Save();
                 }

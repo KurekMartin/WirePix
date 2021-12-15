@@ -47,7 +47,7 @@ namespace PhotoApp
         private double[] _space;
         private IEnumerable<MediaFileInfo> filesToCopy;
 
-        public int filesToCopyCount { get; private set; } = 0;
+        public int FilesToCopyCount { get; private set; } = 0;
         private double sizeToProcess;
         private Settings _lastSettings;
 
@@ -211,6 +211,7 @@ namespace PhotoApp
         //nalezeni souboru dle data
         public void GetFilesByDate(BackgroundWorker worker, DoWorkEventArgs e, Settings settings)
         {
+            bool _checkDateRange;
             ProgressUpdateArgs progressArgs = new ProgressUpdateArgs();
             progressArgs.taskName = "Hledám soubory";
             progressArgs.indeterminateTask = true;
@@ -227,13 +228,16 @@ namespace PhotoApp
             IEnumerable<MediaFileInfo> allFiles = Enumerable.Empty<MediaFileInfo>();
 
 
-            if (settings.Date.End == new DateTime())
+            if (settings.Date.Start == new DateTime())
             {
-                settings.Date.End = DateTime.Now.Date;
+                _checkDateRange = false;
             }
-
-            settings.Date.End = settings.Date.End.AddTicks(-1).AddDays(1); // nastavení konce dne
-
+            else
+            {
+                settings.Date.End = settings.Date.End.AddTicks(-1).AddDays(1); // nastavení konce dne
+                _checkDateRange = true;
+            }
+            
             _device.Connect();
 
             if (!_log.Running) { _log.Start(); }
@@ -246,12 +250,19 @@ namespace PhotoApp
                 {
                     allFiles = allFiles.Concat(GetAllFilesList(dir.FullName, progressArgs, worker, e));
                 }
-                progressArgs.taskName = "Filtrování souborů podle data";
-                worker.ReportProgress(0, progressArgs);
+                if(_checkDateRange)
+                {
+                    progressArgs.taskName = "Filtrování souborů podle data";
+                    worker.ReportProgress(0, progressArgs);
 
-                filesToCopy = allFiles.Where(f => ((DateTime)f.CreationTime) >= settings.Date.Start && ((DateTime)f.CreationTime) <= settings.Date.End);
-                filesToCopyCount = filesToCopy.Count();
+                    filesToCopy = allFiles.Where(f => ((DateTime)f.CreationTime) >= settings.Date.Start && ((DateTime)f.CreationTime) <= settings.Date.End);
+                }
+                else
+                {
+                    filesToCopy = allFiles.ToList();
+                }
 
+                FilesToCopyCount = filesToCopy.Count();
                 sizeToProcess = filesToCopy.Sum(f => Convert.ToDouble(f.Length / 1048576));
             }
             catch (Exception ex)
@@ -263,7 +274,7 @@ namespace PhotoApp
                 _log.Add(ex.ToString(), LogType.ERROR, currentMethodName.Name);
                 _log.Stop();
 
-                filesToCopyCount = 0;
+                FilesToCopyCount = 0;
                 sizeToProcess = 0;
 
                 e.Result = new WorkerResult(MainWindow.RESULT_ERROR, TaskType.FindFiles);
@@ -290,7 +301,7 @@ namespace PhotoApp
             {
                 e.Cancel = true;
                 FilesTotal = 0;
-                filesToCopyCount = 0;
+                FilesToCopyCount = 0;
                 filesToCopy = Enumerable.Empty<MediaFileInfo>();
             }
             else
@@ -341,7 +352,7 @@ namespace PhotoApp
             List<string> filesDone = new List<string>();
             object _lockFilesDone = new object();
 
-            if (filesToCopyCount == 0 && _lastSettings == settings)
+            if (FilesToCopyCount == 0 && _lastSettings == settings)
             {
                 e.Result = new WorkerResult(MainWindow.RESULT_OK, TaskType.CopyFiles);
                 return;
@@ -390,9 +401,9 @@ namespace PhotoApp
 
                         lock (_lockReport)
                         {
-                            progressArgs.progressText = $"Zpracováno {FilesDone}/{filesToCopyCount} souborů";
+                            progressArgs.progressText = $"Zpracováno {FilesDone}/{FilesToCopyCount} souborů";
                             progressArgs.currentTask = $"Stahuji {file.FullName}";
-                            worker.ReportProgress((FilesDone * 100 / filesToCopyCount), progressArgs);
+                            worker.ReportProgress((FilesDone * 100 / FilesToCopyCount), progressArgs);
                         }
 
                         //timer.Start();
@@ -507,7 +518,7 @@ namespace PhotoApp
                   lock (_lockReport)
                   {
                       progressArgs.currentTask = $"Generuji náhled {item.origFile}";
-                      worker.ReportProgress((FilesDone * 100 / filesToCopyCount), progressArgs);
+                      worker.ReportProgress((FilesDone * 100 / FilesToCopyCount), progressArgs);
                   }
                   GenerateThumbnail(settings, item.fullDestPath, item.tmpFile, item.origFile, BitConverter.ToString(item.origHash).Replace("-", String.Empty).ToLowerInvariant());
 
@@ -515,7 +526,7 @@ namespace PhotoApp
                   lock (_lockReport)
                   {
                       progressArgs.currentTask = $"Třídím soubor {item.origFile}";
-                      worker.ReportProgress((FilesDone * 100 / filesToCopyCount), progressArgs);
+                      worker.ReportProgress((FilesDone * 100 / FilesToCopyCount), progressArgs);
                   }
                   bool successSave = SaveFiles(settings, item.fullDestPath, item.tmpFile, item.origFile, item.origHash);
 
@@ -539,10 +550,10 @@ namespace PhotoApp
                       sizeCopied += size;
                       double sizeRemain = sizeToProcess - sizeCopied;
                       FilesDone++;
-                      progressArgs.progressText = $"Zpracováno {FilesDone}/{filesToCopyCount} souborů";
+                      progressArgs.progressText = $"Zpracováno {FilesDone}/{FilesToCopyCount} souborů";
                       TimeSpan timeRemain = TimeSpan.FromTicks((long)(timeTotal.Ticks / sizeCopied) * (long)sizeRemain);
                       progressArgs.timeRemain = timeRemain;
-                      worker.ReportProgress((FilesDone * 100 / filesToCopyCount), progressArgs);
+                      worker.ReportProgress(FilesDone * 100 / FilesToCopyCount, progressArgs);
                   }
               });
 
