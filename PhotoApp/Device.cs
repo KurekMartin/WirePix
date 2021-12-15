@@ -425,7 +425,7 @@ namespace PhotoApp
                             // stažení je nutné - přes knihovnu MediaDevices není možné číst Exif data
                             // info o souboru z knihovny MediaDevices poskytuje CreationTime 
                             // - !neodpovídá času pořízení fotky (EXIF) při delším zpracování fotografie (dlouhá expozice nebo kontinuální snímání)
-                            tmpFile = Path.Combine(tmpFolder, file.Name); //ZMĚNIT na persistentUniqueID
+                            tmpFile = Path.Combine(tmpFolder, file.Name);
                             if (settings.CheckFiles)
                             {
                                 origHash = GetFileHash(file.OpenRead());
