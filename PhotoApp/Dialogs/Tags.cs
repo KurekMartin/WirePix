@@ -86,6 +86,16 @@ namespace PhotoApp
             new NameString(Properties.Resources.Hyphen,     "-",                "-"),
             new NameString(Properties.Resources.Underscore, "_",                "_")
         };
+        private static readonly List<string> dateTags = new List<string>(){
+            Properties.Resources.Year,
+            Properties.Resources.YearLong,
+            Properties.Resources.Month,
+            Properties.Resources.MonthShort,
+            Properties.Resources.MonthLong,
+            Properties.Resources.Day,
+            Properties.Resources.DayLong,
+            Properties.Resources.DayShort
+        }
 
         public static NameString GetTagByCode(string code)
         {
@@ -120,31 +130,46 @@ namespace PhotoApp
             string filename = "FileName";
             if (File.Exists(filePath))
             {
-                date = FileExif.GetDateTimeOriginal(filePath);
-                // soubor nemusí obsahovat EXIF informace
-                if (date == new DateTime())
+                if(dateTags.Contains(codeTag))
                 {
-                    date = (DateTime)fileInfo.CreationTime; // nemusí obsahovat správné datum (někdy se používá DateAuthored nebo LastWriteTime)
+                    date = FileExif.GetDateTimeOriginal(filePath);
+                    // soubor nemusí obsahovat EXIF informace
                     if (date == new DateTime())
                     {
-                        date = (DateTime)fileInfo.DateAuthored;
+                        date = (DateTime)fileInfo.CreationTime; // nemusí obsahovat správné datum (někdy se používá DateAuthored nebo LastWriteTime)
+                        if (date == new DateTime())
+                        {
+                            date = (DateTime)fileInfo.DateAuthored;
+                        }
+                        if (date == new DateTime())
+                        {
+                            date = (DateTime)fileInfo.LastWriteTime;
+                        }
                     }
-                    if (date == new DateTime())
+                }
+
+                if(codeTag == Properties.Resources.DeviceManuf)
+                {
+                    manufacturer = FileExif.GetManufacturer(filePath);
+                    if (manufacturer == null || manufacturer == string.Empty)
                     {
-                        date = (DateTime)fileInfo.LastWriteTime;
+                        manufacturer = device.Manufacturer;
                     }
                 }
-                manufacturer = FileExif.GetManufacturer(filePath);
-                if (manufacturer == null || manufacturer == string.Empty)
+
+                if(codeTag == Properties.Resources.DeviceName)
                 {
-                    manufacturer = device.Manufacturer;
+                    model = FileExif.GetModel(filePath);
+                    if (model == null || model == string.Empty)
+                    {
+                        model = device.Name;
+                    }
                 }
-                model = FileExif.GetModel(filePath);
-                if (model == null || model == string.Empty)
+
+                if(codeTag == Properties.Resources.FileName)
                 {
-                    model = device.Name;
+                    filename = Path.GetFileNameWithoutExtension(filePath);
                 }
-                filename = Path.GetFileNameWithoutExtension(filePath);
             }
 
             if (codeTag == Properties.Resources.YearLong)
