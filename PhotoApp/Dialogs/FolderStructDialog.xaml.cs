@@ -160,37 +160,8 @@ namespace PhotoApp.Dialogs
         //aktualizace vybrané složky
         private void UpdateTreeLayer()
         {
-            string folderName = "";
-            //odsazení + šipka
-            if (selectedFolderLevel > 0)
-            {
-                for (int i = 0; i < selectedFolderLevel; i++)
-                {
-                    folderName += "  ";
-                }
-                folderName += "└> ";
-            }
-
-            //dosazení hodnot za tagy
-            foreach (string tag in selectedStructure)
-            {
-                if (tag.StartsWith("{"))
-                {
-                    int i = tag.LastIndexOf("}"); //konec tagu
-                    NameString nameString = Tags.GetTagByVisibleText(tag.Substring(0, i + 1));
-                    if (nameString.code == "STR")
-                    {
-                        folderName += Regex.Match(tag, @"(?<=\().*?(?=\))").ToString();
-                    }
-                    folderName += Tags.GetSampleValueByTag(nameString.code);
-                }
-                else
-                {
-                    folderName += tag;
-                }
-            }
             TextBlock tb = BaseStructDialog.FindTextBlockByIndex(spFolderStructure, selectedFolderLevel);
-            tb.Text = folderName;
+            tb.Text = FolderLevel(selectedStructure,selectedFolderLevel);
         }
 
 
@@ -281,24 +252,7 @@ namespace PhotoApp.Dialogs
             foreach (List<string> dir in folderStructure)
             {
                 TextBlock folderLevel = new TextBlock();
-
-                string folderName = "";
-
-                //odsazení + šipka
-                if (i > 0)
-                {
-                    folderName += new string(' ', i);
-                    //for (int j = 0; j < i; j++)
-                    //{
-                    //    folderName += "  ";
-                    //}
-                    folderName += "└> ";
-                }
-
-                //dosazení hodnot za tagy
-                folderName += Tags.TagsToValues(dir);
-
-                folderLevel.Text = folderName;
+                folderLevel.Text = FolderLevel(dir, i);
                 folderLevel.Tag = i;
                 folderLevel.MouseLeftButtonDown += FolderName_MouseLeftButtonDown;
                 spFolderStructure.Children.Add(folderLevel);
@@ -311,6 +265,19 @@ namespace PhotoApp.Dialogs
             }
 
             ChangeSelectedFolder(spFolderStructure.Children.Count - 1);
+        }
+
+        //odsazení + dosazení hodnot za tagy
+        private string FolderLevel(List<string> tags, int level)
+        {
+            string folderName = "";
+            if (level > 0)
+            {
+                folderName += new string(' ', level);
+                folderName += "└> ";
+            }
+            folderName += Tags.TagsToValues(tags);
+            return folderName;
         }
 
         //změna CustomTextu -> update tagu
