@@ -698,7 +698,7 @@ namespace PhotoApp
         private bool IsImage(string file)
         {
             var format = MagickFormatInfo.Create(file);
-            return format.ModuleFormat == MagickFormat.Dng || (format.MimeType != null && format.MimeType.StartsWith("image"));
+            return format.ModuleFormat == MagickFormat.Dng || (format.MimeType != null && format.MimeType.Contains("image"));
         }
 
         private bool SaveFiles(Settings settings, string fullName, string tmpFile, string origFile, byte[] origHash)
