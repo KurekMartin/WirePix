@@ -168,7 +168,6 @@ namespace PhotoApp
 
                 if (codeTag == Properties.Resources.FileName)
                 {
-                    //filename = Path.GetFileNameWithoutExtension(filePath);
                     filename = Path.GetFileNameWithoutExtension(fileInfo.Name);
                 }
             }
