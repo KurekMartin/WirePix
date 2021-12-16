@@ -128,9 +128,9 @@ namespace PhotoApp
             string manufacturer = "Manufacturer";
             string model = "DeviceName";
             string filename = "FileName";
-            if (File.Exists(filePath))
+            if (File.Exists(filePath) && fileInfo != null)
             {
-                if(dateTags.Contains(codeTag))
+                if (dateTags.Contains(codeTag))
                 {
                     date = FileExif.GetDateTimeOriginal(filePath);
                     // soubor nemusí obsahovat EXIF informace
@@ -148,7 +148,7 @@ namespace PhotoApp
                     }
                 }
 
-                if(codeTag == Properties.Resources.DeviceManuf)
+                if (codeTag == Properties.Resources.DeviceManuf)
                 {
                     manufacturer = FileExif.GetManufacturer(filePath);
                     if (manufacturer == null || manufacturer == string.Empty)
@@ -157,7 +157,7 @@ namespace PhotoApp
                     }
                 }
 
-                if(codeTag == Properties.Resources.DeviceName)
+                if (codeTag == Properties.Resources.DeviceName)
                 {
                     model = FileExif.GetModel(filePath);
                     if (model == null || model == string.Empty)
@@ -166,9 +166,10 @@ namespace PhotoApp
                     }
                 }
 
-                if(codeTag == Properties.Resources.FileName)
+                if (codeTag == Properties.Resources.FileName)
                 {
-                    filename = Path.GetFileNameWithoutExtension(filePath);
+                    //filename = Path.GetFileNameWithoutExtension(filePath);
+                    filename = Path.GetFileNameWithoutExtension(fileInfo.Name);
                 }
             }
 

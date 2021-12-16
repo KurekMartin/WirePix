@@ -403,7 +403,7 @@ namespace PhotoApp
                         {
                             progressArgs.progressText = $"Zpracováno {FilesDoneCount}/{FilesToCopyCount} souborů";
                             progressArgs.currentTask = $"Stahuji {file.FullName}";
-                            worker.ReportProgress((FilesDoneCount * 100 / FilesToCopyCount), progressArgs);
+                            worker.ReportProgress(FilesDoneCount * 100 / FilesToCopyCount, progressArgs);
                         }
 
                         //timer.Start();
@@ -421,7 +421,8 @@ namespace PhotoApp
                             // stažení je nutné - přes knihovnu MediaDevices není možné číst Exif data
                             // info o souboru z knihovny MediaDevices poskytuje CreationTime 
                             // - !neodpovídá času pořízení fotky (EXIF) při delším zpracování fotografie (dlouhá expozice nebo kontinuální snímání)
-                            tmpFile = Path.Combine(tmpFolder, file.Name);
+                            string GUID = Guid.NewGuid().ToString();
+                            tmpFile = Path.Combine(tmpFolder, GUID);
                             if (settings.CheckFiles)
                             {
                                 origHash = GetFileHash(file.OpenRead());
@@ -598,8 +599,6 @@ namespace PhotoApp
 
             try
             {
-
-
                 string outFile = Path.Combine(settings.Paths.Thumbnail, filePath);
                 outFile = Path.ChangeExtension(outFile, "jpg");
 
