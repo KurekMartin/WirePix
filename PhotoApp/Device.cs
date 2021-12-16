@@ -38,7 +38,7 @@ namespace PhotoApp
 
         }
 
-        public int FilesDone { get; private set; } = 0;
+        public int FilesDoneCount { get; private set; } = 0;
         public int FilesTotal { get; private set; } = 0;
         public int Errors { get; private set; } = 0;
 
@@ -368,7 +368,7 @@ namespace PhotoApp
 
 
             ProgressUpdateArgs progressArgs = new ProgressUpdateArgs();
-            FilesDone = 0;
+            FilesDoneCount = 0;
             byte[] origHash = null;
             double sizeCopied = 0;
             string tmpFolder = Application.Current.Resources["tmpFolder"].ToString();
@@ -380,7 +380,7 @@ namespace PhotoApp
             System.IO.Directory.CreateDirectory(tmpFolder);
 
             DateTime start = DateTime.Now;
-            FilesDone = 0;
+            FilesDoneCount = 0;
             Errors = 0;
 
             MainWindow.ClearTemp();
@@ -401,9 +401,9 @@ namespace PhotoApp
 
                         lock (_lockReport)
                         {
-                            progressArgs.progressText = $"Zpracováno {FilesDone}/{FilesToCopyCount} souborů";
+                            progressArgs.progressText = $"Zpracováno {FilesDoneCount}/{FilesToCopyCount} souborů";
                             progressArgs.currentTask = $"Stahuji {file.FullName}";
-                            worker.ReportProgress((FilesDone * 100 / FilesToCopyCount), progressArgs);
+                            worker.ReportProgress((FilesDoneCount * 100 / FilesToCopyCount), progressArgs);
                         }
 
                         //timer.Start();
@@ -514,7 +514,7 @@ namespace PhotoApp
                       lock (_lockReport)
                       {
                           progressArgs.currentTask = $"Generuji náhled {item.origFile}";
-                          worker.ReportProgress(FilesDone * 100 / FilesToCopyCount, progressArgs);
+                          worker.ReportProgress(FilesDoneCount * 100 / FilesToCopyCount, progressArgs);
                       }
                       GenerateThumbnail(settings, item.fullDestPath, item.tmpFile, item.origFile, BitConverter.ToString(item.origHash).Replace("-", String.Empty).ToLowerInvariant());
                   }
@@ -523,7 +523,7 @@ namespace PhotoApp
                   lock (_lockReport)
                   {
                       progressArgs.currentTask = $"Třídím soubor {item.origFile}";
-                      worker.ReportProgress(FilesDone * 100 / FilesToCopyCount, progressArgs);
+                      worker.ReportProgress(FilesDoneCount * 100 / FilesToCopyCount, progressArgs);
                   }
                   bool successSave = SaveFiles(settings, item.fullDestPath, item.tmpFile, item.origFile, item.origHash);
 
@@ -551,11 +551,11 @@ namespace PhotoApp
                   {
                       sizeCopied += size;
                       double sizeRemain = sizeToProcess - sizeCopied;
-                      FilesDone++;
-                      progressArgs.progressText = $"Zpracováno {FilesDone}/{FilesToCopyCount} souborů";
+                      FilesDoneCount++;
+                      progressArgs.progressText = $"Zpracováno {FilesDoneCount}/{FilesToCopyCount} souborů";
                       TimeSpan timeRemain = TimeSpan.FromTicks((long)(timeTotal.Ticks / sizeCopied) * (long)sizeRemain);
                       progressArgs.timeRemain = timeRemain;
-                      worker.ReportProgress(FilesDone * 100 / FilesToCopyCount, progressArgs);
+                      worker.ReportProgress(FilesDoneCount * 100 / FilesToCopyCount, progressArgs);
                   }
               });
 
@@ -761,6 +761,7 @@ namespace PhotoApp
                 // soubor se nepodařilo zkopírovat -> další soubor
                 if (i == maxAttempts)
                 {
+                    File.Delete(fullPath);
                     string message = $"could not copy file {origFile}";
                     lock (_lockLog)
                     {

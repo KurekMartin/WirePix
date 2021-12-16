@@ -386,7 +386,7 @@ namespace PhotoApp
             else if (result.code == RESULT_OK)
             {
                 int total = DeviceList.SelectedDevice.FilesTotal;
-                int downloaded = DeviceList.SelectedDevice.FilesDone;
+                int downloaded = DeviceList.SelectedDevice.FilesDoneCount;
                 int toDownload = DeviceList.SelectedDevice.FilesToDownload;
                 int errors = DeviceList.SelectedDevice.Errors;
                 lblResult.Text = $"Souborů celkem: {total}\n";
