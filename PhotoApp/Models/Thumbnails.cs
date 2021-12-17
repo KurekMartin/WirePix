@@ -12,27 +12,22 @@ namespace PhotoApp.Models
         private int _value = 0;
         public ThumbnailSelect Selected
         {
-            get
-            {
-                return _selected;
-            }
+            get => _selected;
             set
             {
-                if(value!=_selected)
+                if (value != _selected)
                 {
                     _selected = value;
                     OnPropertyChanged();
                 }
             }
         }
-        public int Value {
-            get
-            {
-                return _value;
-            }
+        public int Value
+        {
+            get => _value;
             set
             {
-                if(value!=_value)
+                if (value != _value)
                 {
                     _value = value;
                     OnPropertyChanged();

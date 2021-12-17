@@ -16,10 +16,7 @@ namespace PhotoApp.Models
         }
         public DateTime Start
         {
-            get
-            {
-                return _start;
-            }
+            get => _start;
             set
             {
                 if (value != _start)
@@ -31,10 +28,7 @@ namespace PhotoApp.Models
         }
         public DateTime End
         {
-            get
-            {
-                return _end;
-            }
+            get => _end;
             set
             {
                 if (value != _end)

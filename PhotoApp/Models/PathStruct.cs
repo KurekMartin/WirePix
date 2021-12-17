@@ -15,10 +15,7 @@ namespace PhotoApp.Models
         private string _thumbnail = string.Empty;
         public string Root
         {
-            get
-            {
-                return _root;
-            }
+            get => _root;
             set
             {
                 if (value != _root)
@@ -30,10 +27,7 @@ namespace PhotoApp.Models
         }
         public string FolderTags
         {
-            get
-            {
-                return _folderTags;
-            }
+            get => _folderTags;
             set
             {
                 if (value != _folderTags)
@@ -45,10 +39,7 @@ namespace PhotoApp.Models
         }
         public string FileTags
         {
-            get
-            {
-                return _fileTags;
-            }
+            get => _fileTags;
             set
             {
                 if (value != _fileTags)
@@ -61,10 +52,7 @@ namespace PhotoApp.Models
 
         public string Backup
         {
-            get
-            {
-                return _backup;
-            }
+            get => _backup;
             set
             {
                 if (value != _backup)
@@ -76,10 +64,7 @@ namespace PhotoApp.Models
         }
         public string Thumbnail
         {
-            get
-            {
-                return _thumbnail;
-            }
+            get => _thumbnail;
             set
             {
                 if (value != _thumbnail)

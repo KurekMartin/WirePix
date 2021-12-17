@@ -112,10 +112,7 @@ namespace PhotoApp
 
         public bool CheckFiles
         {
-            get
-            {
-                return _checkFiles;
-            }
+            get => _checkFiles;
             set
             {
                 if (value != _checkFiles)
@@ -128,10 +125,7 @@ namespace PhotoApp
 
         public bool DeleteFiles
         {
-            get
-            {
-                return _deleteFiles;
-            }
+            get => _deleteFiles;
             set
             {
                 if (value != _deleteFiles)
@@ -144,10 +138,7 @@ namespace PhotoApp
 
         public bool Backup
         {
-            get
-            {
-                return _backup;
-            }
+            get => _backup;
             set
             {
                 if (value != _backup)
@@ -160,10 +151,7 @@ namespace PhotoApp
 
         public bool Thumbnail
         {
-            get
-            {
-                return _thumbnail;
-            }
+            get => _thumbnail;
             set
             {
                 if (value != _thumbnail)
@@ -176,10 +164,7 @@ namespace PhotoApp
         [XmlIgnore]
         public DownloadSelect DownloadSelect
         {
-            get
-            {
-                return _downloadSelect;
-            }
+            get => _downloadSelect;
             set
             {
                 if (value != _downloadSelect)

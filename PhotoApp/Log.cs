@@ -45,12 +45,9 @@ namespace PhotoApp
 
         public bool Running
         {
-            get { return _running; }
+            get => _running;
 
-            private set
-            {
-                _running = value;
-            }
+            private set => _running = value;
         }
 
     }

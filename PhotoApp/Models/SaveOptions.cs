@@ -21,10 +21,10 @@ namespace PhotoApp.Models
         [XmlIgnore]
         public string FileName
         {
-            get { return _fileName; }
+            get => _fileName;
             set
             {
-                if(value!=_fileName)
+                if (value != _fileName)
                 {
                     _fileName = value;
                     OnPropertyChanged();
@@ -33,7 +33,7 @@ namespace PhotoApp.Models
         }
         public bool Root
         {
-            get { return _root; }
+            get => _root;
             set
             {
                 if (value != _root)
@@ -45,10 +45,10 @@ namespace PhotoApp.Models
         }
         public bool FolderStruct
         {
-            get { return _folderStruct; }
+            get => _folderStruct;
             set
             {
-                if(value!=_folderStruct)
+                if (value != _folderStruct)
                 {
                     _folderStruct = value;
                     OnPropertyChanged();
@@ -57,10 +57,10 @@ namespace PhotoApp.Models
         }
         public bool FileStruct
         {
-            get { return _fileStruct; }
+            get => _fileStruct;
             set
             {
-                if(value!=_fileStruct)
+                if (value != _fileStruct)
                 {
                     _fileStruct = value;
                     OnPropertyChanged();
@@ -69,10 +69,10 @@ namespace PhotoApp.Models
         }
         public bool Backup
         {
-            get { return _backup; }
+            get => _backup;
             set
             {
-                if(value!=_backup)
+                if (value != _backup)
                 {
                     _backup = value;
                     OnPropertyChanged();
@@ -81,8 +81,10 @@ namespace PhotoApp.Models
         }
         public bool Thumbnails
         {
-            get { return _thumbnails; }
-            set { if(value!=_thumbnails)
+            get => _thumbnails;
+            set
+            {
+                if (value != _thumbnails)
                 {
                     _thumbnails = value;
                     OnPropertyChanged();
@@ -91,10 +93,10 @@ namespace PhotoApp.Models
         }
         public bool FileCheck
         {
-            get { return _fileCheck; }
+            get => _fileCheck;
             set
             {
-                if(value!=_fileCheck)
+                if (value != _fileCheck)
                 {
                     _fileCheck = value;
                     OnPropertyChanged();
@@ -103,7 +105,7 @@ namespace PhotoApp.Models
         }
         public bool DeleteFiles
         {
-            get { return _deleteFiles; }
+            get => _deleteFiles;
             set
             {
                 if (value != _deleteFiles)
