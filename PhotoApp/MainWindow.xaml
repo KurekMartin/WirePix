@@ -133,9 +133,19 @@
                                 <StackPanel Orientation="Horizontal" x:Name="spDeviceInfo">
                                     <StackPanel x:Name="spBasicInfo" Margin="5,0" Height="Auto" VerticalAlignment="Top" >
                                         <StackPanel Orientation="Horizontal" Margin="0,3">
-                                            <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}" Text="Název zařízení: " FontWeight="Bold"/>
-                                            <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}" x:Name="lblDeviceName" Text="{Binding DeviceList.SelectedDevice.Name,UpdateSourceTrigger=PropertyChanged}"/>
+                                            <TextBlock VerticalAlignment="Bottom" Style="{StaticResource MaterialDesignBody2TextBlock}" Text="Název zařízení: " FontWeight="Bold"/>
+                                            <!--<TextBox x:Name="lblDeviceName" Text="{Binding DeviceList.SelectedDevice.Name,UpdateSourceTrigger=PropertyChanged}"/>-->
+                                            <TextBox x:Name="lblDeviceName" 
+                                                     Width="Auto" 
+                                                     MinWidth="100" 
+                                                     TextAlignment="Left"
+                                                     MaxLength="20"
+                                                     MaxLines="1"
+                                                     Text="{Binding DeviceList.SelectedDeviceInfo.Name,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" 
+                                                     TextChanged="lblDeviceName_TextChanged"
+                                                     />
                                         </StackPanel>
+                                        <TextBlock x:Name="tbDeviceNameError" Foreground="Red" Visibility="Collapsed" Text="" Margin="0,5,0,3"/>
                                         <StackPanel Orientation="Horizontal" Margin="0,3">
                                             <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}" Text="Poslední záloha: " FontWeight="Bold"/>
                                             <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}" x:Name="lblLastBackup" Text="{Binding DeviceList.SelectedDeviceInfo.LastBackup,Converter={StaticResource LastBckp}}"/>

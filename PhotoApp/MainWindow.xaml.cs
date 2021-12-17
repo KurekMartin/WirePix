@@ -116,6 +116,7 @@ namespace PhotoApp
             else
             {
                 spDeviceInfo.Visibility = Visibility.Hidden;
+                ListBoxDevices.IsEnabled = true;
             }
         }
 
@@ -223,6 +224,12 @@ namespace PhotoApp
             bool correct = true;
 
             correct = CheckDeviceSelected();
+
+            if (DeviceList.SelectedDeviceInfo.Name == null || DeviceList.SelectedDeviceInfo.Name.Length == 0)
+            {
+                SetErrorMessage(tbDeviceNameError, "Zadejte název zařízení");
+                correct = false;
+            }
 
             if (Settings.Paths.Root == null || Settings.Paths.Root.Length == 0)
             {
@@ -378,7 +385,7 @@ namespace PhotoApp
             }
 
             WorkerResult result = (WorkerResult)e.Result;
-           if (result.code == RESULT_ERROR)
+            if (result.code == RESULT_ERROR)
             {
                 ErrorDialog("Při získávání souborů došlo k chybě. Prosím zkontrolujte, zda je zařízení připojené a akci zopakujte.");
                 ListConnectedDevices();
@@ -394,10 +401,10 @@ namespace PhotoApp
                 {
                     lblResult.Text += $"Staženo: {downloaded}/{toDownload}\n" +
                                       $"Chyby: {errors}";
-                    if(downloaded == toDownload)
+                    if (downloaded == toDownload)
                     {
                         DeviceList.SelectedDeviceInfo.LastBackup = backupStart;
-                    }                 
+                    }
                     OnPropertyChanged("SelectedDeviceInfo");
                     DeviceList.Save();
                 }
@@ -637,6 +644,8 @@ namespace PhotoApp
             e.Handled = !regex.IsMatch(e.Text);
         }
 
+
+
         // pokud by pole melo byt prazdne -> chyba data bindingu (potreba hondota int)
         private void tbValue_PreviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
         {
@@ -745,6 +754,21 @@ namespace PhotoApp
             {
                 File.Delete(file);
             });
+        }
+
+        private void lblDeviceName_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            TextBox tb = (TextBox)sender;
+            if (tb.Text.Length == 0)
+            {
+                SetErrorMessage(tbDeviceNameError, "Zadejte název zařízení");
+                ListBoxDevices.IsEnabled = false;
+            }
+            else
+            {
+                tbDeviceNameError.Visibility = Visibility.Collapsed;
+                ListBoxDevices.IsEnabled = true;
+            }
         }
     }
 }
