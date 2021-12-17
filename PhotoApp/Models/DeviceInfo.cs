@@ -10,13 +10,14 @@ namespace PhotoApp.Models
     public class DeviceInfo : BaseObserveObject
     {
         private string _name = string.Empty;
+        private string _id = string.Empty;
         private bool _connected = false;
         private DateTime _lastBackup = new DateTime();
         public DeviceInfo() { }
         public DeviceInfo(string name, string id, DateTime lastBackup = new DateTime(), bool connected = false)
         {
             _name = name;
-            ID = id;
+            _id = id;
             LastBackup = lastBackup;
             _connected = connected;
         }
@@ -32,7 +33,9 @@ namespace PhotoApp.Models
                 }
             }
         }
-        public string ID { get; set; }
+        public string ID { 
+            get {return _id};
+            private set; }
         public DateTime LastBackup
         {
             get { return _lastBackup; }
