@@ -7,7 +7,7 @@
     xmlns:converters="clr-namespace:PhotoApp.Converters"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" x:Class="PhotoApp.MainWindow"
         mc:Ignorable="d"
-        Title="MainWindow"
+        Title="Photo Manager"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
         TextElement.FontWeight="Regular"
         TextElement.FontSize="13"
