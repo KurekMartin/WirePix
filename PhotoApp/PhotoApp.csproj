@@ -214,9 +214,6 @@
     <Resource Include="MediaDevicesLicense.txt" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="photo_camera_black_24dp.ico" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="baseline_photo_camera_black_48dp.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
