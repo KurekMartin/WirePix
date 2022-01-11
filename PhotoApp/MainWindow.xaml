@@ -14,7 +14,7 @@
         TextOptions.TextFormattingMode="Ideal" 
         TextOptions.TextRenderingMode="Auto"        
         Background="{DynamicResource MaterialDesignPaper}"
-        FontFamily="{DynamicResource MaterialDesignFont}" MinWidth="800" MinHeight="600" Height="623" Width="800" SizeToContent="Height" ResizeMode="CanMinimize" Closing="Window_Closing">
+        FontFamily="{DynamicResource MaterialDesignFont}" MinWidth="800" MinHeight="600" Height="623" Width="800" SizeToContent="Height" ResizeMode="CanMinimize" Closing="Window_Closing" WindowStartupLocation="CenterScreen" Icon="baseline_photo_camera_black_48dp.ico">
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVisConverter" />
         <local:EnumToBoleanConverter x:Key="EnumToBool"/>
