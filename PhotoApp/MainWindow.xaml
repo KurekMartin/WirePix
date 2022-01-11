@@ -133,7 +133,7 @@
                                 <StackPanel Orientation="Horizontal" x:Name="spDeviceInfo">
                                     <StackPanel x:Name="spBasicInfo" Margin="5,0" Height="Auto" VerticalAlignment="Top" >
                                         <StackPanel Orientation="Horizontal" Margin="0,3">
-                                            <TextBlock VerticalAlignment="Bottom" Style="{StaticResource MaterialDesignBody2TextBlock}" Text="Název zařízení: " FontWeight="Bold"/>
+                                            <TextBlock VerticalAlignment="Center" Style="{StaticResource MaterialDesignBody2TextBlock}" Text="Název zařízení: " FontWeight="Bold"/>
                                             <!--<TextBox x:Name="lblDeviceName" Text="{Binding DeviceList.SelectedDevice.Name,UpdateSourceTrigger=PropertyChanged}"/>-->
                                             <TextBox x:Name="lblDeviceName" 
                                                      Width="Auto" 
