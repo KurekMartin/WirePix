@@ -84,7 +84,7 @@ namespace PhotoApp
                 bool isMediaDevice = d.Protocol.ToUpper().Contains("MTP") || d.Protocol.ToUpper().Contains("PTP"); //filtr podle protokolu
                 d.Disconnect();
                 return isMediaDevice;
-            }); 
+            });
             DeviceInfo.Select(d => { d.Connected = false; return d; }).ToList();
 
             foreach (MediaDevice device in devices)
