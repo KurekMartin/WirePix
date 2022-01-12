@@ -535,7 +535,7 @@ namespace PhotoApp
                   }
 
                   double size = 0;
-                  if (File.Exists(tmpFile))
+                  if (File.Exists(item.tmpFile))
                   {
                       size = new FileInfo(item.tmpFile).Length / 1048576;
                       File.Delete(item.tmpFile);

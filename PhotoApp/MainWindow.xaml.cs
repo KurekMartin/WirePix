@@ -385,7 +385,7 @@ namespace PhotoApp
             {
                 int total = DeviceList.SelectedDevice.FilesTotal;
                 int downloaded = DeviceList.SelectedDevice.FilesDoneCount;
-                int toDownload = DeviceList.SelectedDevice.FilesToDownload;
+                int toDownload = DeviceList.SelectedDevice.FilesToCopyCount;
                 int errors = DeviceList.SelectedDevice.Errors;
                 lblResult.Text = $"Souborů celkem: {total}\n";
                 if (result.task == TaskType.CopyFiles)

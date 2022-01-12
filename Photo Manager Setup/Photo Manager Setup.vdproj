@@ -310,6 +310,14 @@
             "PrerequisitesLocation" = "2:1"
             "Url" = "8:"
             "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.8"
+                    {
+                    "Name" = "8:Microsoft .NET Framework 4.8 (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.8"
+                    }
+                }
             }
         }
     }
@@ -924,7 +932,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Photo Manager"
         "ProductCode" = "8:{F4D46984-A8BE-4B3F-8D35-6A08DD6265C4}"
-        "PackageCode" = "8:{B7068886-F76E-40A4-83B6-BCB83468D6CF}"
+        "PackageCode" = "8:{D58DB959-E734-44BD-9A93-914D762DE587}"
         "UpgradeCode" = "8:{353A19C6-4684-41C1-B2BE-7E6F047F0586}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
@@ -1473,7 +1481,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_70741A9CC78844C587E1C7277972C5DB"
             {
-            "SourcePath" = "8:..\\PhotoApp\\obj\\Debug\\Photo Manager.exe"
+            "SourcePath" = "8:..\\PhotoApp\\obj\\Release\\Photo Manager.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_14203058B299443EBC1FFAD01C983BFC"
