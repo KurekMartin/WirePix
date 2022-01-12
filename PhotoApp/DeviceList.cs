@@ -80,8 +80,9 @@ namespace PhotoApp
             }
         }
 
-        public int UpdateDevices(IEnumerable<MediaDevice> devices)
+        public int UpdateDevices()
         {
+            IEnumerable<MediaDevice> devices = MediaDevice.GetDevices();
             DeviceInfo.Select(d => { d.Connected = false; return d; }).ToList();
             //_connectedDevices.Clear();
             foreach (MediaDevice device in devices)

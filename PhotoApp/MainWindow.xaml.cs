@@ -124,7 +124,7 @@ namespace PhotoApp
         //nalezeni a vypis vsech zarizeni vyuzivajicich MTP
         private void ListConnectedDevices()
         {
-            ListBoxDevices.SelectedIndex = DeviceList.UpdateDevices(MediaDevice.GetDevices());
+            ListBoxDevices.SelectedIndex = DeviceList.UpdateDevices();
 
         }
 
