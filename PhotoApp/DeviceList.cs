@@ -1,12 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using MediaDevices;
+using PhotoApp.Models;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Xml.Serialization;
-using MediaDevices;
-using PhotoApp.Models;
 
 namespace PhotoApp
 {

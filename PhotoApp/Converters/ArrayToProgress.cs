@@ -9,7 +9,7 @@ namespace PhotoApp.Converters
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             double[] array = value as double[];
-            if (array.Length >= 2 && array[0]>0)
+            if (array.Length >= 2 && array[0] > 0)
             {
                 return 100 - array[1] / array[0] * 100;
             }

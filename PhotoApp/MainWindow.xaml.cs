@@ -1,19 +1,19 @@
-﻿using System;
+﻿using MaterialDesignThemes.Wpf;
+using PhotoApp.Dialogs;
+using PhotoApp.Models;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Windows;
-using System.Windows.Controls;
-using Usb.Events;
-using MaterialDesignThemes.Wpf;
-using PhotoApp.Dialogs;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Windows.Media;
-using System.Text.RegularExpressions;
-using PhotoApp.Models;
 using System.Runtime.CompilerServices;
-using System.Diagnostics;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Media;
+using Usb.Events;
 
 namespace PhotoApp
 {

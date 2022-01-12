@@ -9,7 +9,7 @@ namespace PhotoApp.Dialogs
     public partial class ErrorDialog : UserControl
     {
         private MainWindow mainWindow;
-        public ErrorDialog(MainWindow window,string msg)
+        public ErrorDialog(MainWindow window, string msg)
         {
             InitializeComponent();
             mainWindow = window;
@@ -18,7 +18,7 @@ namespace PhotoApp.Dialogs
 
         private void btnOK_Click(object sender, RoutedEventArgs e)
         {
-            mainWindow.DialogClose(this,null);
+            mainWindow.DialogClose(this, null);
         }
     }
 }

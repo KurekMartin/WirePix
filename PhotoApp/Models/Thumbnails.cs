@@ -1,6 +1,6 @@
 ﻿namespace PhotoApp.Models
 {
-    public class Thumbnails:BaseObserveObject
+    public class Thumbnails : BaseObserveObject
     {
         private ThumbnailSelect _selected;
         private int _value = 0;

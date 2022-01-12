@@ -237,7 +237,7 @@ namespace PhotoApp.Dialogs
         public static void ShowControls(StackPanel controlPanel, string blockText)
         {
             string tag = Regex.Match(blockText, @"\{.*?\}").ToString(); //ziskani tagu vcetne {}
-            
+
             //zobrazení ovládacích prvků podle vybraného tagu
             foreach (object o in controlPanel.Children)
             {

@@ -1,17 +1,17 @@
-﻿using System;
+﻿using ImageMagick;
+using MediaDevices;
+using PhotoApp.Models;
+using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
-using MediaDevices;
-using PhotoApp.Models;
-using ImageMagick;
-using System.Diagnostics;
-using System.Threading.Tasks;
-using System.Collections.Concurrent;
 using System.Threading;
-using System.Globalization;
+using System.Threading.Tasks;
 using System.Windows;
 
 namespace PhotoApp
@@ -445,7 +445,7 @@ namespace PhotoApp
                                     _log.Add(message, LogType.ERROR, currentMethodName.Name);
                                 }
 
-                                if (File.Exists(tmpFile)){ File.Delete(tmpFile); }
+                                if (File.Exists(tmpFile)) { File.Delete(tmpFile); }
                                 continue;
                             }
 

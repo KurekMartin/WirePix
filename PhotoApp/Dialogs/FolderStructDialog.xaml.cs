@@ -161,7 +161,7 @@ namespace PhotoApp.Dialogs
         private void UpdateTreeLayer()
         {
             TextBlock tb = BaseStructDialog.FindTextBlockByIndex(spFolderStructure, selectedFolderLevel);
-            tb.Text = FolderLevel(selectedStructure,selectedFolderLevel);
+            tb.Text = FolderLevel(selectedStructure, selectedFolderLevel);
         }
 
 

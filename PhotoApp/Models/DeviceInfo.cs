@@ -27,7 +27,7 @@ namespace PhotoApp.Models
                 {
                     _name = value;
                     OnPropertyChanged();
-                    if(_originalName==string.Empty)
+                    if (_originalName == string.Empty)
                     {
                         _originalName = _name;
                     }

@@ -49,22 +49,22 @@ namespace PhotoApp
         public void SetTimeRemain(TimeSpan time)
         {
             lblTime.Visibility = Visibility.Visible;
-            if(time.Ticks == 0)
+            if (time.Ticks == 0)
             {
                 lblTime.Text = "Počítám zbývající čas";
             }
             else
             {
                 lblTime.Text = "Zbývá ";
-                if (time.Days>0)
+                if (time.Days > 0)
                 {
                     lblTime.Text += time.Days + "d ";
                 }
-                if(time.Hours>0)
+                if (time.Hours > 0)
                 {
                     lblTime.Text += time.Hours + "h ";
                 }
-                if(time.Minutes>0)
+                if (time.Minutes > 0)
                 {
                     lblTime.Text += time.Minutes + "m ";
                 }

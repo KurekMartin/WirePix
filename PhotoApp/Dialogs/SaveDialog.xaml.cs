@@ -18,7 +18,7 @@ namespace PhotoApp.Dialogs
         public SaveDialog(MainWindow window, SaveOptions options = null)
         {
             InitializeComponent();
-            if(options==null)
+            if (options == null)
             {
                 saveResult = new SaveOptions();
             }

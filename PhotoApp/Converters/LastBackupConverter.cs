@@ -9,10 +9,11 @@ namespace PhotoApp.Converters
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             DateTime date = (DateTime)value;
-            if(date==new DateTime())
+            if (date == new DateTime())
             {
                 return "nikdy";
-            }else
+            }
+            else
             {
                 return date.ToString("dd.MM.yyyy HH:mm:ss");
             }

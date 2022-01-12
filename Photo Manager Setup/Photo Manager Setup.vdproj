@@ -154,12 +154,6 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_468C0D82E4B6EDEF7B907589950B076C"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_70741A9CC78844C587E1C7277972C5DB"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -253,6 +247,12 @@
         "OwnerKey" = "8:_71B1B0674E44C32CDD598A6B0449F188"
         "MsmSig" = "8:_UNDEFINED"
         }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_468C0D82E4B6EDEF7B907589950B076C"
+        "MsmSig" = "8:_UNDEFINED"
+        }
     }
     "Configurations"
     {
@@ -303,6 +303,14 @@
         "PrivateKeyFile" = "8:"
         "TimeStampServer" = "8:"
         "InstallerBootstrapper" = "3:2"
+            "BootstrapperCfg:{63ACBE69-63AA-4F98-B2B6-99F9E24495F2}"
+            {
+            "Enabled" = "11:TRUE"
+            "PromptEnabled" = "11:TRUE"
+            "PrerequisitesLocation" = "2:1"
+            "Url" = "8:"
+            "ComponentsUrl" = "8:"
+            }
         }
     }
     "Deployable"
@@ -916,7 +924,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Photo Manager"
         "ProductCode" = "8:{F4D46984-A8BE-4B3F-8D35-6A08DD6265C4}"
-        "PackageCode" = "8:{77D78AF9-6430-4C26-AC1F-53B13210423A}"
+        "PackageCode" = "8:{B7068886-F76E-40A4-83B6-BCB83468D6CF}"
         "UpgradeCode" = "8:{353A19C6-4684-41C1-B2BE-7E6F047F0586}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
@@ -1465,7 +1473,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_70741A9CC78844C587E1C7277972C5DB"
             {
-            "SourcePath" = "8:..\\PhotoApp\\obj\\Release\\Photo Manager.exe"
+            "SourcePath" = "8:..\\PhotoApp\\obj\\Debug\\Photo Manager.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_14203058B299443EBC1FFAD01C983BFC"

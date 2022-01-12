@@ -59,7 +59,7 @@ namespace PhotoApp
                 overrides.Add(typeof(Settings), "ThumbnailSettings", attributes);
             }
             if (!SaveOptions.FileCheck) { overrides.Add(typeof(Settings), "CheckFiles", attributes); }
-            if(!SaveOptions.DeleteFiles) { overrides.Add(typeof(Settings), "DeleteFiles", attributes); }
+            if (!SaveOptions.DeleteFiles) { overrides.Add(typeof(Settings), "DeleteFiles", attributes); }
 
             XmlSerializer serializer = new XmlSerializer(typeof(Settings), overrides);
             using (FileStream fs = File.Create(Path.Combine(_profilesFolder, $"{SaveOptions.FileName}.xml")))
@@ -83,11 +83,13 @@ namespace PhotoApp
                     if (s.SaveOptions.Root) { Paths.Root = s.Paths.Root; }
                     if (s.SaveOptions.FolderStruct) { Paths.FolderTags = s.Paths.FolderTags; }
                     if (s.SaveOptions.FileStruct) { Paths.FileTags = s.Paths.FileTags; }
-                    if (s.SaveOptions.Backup) { 
+                    if (s.SaveOptions.Backup)
+                    {
                         Paths.Backup = s.Paths.Backup;
                         Backup = s.Backup;
                     }
-                    if (s.SaveOptions.Thumbnails){
+                    if (s.SaveOptions.Thumbnails)
+                    {
                         Paths.Thumbnail = s.Paths.Thumbnail;
                         Thumbnail = s.Thumbnail;
                         ThumbnailSettings = s.ThumbnailSettings;
