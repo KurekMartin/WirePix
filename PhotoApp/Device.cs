@@ -173,7 +173,7 @@ namespace PhotoApp
                     foreach (MediaDriveInfo drive in drives)
                     {
                         MediaDirectoryInfo root = drive.RootDirectory;
-                        if(root != null)
+                        if (root != null)
                         {
                             GetMediaDirectory(_device, root, _mediaDirList);
                         }
@@ -186,7 +186,7 @@ namespace PhotoApp
         }
 
         private void GetMediaDirectory(MediaDevice device, MediaDirectoryInfo dir, List<MediaDirectoryInfo> mediaDirList)
-        {   
+        {
             var dirs = dir.EnumerateDirectories();
             var mediaDir = dirs.FirstOrDefault(d => d.Name == "DCIM");
 
@@ -562,20 +562,42 @@ namespace PhotoApp
 
             await addItems;
 
-            DeleteFiles(filesDone);
+            DeleteFiles(filesDone, worker);
 
             _log.Stop();
             _device.Disconnect();
             e.Result = new WorkerResult(MainWindow.RESULT_OK, TaskType.CopyFiles);
         }
 
-        private void DeleteFiles(List<string> files)
+        private void DeleteFiles(List<string> files, BackgroundWorker worker)
         {
+            DateTime start = DateTime.Now;
+            int totalCount = files.Count();
+            int doneCount = 0;
+            int progressPercent = 0;
+            ProgressUpdateArgs progressArgs = new ProgressUpdateArgs();
+
+            progressArgs.taskName = "Mažu stažené soubory ze zařízení";
+            progressArgs.progressText = $"Smazáno {doneCount}/{totalCount} souborů";
+            worker.ReportProgress(progressPercent, progressArgs);
             foreach (string file in files)
             {
+                
+                progressArgs.currentTask = $"Mažu soubor {file}";
+                worker.ReportProgress(progressPercent, progressArgs);
                 _device.DeleteFile(file);
                 Console.WriteLine($"file {file} deleted");
                 Console.WriteLine($"file {file} exists: {_device.FileExists(file)}");
+                
+                doneCount++;
+                progressPercent = doneCount * 100 / totalCount;
+                DateTime end = DateTime.Now;
+                TimeSpan timeTotal = end - start;
+                TimeSpan timeRemain = TimeSpan.FromTicks((timeTotal.Ticks / doneCount) * (totalCount - doneCount));
+
+                progressArgs.progressText = $"Smazáno {doneCount}/{totalCount} souborů";               
+                progressArgs.timeRemain = timeRemain;
+                worker.ReportProgress(progressPercent, progressArgs);
             }
 
         }
