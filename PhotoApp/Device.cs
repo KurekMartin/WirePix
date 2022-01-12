@@ -212,9 +212,11 @@ namespace PhotoApp
         public void GetFilesByDate(BackgroundWorker worker, DoWorkEventArgs e, Settings settings)
         {
             bool _checkDateRange;
-            ProgressUpdateArgs progressArgs = new ProgressUpdateArgs();
-            progressArgs.taskName = "Hledám soubory";
-            progressArgs.indeterminateTask = true;
+            ProgressUpdateArgs progressArgs = new ProgressUpdateArgs
+            {
+                taskName = "Hledám soubory",
+                indeterminateTask = true
+            };
             worker.ReportProgress(0, progressArgs);
 
             if (fileCheckDone && _lastSettings.Date == settings.Date)
@@ -575,10 +577,11 @@ namespace PhotoApp
             int totalCount = files.Count();
             int doneCount = 0;
             int progressPercent = 0;
-            ProgressUpdateArgs progressArgs = new ProgressUpdateArgs();
-
-            progressArgs.taskName = "Mažu stažené soubory ze zařízení";
-            progressArgs.progressText = $"Smazáno {doneCount}/{totalCount} souborů";
+            ProgressUpdateArgs progressArgs = new ProgressUpdateArgs
+            {
+                taskName = "Mažu stažené soubory ze zařízení",
+                progressText = $"Smazáno {doneCount}/{totalCount} souborů"
+            };
             worker.ReportProgress(progressPercent, progressArgs);
             foreach (string file in files)
             {
