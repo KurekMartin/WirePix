@@ -14,7 +14,6 @@ namespace PhotoApp.Dialogs
     {
         private SaveOptions saveResult;
         private MainWindow mainWindow;
-        //private string profilesPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "PhotoApp", "Profiles");
         public SaveDialog(MainWindow window, SaveOptions options = null)
         {
             InitializeComponent();

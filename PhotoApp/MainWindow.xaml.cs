@@ -122,8 +122,7 @@ namespace PhotoApp
 
         private void GetProfiles(string SelectProfile = "")
         {
-            var directory = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-            var profilesPath = Path.Combine(directory, "PhotoApp", "Profiles");
+            var profilesPath = Application.Current.Resources["profilesFolder"].ToString();
             string selectedProfile = SelectProfile;
             if (selectedProfile.Length == 0 && cbProfiles.SelectedItem != null)
             {
