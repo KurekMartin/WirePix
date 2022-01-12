@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
-using MediaDevices;
 using Usb.Events;
 using MaterialDesignThemes.Wpf;
 using PhotoApp.Dialogs;
@@ -12,9 +11,7 @@ using System.Linq;
 using System.Windows.Media;
 using System.Text.RegularExpressions;
 using PhotoApp.Models;
-using System.Xml.Serialization;
 using System.Runtime.CompilerServices;
-using ImageMagick;
 using System.Diagnostics;
 using System.Threading.Tasks;
 
@@ -39,11 +36,6 @@ namespace PhotoApp
 
     public partial class MainWindow : Window, INotifyPropertyChanged
     {
-        //private static string appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-        //public static readonly string tmpFolder = Path.Combine(Path.GetTempPath(), "PhotoApp");
-        //public static readonly string logFolder = Path.Combine(appData, "PhotoApp", "Logs");
-        //public static readonly string profilesFolder = Path.Combine(appData, "PhotoApp", "Profiles");
-        //public static readonly string dataFolder = Path.Combine(appData, "PhotoApp", "Data");
         private readonly string logFolder = Application.Current.Resources["logFolder"].ToString();
         private static readonly string tmpFolder = Application.Current.Resources["tmpFolder"].ToString();
 

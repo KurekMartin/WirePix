@@ -1,16 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using MediaDevices;
-using MetadataExtractor;
-using MetadataExtractor.Formats.Exif;
 using PhotoApp.Models;
 using ImageMagick;
-using System.Web;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Collections.Concurrent;
