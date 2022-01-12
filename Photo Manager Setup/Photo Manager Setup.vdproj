@@ -932,7 +932,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Photo Manager"
         "ProductCode" = "8:{F4D46984-A8BE-4B3F-8D35-6A08DD6265C4}"
-        "PackageCode" = "8:{D58DB959-E734-44BD-9A93-914D762DE587}"
+        "PackageCode" = "8:{D1EF30CE-A657-47E5-ACDD-3237ACF36065}"
         "UpgradeCode" = "8:{353A19C6-4684-41C1-B2BE-7E6F047F0586}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
