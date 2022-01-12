@@ -78,9 +78,15 @@ namespace PhotoApp
 
         public int UpdateDevices()
         {
-            IEnumerable<MediaDevice> devices = MediaDevice.GetDevices();
+            IEnumerable<MediaDevice> devices = MediaDevice.GetDevices().Where(d =>
+            {
+                d.Connect();
+                bool isMediaDevice = d.Protocol.ToUpper().Contains("MTP") || d.Protocol.ToUpper().Contains("PTP"); //filtr podle protokolu
+                d.Disconnect();
+                return isMediaDevice;
+            }); 
             DeviceInfo.Select(d => { d.Connected = false; return d; }).ToList();
-            //_connectedDevices.Clear();
+
             foreach (MediaDevice device in devices)
             {
                 var deviceInfo = DeviceInfo.Where(d => d.ID == device.DeviceId);

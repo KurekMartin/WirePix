@@ -172,7 +172,11 @@ namespace PhotoApp
                     _mediaDirList = new List<MediaDirectoryInfo>();
                     foreach (MediaDriveInfo drive in drives)
                     {
-                        GetMediaDirectory(_device, drive.RootDirectory, _mediaDirList);
+                        MediaDirectoryInfo root = drive.RootDirectory;
+                        if(root != null)
+                        {
+                            GetMediaDirectory(_device, root, _mediaDirList);
+                        }
                     }
                     _device.Disconnect();
                 }
@@ -182,7 +186,7 @@ namespace PhotoApp
         }
 
         private void GetMediaDirectory(MediaDevice device, MediaDirectoryInfo dir, List<MediaDirectoryInfo> mediaDirList)
-        {
+        {   
             var dirs = dir.EnumerateDirectories();
             var mediaDir = dirs.FirstOrDefault(d => d.Name == "DCIM");
 
