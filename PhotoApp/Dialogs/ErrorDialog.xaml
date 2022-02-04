@@ -13,7 +13,7 @@
         </Grid.RowDefinitions>
         <StackPanel Orientation="Horizontal" Grid.Row="0" Margin="10,10">
             <materialDesign:PackIcon Kind="AlertCircleOutline" Height="35" Width="35" Foreground="Red" />
-            <TextBlock x:Name="lblMessage" Text="Objevila se nějaká chyba" Margin="5,5" TextWrapping="Wrap" MaxWidth="235"/>
+            <TextBlock x:Name="lblMessage" Text="Objevila se nějaká chyba" Margin="5,5" TextWrapping="Wrap" MaxWidth="235" VerticalAlignment="Center"/>
         </StackPanel>
         <Button x:Name="btnOK" Content="OK" Margin="15,10" Grid.Row="1" Click="btnOK_Click"/>
     </Grid>

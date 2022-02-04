@@ -75,6 +75,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_72D7BCFDE34A43049B80ADA858F14054"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_76F7354C81DCFCA01847A152047C56FE"
         "OwnerKey" = "8:_70741A9CC78844C587E1C7277972C5DB"
         "MsmSig" = "8:_UNDEFINED"
@@ -89,6 +95,12 @@
         {
         "MsmKey" = "8:_784A5766105B35B82DA28834778E60C1"
         "OwnerKey" = "8:_76F7354C81DCFCA01847A152047C56FE"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_784A5766105B35B82DA28834778E60C1"
+        "OwnerKey" = "8:_FD8642279902D64D74BC2C1BFE72F20A"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -123,13 +135,13 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_C1BD01E15A2D4975825F96AEC0A5F32E"
-        "OwnerKey" = "8:_UNDEFINED"
+        "MsmKey" = "8:_EE5CFFC98CF18826F3034E858375E145"
+        "OwnerKey" = "8:_70741A9CC78844C587E1C7277972C5DB"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_EE5CFFC98CF18826F3034E858375E145"
+        "MsmKey" = "8:_FD8642279902D64D74BC2C1BFE72F20A"
         "OwnerKey" = "8:_70741A9CC78844C587E1C7277972C5DB"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -155,6 +167,12 @@
         {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_70741A9CC78844C587E1C7277972C5DB"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_FD8642279902D64D74BC2C1BFE72F20A"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -565,6 +583,26 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_72D7BCFDE34A43049B80ADA858F14054"
+            {
+            "SourcePath" = "8:..\\PhotoApp\\Icon\\icon.ico"
+            "TargetName" = "8:icon.ico"
+            "Tag" = "8:"
+            "Folder" = "8:_F168CDE34C7D44C7B88ECFB99B679460"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_76F7354C81DCFCA01847A152047C56FE"
             {
             "AssemblyRegister" = "3:1"
@@ -751,26 +789,6 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_C1BD01E15A2D4975825F96AEC0A5F32E"
-            {
-            "SourcePath" = "8:..\\PhotoApp\\baseline_photo_camera_black_48dp.ico"
-            "TargetName" = "8:baseline_photo_camera_black_48dp.ico"
-            "Tag" = "8:"
-            "Folder" = "8:_14203058B299443EBC1FFAD01C983BFC"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_EE5CFFC98CF18826F3034E858375E145"
             {
             "AssemblyRegister" = "3:1"
@@ -799,6 +817,37 @@
             "PackageAs" = "3:1"
             "Register" = "3:1"
             "Exclude" = "11:TRUE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_FD8642279902D64D74BC2C1BFE72F20A"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:Octokit, Version=0.50.0.0, Culture=neutral, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_FD8642279902D64D74BC2C1BFE72F20A"
+                    {
+                    "Name" = "8:Octokit.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:Octokit.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_14203058B299443EBC1FFAD01C983BFC"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
@@ -880,6 +929,17 @@
             "Property" = "8:TARGETDIR"
                 "Folders"
                 {
+                    "{9EF0B969-E518-4E46-987F-47570745A589}:_F168CDE34C7D44C7B88ECFB99B679460"
+                    {
+                    "Name" = "8:icon"
+                    "AlwaysCreate" = "11:FALSE"
+                    "Condition" = "8:"
+                    "Transitive" = "11:FALSE"
+                    "Property" = "8:_5C967E53EBAF470E97ED782278254C78"
+                        "Folders"
+                        {
+                        }
+                    }
                 }
             }
             "{1525181F-901A-416C-8A58-119130FE478E}:_66F287BDD45A48E7B93EBC124CC31C53"
@@ -931,15 +991,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Photo Manager"
-        "ProductCode" = "8:{F4D46984-A8BE-4B3F-8D35-6A08DD6265C4}"
-        "PackageCode" = "8:{D1EF30CE-A657-47E5-ACDD-3237ACF36065}"
+        "ProductCode" = "8:{BA54AB14-6CDF-4E6B-AF7B-B45D3506D084}"
+        "PackageCode" = "8:{A500A1DA-7BF2-4220-8D92-D544863C3832}"
         "UpgradeCode" = "8:{353A19C6-4684-41C1-B2BE-7E6F047F0586}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
-        "RemovePreviousVersions" = "11:FALSE"
+        "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:1.0.0"
+        "ProductVersion" = "8:1.0.8"
         "Manufacturer" = "8:Martin Kurek"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
@@ -949,7 +1009,7 @@
         "Keywords" = "8:"
         "ARPCOMMENTS" = "8:Aplikace pro správu fotografií"
         "ARPURLINFOABOUT" = "8:"
-        "ARPPRODUCTICON" = "8:_C1BD01E15A2D4975825F96AEC0A5F32E"
+        "ARPPRODUCTICON" = "8:_72D7BCFDE34A43049B80ADA858F14054"
         "ARPIconIndex" = "3:0"
         "SearchPath" = "8:"
         "UseSystemSearchPath" = "11:TRUE"
@@ -1052,21 +1112,7 @@
         }
         "Shortcut"
         {
-            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_79EC32D16E7E4880ADAA82FA2C3AC9E7"
-            {
-            "Name" = "8:Photo Manager"
-            "Arguments" = "8:"
-            "Description" = "8:"
-            "ShowCmd" = "3:1"
-            "IconIndex" = "3:0"
-            "Transitive" = "11:FALSE"
-            "Target" = "8:_70741A9CC78844C587E1C7277972C5DB"
-            "Folder" = "8:_7D87A68C36CF4E9C99E39C0285AF2EE8"
-            "WorkingFolder" = "8:_14203058B299443EBC1FFAD01C983BFC"
-            "Icon" = "8:_C1BD01E15A2D4975825F96AEC0A5F32E"
-            "Feature" = "8:"
-            }
-            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_CB508549E6BE42E8A56C7E37DC934E46"
+            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_BCA46DFC7B8A442AA663F34C76E78082"
             {
             "Name" = "8:Photo Manager"
             "Arguments" = "8:"
@@ -1077,7 +1123,21 @@
             "Target" = "8:_70741A9CC78844C587E1C7277972C5DB"
             "Folder" = "8:_89DD99A268B14A03AFBD6E0A2468E719"
             "WorkingFolder" = "8:_14203058B299443EBC1FFAD01C983BFC"
-            "Icon" = "8:_C1BD01E15A2D4975825F96AEC0A5F32E"
+            "Icon" = "8:_72D7BCFDE34A43049B80ADA858F14054"
+            "Feature" = "8:"
+            }
+            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_E52F8BC0929F4C6E9943093BBE374630"
+            {
+            "Name" = "8:Photo Manager"
+            "Arguments" = "8:"
+            "Description" = "8:"
+            "ShowCmd" = "3:1"
+            "IconIndex" = "3:0"
+            "Transitive" = "11:FALSE"
+            "Target" = "8:_70741A9CC78844C587E1C7277972C5DB"
+            "Folder" = "8:_7D87A68C36CF4E9C99E39C0285AF2EE8"
+            "WorkingFolder" = "8:_14203058B299443EBC1FFAD01C983BFC"
+            "Icon" = "8:_72D7BCFDE34A43049B80ADA858F14054"
             "Feature" = "8:"
             }
         }
