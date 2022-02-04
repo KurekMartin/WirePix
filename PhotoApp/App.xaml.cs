@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Deployment.Application;
 using System.IO;
+using System.Reflection;
 using System.Windows;
 
 namespace PhotoApp
@@ -7,7 +9,7 @@ namespace PhotoApp
     /// <summary>
     /// Interakční logika pro App.xaml
     /// </summary>
-    public partial class App : Application
+    public partial class App : System.Windows.Application
     {
         private void Application_Startup(object sender, StartupEventArgs e)
         {
@@ -19,14 +21,33 @@ namespace PhotoApp
             Resources.Add("dataFolder", Path.Combine(appData, mainFolder, "Data"));
 
             var keys = Current.Resources.Keys.GetEnumerator();
-            while(keys.MoveNext())
+            while (keys.MoveNext())
             {
                 string key = keys.Current.ToString();
-                if(key.Contains("Folder"))
+                if (key.Contains("Folder"))
                 {
                     Directory.CreateDirectory(Current.Resources[key].ToString());
                 }
-                
+
+            }
+
+
+            //var github = new GitHubClient(new ProductHeaderValue("MartinKurek"));
+            //var release = await github.Repository.Release.GetLatest("octokit", "octokit.net");
+            //Console.WriteLine(release.TagName);
+        }
+        public string Version
+        {
+            get
+            {
+                try
+                {
+                    return ApplicationDeployment.CurrentDeployment.CurrentVersion.ToString(3);
+                }
+                catch (Exception)
+                {
+                    return Assembly.GetExecutingAssembly().GetName().Version.ToString(3);
+                }
             }
         }
     }
