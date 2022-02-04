@@ -761,6 +761,12 @@ namespace PhotoApp
                 ListBoxDevices.IsEnabled = true;
             }
         }
+
+        private async void btnInfoClick(object sender, RoutedEventArgs e)
+        {
+            var AppInfoDialog = new AppInfoDialog(this);
+            await DialogHost.Show(AppInfoDialog, "RootDialog");
+        }
     }
 }
 

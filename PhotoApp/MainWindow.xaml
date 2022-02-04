@@ -14,7 +14,7 @@
         TextOptions.TextFormattingMode="Ideal" 
         TextOptions.TextRenderingMode="Auto"        
         Background="{DynamicResource MaterialDesignPaper}"
-        FontFamily="{DynamicResource MaterialDesignFont}" MinWidth="800" MinHeight="600" Height="623" Width="800" SizeToContent="Height" ResizeMode="CanMinimize" Closing="Window_Closing" WindowStartupLocation="CenterScreen" Icon="baseline_photo_camera_black_48dp.ico">
+        FontFamily="{DynamicResource MaterialDesignFont}" MinWidth="800" MinHeight="600" Height="698" Width="800" SizeToContent="Height" ResizeMode="CanMinimize" Closing="Window_Closing" WindowStartupLocation="CenterScreen" Icon="/icon.ico">
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVisConverter" />
         <local:EnumToBoleanConverter x:Key="EnumToBool"/>
@@ -29,6 +29,25 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
+            <materialDesign:Card Margin="10,5" Padding="10" Grid.Row="0" UniformCornerRadius="5">
+                <StackPanel Orientation="Vertical" HorizontalAlignment="Left">
+                    <Button
+                            ToolTip="O aplikaci"
+                            Width="Auto"
+                            x:Name="btnInfo" Visibility="Visible" Click="btnInfoClick">
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:PackIcon
+                                        Kind="InfoCircleOutline"
+                                        Height="Auto"
+                                        Width="Auto"
+                                        />
+                            <TextBlock Text="O aplikaci" Margin="5,0,0,0" TextAlignment="Center" VerticalAlignment="Center"/>
+                        </StackPanel>
+
+                    </Button>
+                </StackPanel>
+
+            </materialDesign:Card>
             <!--<Menu Grid.Row="0"
   IsMainMenu="True" VerticalAlignment="Top" Height="30" BorderBrush="#4C000000" BorderThickness="0,0,0,1">
                 <MenuItem
@@ -119,7 +138,7 @@
 
                             <StackPanel Orientation="Horizontal" Margin="5,5,5,10" VerticalAlignment="Top" Height="Auto">
                                 <StackPanel Orientation="Vertical" Margin="5,0">
-                                    <ListBox x:Name="ListBoxDevices" ItemsSource="{Binding DeviceList.ConnectedDevicesInfo,UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Height="100" VerticalAlignment="Top" Width="Auto" MinWidth="150" SelectionChanged="ListBoxDevices_SelectionChanged" Background="#00000000" BorderThickness="1" BorderBrush="Black">
+                                    <ListBox x:Name="ListBoxDevices" ItemsSource="{Binding DeviceList.ConnectedDevicesInfo,UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Height="100" VerticalAlignment="Top" Width="Auto" MinWidth="150" SelectionChanged="ListBoxDevices_SelectionChanged" Background="#00000000" BorderThickness="1" BorderBrush="Black" d:ItemsSource="{d:SampleData ItemCount=5}">
                                         <ListBox.ItemTemplate>
                                             <DataTemplate>
                                                 <TextBlock Text="{Binding Name}"/>
@@ -196,7 +215,11 @@
                         </Grid.ColumnDefinitions>
                         <materialDesign:Card Margin="0,0,5,0" Grid.Column="0" UniformCornerRadius="5">
                             <StackPanel Orientation="Vertical" Margin="0,0,0,5">
-                                <TextBlock Style="{StaticResource MaterialDesignHeadline6TextBlock}" Text="Profil" Padding="5" FontSize="15" Background="#FF00BCD4" TextAlignment="Center"/>
+                                <materialDesign:ColorZone
+                                    Mode="PrimaryMid">
+                                    <TextBlock Style="{StaticResource MaterialDesignHeadline6TextBlock}" Text="Profil" Padding="5" FontSize="15" TextAlignment="Center"/>
+                                </materialDesign:ColorZone>
+
                                 <Grid Margin="5">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*"/>
@@ -224,7 +247,10 @@
                         </materialDesign:Card>
                         <materialDesign:Card Margin="5,0,0,0" Grid.Column="1" UniformCornerRadius="5">
                             <StackPanel Orientation="Vertical">
-                                <TextBlock Style="{StaticResource MaterialDesignHeadline6TextBlock}" Text="Úložiště" Padding="5" FontSize="15" Background="#FF00BCD4" TextAlignment="Center"/>
+                                <materialDesign:ColorZone
+                                    Mode="PrimaryMid">
+                                    <TextBlock Style="{StaticResource MaterialDesignHeadline6TextBlock}" Text="Úložiště" Padding="5" FontSize="15" TextAlignment="Center"/>
+                                </materialDesign:ColorZone>
                                 <StackPanel Orientation="Horizontal" Margin="10,5">
                                     <StackPanel Orientation="Vertical">
                                         <Button Content="Vybrat hlavní složku" x:Name="btnMainFolder" HorizontalAlignment="Left" Margin="0,5,0,0" Padding="15,5" VerticalAlignment="Top" Click="btnMainFolder_Click" Width="Auto" Height="Auto"/>
@@ -251,7 +277,9 @@
                         </Grid.ColumnDefinitions>
                         <materialDesign:Card Margin="0,0,5,0" UniformCornerRadius="5" Grid.Column="0">
                             <StackPanel Orientation="Vertical">
-                                <TextBlock Style="{StaticResource MaterialDesignHeadline6TextBlock}" Text="Ostatní" Padding="5" FontSize="15" Background="#FF00BCD4" TextAlignment="Center"/>
+                                <materialDesign:ColorZone Mode="PrimaryMid">
+                                    <TextBlock Style="{StaticResource MaterialDesignHeadline6TextBlock}" Text="Ostatní" Padding="5" FontSize="15" TextAlignment="Center"/>
+                                </materialDesign:ColorZone>
                                 <CheckBox Content="Záloha" x:Name="cbBackup" Margin="10,5" IsChecked="{Binding Settings.Backup, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
                                 <StackPanel Orientation="Vertical" Margin="10,0" x:Name="spBackup" Visibility="{Binding Settings.Backup, Converter={StaticResource BoolToVisConverter},UpdateSourceTrigger=PropertyChanged}">
                                     <StackPanel Orientation="Horizontal" Margin="10,0">
@@ -297,7 +325,10 @@
 
                         <materialDesign:Card Margin="5,0,0,0" UniformCornerRadius="5" Grid.Column="1">
                             <StackPanel Orientation="Vertical">
-                                <TextBlock Style="{StaticResource MaterialDesignHeadline6TextBlock}" Text="Stažení" Padding="5" FontSize="15" Background="#FF00BCD4" TextAlignment="Center"/>
+                                <materialDesign:ColorZone Mode="PrimaryMid">
+                                    <TextBlock Style="{StaticResource MaterialDesignHeadline6TextBlock}" Text="Stažení" Padding="5" FontSize="15" TextAlignment="Center"/>
+                                </materialDesign:ColorZone>
+
                                 <StackPanel Margin="10,5" Orientation="Vertical">
                                     <CheckBox Content="Kontrola souborů" x:Name="cbCheckFiles" IsChecked="{Binding Settings.CheckFiles,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Margin="0,2"/>
                                     <CheckBox Content="Smazat stažené soubory ze zařízení" x:Name="cbDeleteFiles" IsChecked="{Binding Settings.DeleteFiles,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Margin="0,2"/>
