@@ -43,7 +43,6 @@
                                         />
                             <TextBlock Text="O aplikaci" Margin="5,0,0,0" TextAlignment="Center" VerticalAlignment="Center"/>
                         </StackPanel>
-
                     </Button>
                 </StackPanel>
 

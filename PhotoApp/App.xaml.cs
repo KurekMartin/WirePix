@@ -29,12 +29,7 @@ namespace PhotoApp
                     Directory.CreateDirectory(Current.Resources[key].ToString());
                 }
 
-            }
-
-
-            //var github = new GitHubClient(new ProductHeaderValue("MartinKurek"));
-            //var release = await github.Repository.Release.GetLatest("octokit", "octokit.net");
-            //Console.WriteLine(release.TagName);
+            }                       
         }
         public string Version
         {

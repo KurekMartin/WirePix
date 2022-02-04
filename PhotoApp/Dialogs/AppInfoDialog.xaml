@@ -5,21 +5,27 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:PhotoApp.Dialogs"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-             mc:Ignorable="d" d:DesignWidth="800" Width="Auto" Height="Auto">
+             mc:Ignorable="d" Width="Auto" Height="Auto">
     <materialDesign:Card>
         <StackPanel Orientation="Vertical">
             <materialDesign:ColorZone Mode="PrimaryMid">
                 <TextBlock Style="{StaticResource MaterialDesignHeadline6TextBlock}" Text="O Aplikaci" Padding="5" TextAlignment="Center"/>
             </materialDesign:ColorZone>
-            <StackPanel Orientation="Vertical" Margin="10">
-                <StackPanel Orientation="Horizontal">
+            <StackPanel Orientation="Vertical" Margin="10" >
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
                     <TextBlock VerticalAlignment="Center" Style="{StaticResource MaterialDesignBody2TextBlock}" Text="Verze aplikace: " FontWeight="Bold"/>
-                    <TextBlock Text="{Binding Path=Version, Source={x:Static Application.Current}}"/>
+                    <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}" Text="{Binding Path=Version, Source={x:Static Application.Current}}" d:Text="1.0.0" VerticalAlignment="Center"/>
+                    <Button x:Name="btnCheckUpdate" Content="Zkontolovat aktualizace" Margin="10,0,0,0" Click="btnCheckUpdate_Click"
+                            Style="{StaticResource MaterialDesignRaisedButton}"
+                            materialDesign:ButtonProgressAssist.Value="-1"
+                            materialDesign:ButtonProgressAssist.IsIndicatorVisible="False"
+                            materialDesign:ButtonProgressAssist.IsIndeterminate="True"/>
                 </StackPanel>
+                <TextBlock x:Name="tbVersionInfo" Style="{StaticResource MaterialDesignBody2TextBlock}" Visibility="Collapsed" d:Visibility="Visible" d:Text="Version Info"/>
             </StackPanel>
-            
+
             <Button x:Name="btnOK" Content="OK" Margin="15,10" Grid.Row="1" Click="btnOK_Click"/>
         </StackPanel>
     </materialDesign:Card>
-    
+
 </UserControl>
