@@ -5,16 +5,23 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:PhotoApp.Dialogs"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-             mc:Ignorable="d" d:DesignWidth="800" Width="300" Height="114.871">
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
-        <StackPanel Orientation="Horizontal" Grid.Row="0" Margin="10,10">
-            <materialDesign:PackIcon Kind="AlertCircleOutline" Height="35" Width="35" Foreground="Red" />
-            <TextBlock x:Name="lblMessage" Text="Objevila se nějaká chyba" Margin="5,5" TextWrapping="Wrap" MaxWidth="235" VerticalAlignment="Center"/>
+             mc:Ignorable="d" d:DesignWidth="800" Width="300" Height="Auto">
+    <materialDesign:Card>
+        <StackPanel Orientation="Vertical">
+            <materialDesign:ColorZone Background="Red">
+                <TextBlock Style="{StaticResource MaterialDesignHeadline6TextBlock}" Text="Chyba" Padding="5" TextAlignment="Center"/>
+            </materialDesign:ColorZone>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <StackPanel Orientation="Horizontal" Grid.Row="0" Margin="10,10">
+                    <materialDesign:PackIcon Kind="AlertCircleOutline" Height="35" Width="35" Foreground="Red" />
+                    <TextBlock x:Name="lblMessage" Text="Objevila se nějaká chyba" Margin="5,5" TextWrapping="Wrap" MaxWidth="235" VerticalAlignment="Center"/>
+                </StackPanel>
+                <Button x:Name="btnOK" Content="OK" Margin="15,10" Grid.Row="1" Click="btnOK_Click"/>
+            </Grid>
         </StackPanel>
-        <Button x:Name="btnOK" Content="OK" Margin="15,10" Grid.Row="1" Click="btnOK_Click"/>
-    </Grid>
+    </materialDesign:Card>
 </UserControl>
