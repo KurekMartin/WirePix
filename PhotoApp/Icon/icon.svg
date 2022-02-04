@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="48"
+   height="48"
+   viewBox="0 0 48 48"
+   version="1.1"
+   id="svg5"
+   inkscape:version="1.1.1 (3bf5ae0d25, 2021-09-20)"
+   sodipodi:docname="icon.svg"
+   inkscape:export-filename="D:\Skola\Bakalářská práce\PhotoApp\PhotoApp\Icon\icon.png"
+   inkscape:export-xdpi="300"
+   inkscape:export-ydpi="300"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview7"
+     pagecolor="#505050"
+     bordercolor="#eeeeee"
+     borderopacity="1"
+     inkscape:pageshadow="0"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="0"
+     inkscape:document-units="px"
+     showgrid="false"
+     showguides="true"
+     inkscape:guide-bbox="true"
+     inkscape:snap-page="true"
+     inkscape:snap-bbox="true"
+     inkscape:snap-nodes="true"
+     inkscape:zoom="16"
+     inkscape:cx="13.34375"
+     inkscape:cy="19.65625"
+     inkscape:window-width="2560"
+     inkscape:window-height="1369"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1">
+    <sodipodi:guide
+       position="-33.5625,4"
+       orientation="0,1"
+       id="guide2024"
+       inkscape:label=""
+       inkscape:locked="false"
+       inkscape:color="rgb(0,0,255)" />
+    <sodipodi:guide
+       position="-29.8125,44"
+       orientation="0,1"
+       id="guide2026"
+       inkscape:label=""
+       inkscape:locked="false"
+       inkscape:color="rgb(0,0,255)" />
+    <sodipodi:guide
+       position="4,44"
+       orientation="-1,0"
+       id="guide2028"
+       inkscape:label=""
+       inkscape:locked="false"
+       inkscape:color="rgb(0,0,255)" />
+    <sodipodi:guide
+       position="44,44"
+       orientation="-1,0"
+       id="guide2030"
+       inkscape:label=""
+       inkscape:locked="false"
+       inkscape:color="rgb(0,0,255)" />
+    <sodipodi:guide
+       position="-3.6875,22"
+       orientation="0,1"
+       id="guide3103"
+       inkscape:label=""
+       inkscape:locked="false"
+       inkscape:color="rgb(0,0,255)" />
+  </sodipodi:namedview>
+  <defs
+     id="defs2" />
+  <g
+     inkscape:groupmode="layer"
+     id="layer2"
+     inkscape:label="back"
+     style="display:inline">
+    <rect
+       style="fill:#00bcd4;fill-opacity:1;stroke:#50b83a;stroke-width:0"
+       id="rect140"
+       width="48"
+       height="48"
+       x="0"
+       y="0"
+       rx="8"
+       ry="8" />
+  </g>
+  <g
+     inkscape:label="Cam"
+     inkscape:groupmode="layer"
+     id="layer1"
+     style="display:inline">
+    <g
+       inkscape:groupmode="layer"
+       id="layer4"
+       inkscape:label="circ"
+       style="display:none" />
+    <g
+       style="fill:#000000"
+       id="g116"
+       transform="scale(2)">
+      <path
+         d="M 0,0 H 24 V 24 H 0 Z"
+         fill="none"
+         id="path101" />
+      <g
+         style="fill:#000000"
+         id="g1895">
+        <path
+           d="M 0,0 H 24 V 24 H 0 Z"
+           fill="none"
+           id="path1880" />
+        <g
+           id="g1918">
+          <g
+             id="g2002"
+             transform="translate(0,0.3370872)">
+            <path
+               d="m 9,2.6629126 -1.83,2 H 4 c -1.1,0 -2,0.9 -2,2 V 18.662913 c 0,1.1 0.9,2 2,2 h 16 c 1.1,0 2,-0.9 2,-2 V 6.6629126 c 0,-1.1 -0.9,-2 -2,-2 h -3.17 l -1.83,-2 z m 3,15.0000004 c -2.76,0 -5,-2.24 -5,-5 0,-2.7600004 2.24,-5.0000004 5,-5.0000004 2.76,0 5,2.24 5,5.0000004 0,2.76 -2.24,5 -5,5 z"
+               id="path1884" />
+          </g>
+        </g>
+      </g>
+    </g>
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer3"
+     inkscape:label="Arrow"
+     transform="scale(2)"
+     style="display:none">
+    <g
+       style="fill:#000000"
+       id="g2022"
+       transform="translate(0,3.1875)">
+      <g
+         id="g2006">
+        <rect
+           fill="none"
+           height="24"
+           width="24"
+           id="rect2004"
+           x="0"
+           y="0" />
+      </g>
+      <g
+         id="g2010"
+         transform="matrix(0.57582032,0,0,0.5742126,-8.7682345,5.3099352)"
+         style="fill:#ffffff;fill-opacity:1">
+        <g
+           id="g3674"
+           clip-path="none"
+           style="mix-blend-mode:multiply">
+          <g
+             inkscape:label="Clip"
+             id="g3672"
+             style="mix-blend-mode:normal">
+            <g
+               id="g3684"
+               clip-path="none">
+              <ellipse
+                 cx="-36.136108"
+                 cy="7.7600713"
+                 id="circle1882"
+                 style="display:inline;fill:#000000;stroke-width:2.20743"
+                 transform="scale(-1,1)"
+                 rx="7.0539136"
+                 ry="7.0736632" />
+              <path
+                 d="m 43.136612,7.8412853 h -4 V 1.4964421 h -6 v 6.3448432 h -4 l 7,7.0197927 z"
+                 id="path2008"
+                 style="fill:#ffffff;fill-opacity:1"
+                 sodipodi:nodetypes="cccccccc" />
+              <ellipse
+                 cx="-36.136108"
+                 cy="7.7600713"
+                 id="ellipse5012"
+                 style="display:inline;fill:#000000;stroke-width:2.20743"
+                 transform="scale(-1,1)"
+                 rx="7.0539136"
+                 ry="7.0736632" />
+              <path
+                 d="m 43.136612,7.8412853 h -4 V 1.4964421 h -6 v 6.3448432 h -4 l 7,7.0197927 z"
+                 id="path5014"
+                 style="fill:#ffffff;fill-opacity:1"
+                 sodipodi:nodetypes="cccccccc" />
+            </g>
+          </g>
+        </g>
+      </g>
+    </g>
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer5"
+     inkscape:label="Center"
+     transform="matrix(1.1516406,0,0,1.1484252,-17.536469,16.99487)"
+     style="display:inline;mix-blend-mode:darken">
+    <ellipse
+       cx="-36.136108"
+       cy="7.7600713"
+       id="ellipse5016"
+       style="display:inline;mix-blend-mode:normal;fill:#000000;fill-opacity:1;stroke-width:2.29149"
+       transform="scale(-1,1)"
+       rx="7.3225384"
+       ry="7.34304"
+       mask="none" />
+    <path
+       d="M 42.214017,7.8857647 H 38.741215 V 2.3771682 h -5.209204 v 5.5085965 h -3.472802 l 6.077404,6.0945883 z"
+       id="path5382"
+       style="display:inline;mix-blend-mode:normal;fill:#ffffff;fill-opacity:1;stroke-width:0.8682"
+       sodipodi:nodetypes="cccccccc" />
+  </g>
+</svg>
