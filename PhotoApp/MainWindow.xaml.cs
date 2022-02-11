@@ -73,7 +73,6 @@ namespace PhotoApp
 
             spDeviceInfo.Visibility = Visibility.Hidden;
 
-
             ListConnectedDevices();
 
             //udalost pripojeni/odpojeni zarizeni -> aktualizace seznamu
@@ -107,7 +106,7 @@ namespace PhotoApp
             }
             else
             {
-                spDeviceInfo.Visibility = Visibility.Hidden;
+                spDeviceInfo.Visibility = Visibility.Collapsed;
                 ListBoxDevices.IsEnabled = true;
             }
         }
@@ -131,9 +130,9 @@ namespace PhotoApp
 
             Profiles = Directory.GetFiles(profilesPath, "*.xml").Select(f => Path.GetFileNameWithoutExtension(f)).ToList();
 
-            cbProfiles.SelectedIndex = Profiles.IndexOf(selectedProfile);
-
             OnPropertyChanged("Profiles");
+
+            cbProfiles.SelectedIndex = Profiles.IndexOf(selectedProfile);
         }
 
         //vyhledani vsech souboru v adresari (hleda i v podadresarich)
@@ -750,7 +749,7 @@ namespace PhotoApp
         private void lblDeviceName_TextChanged(object sender, TextChangedEventArgs e)
         {
             TextBox tb = (TextBox)sender;
-            if (tb.Text.Length == 0)
+            if (DeviceList.SelectedIndex != -1 && tb.Text.Length == 0)
             {
                 SetErrorMessage(tbDeviceNameError, "Zadejte název zařízení");
                 ListBoxDevices.IsEnabled = false;
