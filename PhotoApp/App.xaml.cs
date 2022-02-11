@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Deployment.Application;
 using System.IO;
 using System.Reflection;
@@ -19,6 +20,7 @@ namespace PhotoApp
             Resources.Add("logFolder", Path.Combine(appData, mainFolder, "Logs"));
             Resources.Add("profilesFolder", Path.Combine(appData, mainFolder, "Profiles"));
             Resources.Add("dataFolder", Path.Combine(appData, mainFolder, "Data"));
+            Resources.Add("crashFolder", Path.Combine(appData, mainFolder, "Crash Reports"));
 
             var keys = Current.Resources.Keys.GetEnumerator();
             while (keys.MoveNext())
@@ -29,8 +31,10 @@ namespace PhotoApp
                     Directory.CreateDirectory(Current.Resources[key].ToString());
                 }
 
-            }                       
+            }
+            
         }
+
         public string Version
         {
             get
