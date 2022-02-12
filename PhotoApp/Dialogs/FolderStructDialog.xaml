@@ -46,7 +46,7 @@
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
 
-                    <StackPanel x:Name="spFolderStructure" Grid.Column="1" HorizontalAlignment="Left" Height="Auto" Margin="10" Grid.Row="1" VerticalAlignment="Top" Width="Auto"/>
+                    <StackPanel x:Name="spFolderStructure" Grid.Column="1" HorizontalAlignment="Left" Height="Auto" Margin="10" Grid.Row="1" VerticalAlignment="Top" Width="Auto" MinWidth="150"/>
                 </Grid>
                 <TextBlock x:Name="tbError" Text="" Margin="15,5,15,0" Foreground="#DDC90000" Style="{StaticResource MaterialDesignBody2TextBlock}"/>
                 <Button x:Name="btnDone" Content="Hotovo" Margin="15,5" Click="btnDone_Click"/>

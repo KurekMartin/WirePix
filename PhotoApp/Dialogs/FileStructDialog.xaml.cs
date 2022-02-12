@@ -29,10 +29,10 @@ namespace PhotoApp.Dialogs
 
             fileStructure = Tags.TagsToList(initStructure);
 
-            BaseStructDialog.TagsToStackPanel(spNameStruct, fileStructure, TagClick);
+            BaseStructDialog.TagsToStackPanel(spNameStruct, fileStructure, TagClick, mainWindow.mainTextStyle);
 
             BaseStructDialog.SelectTag(spNameStruct, selectedTag, selectedTag);
-            TextBlock tb = BaseStructDialog.FindTextBlockByIndex(spNameStruct, selectedTag);
+            TextBlock tb = BaseStructDialog.FindTextBlockByIndex<TextBlock>(spNameStruct, selectedTag);
             BaseStructDialog.ShowControls(spControls, tb.Text);
         }
 
@@ -52,14 +52,14 @@ namespace PhotoApp.Dialogs
                 fileStructure = retVal.tags;
             }
 
-            BaseStructDialog.TagsToStackPanel(spNameStruct, fileStructure, TagClick);
+            BaseStructDialog.TagsToStackPanel(spNameStruct, fileStructure, TagClick, mainWindow.mainTextStyle);
             TagsToName();
 
             if (fileStructure.Count() > 0)
             {
                 //SelectTag(fileStructure.Count() - 1);
                 selectedTag = BaseStructDialog.SelectTag(spNameStruct, selectedTag, fileStructure.Count() - 1);
-                TextBlock tb = BaseStructDialog.FindTextBlockByIndex(spNameStruct, selectedTag);
+                TextBlock tb = BaseStructDialog.FindTextBlockByIndex<TextBlock>(spNameStruct, selectedTag);
                 BaseStructDialog.ShowControls(spControls, tb.Text);
             }
 
@@ -95,19 +95,26 @@ namespace PhotoApp.Dialogs
                 fileStructure = cReturn.tagStructure;
 
 
-                BaseStructDialog.TagsToStackPanel(spNameStruct, fileStructure, TagClick);
+                BaseStructDialog.TagsToStackPanel(spNameStruct, fileStructure, TagClick, mainWindow.mainTextStyle);
                 TagsToName();
 
                 //SelectTag(index);
                 selectedTag = BaseStructDialog.SelectTag(spNameStruct, selectedTag, cReturn.index);
-                TextBlock tb = BaseStructDialog.FindTextBlockByIndex(spNameStruct, selectedTag);
+                TextBlock tb = BaseStructDialog.FindTextBlockByIndex<TextBlock>(spNameStruct, selectedTag);
                 BaseStructDialog.ShowControls(spControls, tb.Text);
             }
         }
 
         private void TagsToName()
         {
-
+            if(fileStructure.Count == 0)
+            {
+                spFileName.Visibility = Visibility.Hidden;
+            }
+            else
+            {
+                spFileName.Visibility = Visibility.Visible;
+            }
             //dosazení hodnot za tagy
             string fileName = Tags.TagsToValues(fileStructure);
             if (fileName != "")
@@ -127,7 +134,7 @@ namespace PhotoApp.Dialogs
             }
 
 
-            BaseStructDialog.TagsToStackPanel(spNameStruct, fileStructure, TagClick);
+            BaseStructDialog.TagsToStackPanel(spNameStruct, fileStructure, TagClick, mainWindow.mainTextStyle);
             TagsToName();
 
             //pokud smažeme poslední tag -> vybere se opět poslední
@@ -138,7 +145,7 @@ namespace PhotoApp.Dialogs
             }
             //selectedTag(selectedTag);
             selectedTag = BaseStructDialog.SelectTag(spNameStruct, selectedTag, selectedTag);
-            TextBlock tb = BaseStructDialog.FindTextBlockByIndex(spNameStruct, selectedTag);
+            TextBlock tb = BaseStructDialog.FindTextBlockByIndex<TextBlock>(spNameStruct, selectedTag);
             BaseStructDialog.ShowControls(spControls, tb.Text);
         }
 
@@ -157,12 +164,12 @@ namespace PhotoApp.Dialogs
                 }
                 fileStructure[textPos] += $"({tbCustomText.Text})";
 
-                BaseStructDialog.TagsToStackPanel(spNameStruct, fileStructure, TagClick);
+                BaseStructDialog.TagsToStackPanel(spNameStruct, fileStructure, TagClick, mainWindow.mainTextStyle);
                 TagsToName();
 
                 //SelectTag(textPos);
                 selectedTag = BaseStructDialog.SelectTag(spNameStruct, selectedTag, textPos);
-                TextBlock tb = BaseStructDialog.FindTextBlockByIndex(spNameStruct, selectedTag);
+                TextBlock tb = BaseStructDialog.FindTextBlockByIndex<TextBlock>(spNameStruct, selectedTag);
                 BaseStructDialog.ShowControls(spControls, tb.Text);
             }
 
@@ -184,7 +191,7 @@ namespace PhotoApp.Dialogs
             if (i > -1)
             {
                 selectedTag = BaseStructDialog.SelectTag(spNameStruct, selectedTag, i);
-                TextBlock tb = BaseStructDialog.FindTextBlockByIndex(spNameStruct, selectedTag);
+                TextBlock tb = BaseStructDialog.FindTextBlockByIndex<TextBlock>(spNameStruct, selectedTag);
                 BaseStructDialog.ShowControls(spControls, tb.Text);
 
                 tbError.Text = $"Chybí hodnota pro {Tags.GetTagByCode(Properties.Resources.CustomText).visibleText}.\n" +

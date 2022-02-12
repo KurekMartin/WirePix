@@ -168,7 +168,7 @@
                                         <StackPanel Orientation="Horizontal" Margin="0,3">
                                             <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}" Text="Výrobce: " HorizontalAlignment="Left" VerticalAlignment="Top" FontWeight="Bold"/>
                                             <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}" x:Name="lblManu" Text="{Binding DeviceList.SelectedDevice.Manufacturer}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-                                        </StackPanel>                                        
+                                        </StackPanel>
                                         <StackPanel Orientation="Horizontal" Margin="0,3">
                                             <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}" Text="Stav: " FontWeight="Bold"/>
                                             <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}" x:Name="lblDeviceStatus" Text="{Binding DeviceList.SelectedDevice.Status,Converter={StaticResource IntToDeviceStatus},UpdateSourceTrigger=PropertyChanged}"/>
@@ -262,19 +262,42 @@
                                 </materialDesign:ColorZone>
                                 <StackPanel Orientation="Horizontal" Margin="10,5">
                                     <StackPanel Orientation="Vertical">
-                                        <Button Content="Vybrat hlavní složku" x:Name="btnMainFolder" HorizontalAlignment="Left" Margin="0,5,0,0" Padding="15,5" VerticalAlignment="Top" Click="btnMainFolder_Click" Width="Auto" Height="Auto"/>
+                                        <Button x:Name="btnMainFolder" HorizontalAlignment="Left" Margin="0,5,0,0" Padding="15,5" VerticalAlignment="Top" Click="btnMainFolder_Click" Width="Auto" Height="Auto">
+                                            <StackPanel Orientation="Horizontal">
+                                                <materialDesign:PackIcon Kind="Folder"/>
+                                                <TextBlock Text="Vybrat hlavní složku" Margin="5,0"/>
+                                            </StackPanel>
+                                        </Button>
                                         <TextBlock x:Name="tbRootError" Foreground="Red" Visibility="Collapsed" Margin="0,0,0,3"/>
-                                        <Button Content="Pojmenování složek" x:Name="btnFolderStruct" HorizontalAlignment="Left" Margin="0,10,0,0" Padding="15,5" VerticalAlignment="Top" Click="btnFolderStruct_Click" Width="Auto" Height="Auto"/>
-                                        <TextBlock x:Name="tbFolderStructError" Foreground="Red" Visibility="Collapsed" Margin="0,0,0,3"/>
-                                        <Button Content="Název souboru" x:Name="btnFileStruct" HorizontalAlignment="Left" Margin="0,10,0,0" Padding="15,5" VerticalAlignment="Top" Width="Auto" Height="Auto" Click="btnFileStruct_Click"/>
-                                        <TextBlock x:Name="tbFileStructError" Foreground="Red" Visibility="Collapsed" Margin="0,0,0,3"/>
-                                    </StackPanel>
-                                    <StackPanel Orientation="Horizontal" Margin="5">
-                                        <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}" Text="Struktura uložení: " FontWeight="Bold"/>
-                                        <d:StackPanel x:Name="spDestExample">
+                                        <Button x:Name="btnFolderStruct" HorizontalAlignment="Left" Margin="0,10,0,0" Padding="15,5" VerticalAlignment="Top" Click="btnFolderStruct_Click" Width="Auto" Height="Auto">
                                             <StackPanel Orientation="Horizontal">
                                                 <materialDesign:PackIcon Kind="FolderOutline"/>
+                                                <TextBlock Text="Pojmenování složek" Margin="5,0"/>
+                                            </StackPanel>
+                                        </Button>
+                                        <TextBlock x:Name="tbFolderStructError" Foreground="Red" Visibility="Collapsed" Margin="0,0,0,3"/>
+                                        <Button x:Name="btnFileStruct" HorizontalAlignment="Left" Margin="0,10,0,0" Padding="15,5" VerticalAlignment="Top" Width="Auto" Height="Auto" Click="btnFileStruct_Click">
+                                            <StackPanel Orientation="Horizontal">
+                                                <materialDesign:PackIcon Kind="ImageOutline"/>
+                                                <TextBlock Text="Název souboru" Margin="5,0"/>
+                                            </StackPanel>
+                                        </Button>
+                                        <TextBlock x:Name="tbFileStructError" Foreground="Red" Visibility="Collapsed" Margin="0,0,0,3"/>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Vertical" Margin="10,5" x:Name="spDestExample">
+                                        <!--<TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}" Text="Struktura uložení: " FontWeight="Bold"/>-->
+                                        <d:StackPanel>
+                                            <StackPanel Orientation="Horizontal" Margin="0,0,0,0">
+                                                <materialDesign:PackIcon Kind="Folder"/>
                                                 <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}" FontWeight="SemiBold" Margin="3,0" Text="root"/>
+                                            </StackPanel>
+                                            <StackPanel Orientation="Horizontal" Margin="10,0,0,0">
+                                                <materialDesign:PackIcon Kind="FolderOutline"/>
+                                                <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}" FontWeight="SemiBold" Margin="3,0" Text="root"/>
+                                            </StackPanel>
+                                            <StackPanel Orientation="Horizontal" Margin="20,0,0,0">
+                                                <materialDesign:PackIcon Kind="ImageOutline"/>
+                                                <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}" FontWeight="SemiBold" Margin="3,0" Text="filename.xxx"/>
                                             </StackPanel>
                                         </d:StackPanel>
                                         <TextBlock x:Name="tbRootDir" Text="{Binding Settings.Paths.Root,UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource MaterialDesignBody2TextBlock}"/>

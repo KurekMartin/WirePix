@@ -58,6 +58,7 @@ namespace PhotoApp
 
         private Border normalBorder = new Border();
         Border errorBorder = new Border();
+        public Style mainTextStyle { get; private set; }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -85,6 +86,8 @@ namespace PhotoApp
 
             errorBorder.BorderBrush = Brushes.Red;
             errorBorder.BorderThickness = new Thickness(3);
+
+            mainTextStyle = (Style)FindResource("MaterialDesignBody2TextBlock");
 
             GetProfiles();
         }
@@ -494,10 +497,12 @@ namespace PhotoApp
             if (sender.GetType() == typeof(FolderStructDialog))
             {
                 Settings.Paths.FolderTags = (string)result;
+                UpdateDestExample();
             }
             else if (sender.GetType() == typeof(FileStructDialog))
             {
                 Settings.Paths.FileTags = (string)result;
+                UpdateDestExample();
             }
             else if (sender.GetType() == typeof(SaveDialog))
             {
@@ -576,6 +581,7 @@ namespace PhotoApp
             if (result != string.Empty)
             {
                 Settings.Paths.Root = result;
+                UpdateDestExample();
             }
         }
 
@@ -700,14 +706,48 @@ namespace PhotoApp
             {
                 Settings.Load(cb.SelectedItem.ToString());
                 OnPropertyChanged("Settings");
-                tbStructure.Text = Tags.TagsToBlock(Settings.Paths.FolderTags, Settings.Paths.FileTags, DeviceList.SelectedDevice);
+                //tbStructure.Text = Tags.TagsToBlock(Settings.Paths.FolderTags, Settings.Paths.FileTags, DeviceList.SelectedDevice);
+                UpdateDestExample();
 
                 RemoveAllErrors();
                 CheckSettings();
             }
         }
 
+        private void UpdateDestExample()
+        {
+            spDestExample.Children.Clear();
 
+            Style textStyle = (Style)FindResource("MaterialDesignBody2TextBlock");
+
+            if (Settings.Paths.Root.Length > 0)
+            {
+                spDestExample.Children.Add(CreateIconPanel(Settings.Paths.Root, PackIconKind.Folder, 0, textStyle));
+            }
+
+            spDestExample.Children.Add(Tags.TagsToStackPanel(Settings.Paths.FolderTags, Settings.Paths.FileTags, textStyle, DeviceList.SelectedDevice));
+        }
+
+        public static StackPanel CreateIconPanel(string text, PackIconKind iconKind, int level, Style textStyle)
+        {
+            StackPanel sp = new StackPanel();
+            sp.Orientation = Orientation.Horizontal;
+            sp.Margin = new Thickness(level * 10, 0, 0, 0);
+
+            PackIcon icon = new PackIcon();
+            icon.Kind = iconKind;
+
+            sp.Children.Add(icon);
+
+            TextBlock textBlock = new TextBlock();
+            textBlock.Style = textStyle;
+            textBlock.FontWeight = FontWeights.SemiBold;
+            textBlock.Margin = new Thickness(5, 0, 0, 0);
+            textBlock.Text = text;
+            sp.Children.Add(textBlock);
+
+            return sp;
+        }
 
         private void Window_Closing(object sender, CancelEventArgs e)
         {

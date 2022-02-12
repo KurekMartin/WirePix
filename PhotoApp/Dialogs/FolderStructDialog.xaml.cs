@@ -86,7 +86,7 @@ namespace PhotoApp.Dialogs
                 int index = selectedStructure.Count() - 1;
 
                 selectedTag = BaseStructDialog.SelectTag(spNameStruct, selectedTag, index);
-                TextBlock tb = BaseStructDialog.FindTextBlockByIndex(spNameStruct, index);
+                TextBlock tb = BaseStructDialog.FindTextBlockByIndex<TextBlock>(spNameStruct, index);
                 BaseStructDialog.ShowControls(spControls, tb.Text);
             }
 
@@ -103,12 +103,13 @@ namespace PhotoApp.Dialogs
         {
             spNameStruct.Children.Clear();
 
-            TextBlock newItem = new TextBlock();
+            int index = folderStructure.Count();
+            StackPanel newItem = MainWindow.CreateIconPanel("", MaterialDesignThemes.Wpf.PackIconKind.FolderOutline, index, mainWindow.mainTextStyle);
+
+            //TextBlock newItem = new TextBlock();
             spFolderStructure.Children.Add(newItem);
             selectedStructure = new List<string>();
             folderStructure.Add(selectedStructure);
-
-            int index = folderStructure.Count() - 1;
 
             newItem.Tag = index;
             ChangeSelectedFolder(index);
@@ -130,8 +131,8 @@ namespace PhotoApp.Dialogs
         //zvýraznění vybrané úrovně
         private void ChangeSelectedFolder(int newIndex)
         {
-            TextBlock oldSelect = BaseStructDialog.FindTextBlockByIndex(spFolderStructure, selectedFolderLevel);
-            TextBlock newSelect = BaseStructDialog.FindTextBlockByIndex(spFolderStructure, newIndex);
+            StackPanel oldSelect = BaseStructDialog.FindTextBlockByIndex<StackPanel>(spFolderStructure, selectedFolderLevel);
+            StackPanel newSelect = BaseStructDialog.FindTextBlockByIndex<StackPanel>(spFolderStructure, newIndex);
             oldSelect.Background = Brushes.Transparent;
 
             //nová složka neobsahuje žádný tag a vybereme jinou složku -> odstranění prázdné složky
@@ -150,7 +151,8 @@ namespace PhotoApp.Dialogs
                 BaseStructDialog.TagsToStackPanel(spNameStruct, selectedStructure, TagClick);
 
                 selectedTag = BaseStructDialog.SelectTag(spNameStruct, 0, 0);
-                TextBlock tb = BaseStructDialog.FindTextBlockByIndex(spNameStruct, selectedTag);
+                TextBlock tb = BaseStructDialog.FindTextBlockByIndex<TextBlock>(spNameStruct, selectedTag);
+                if(tb== null) { tb = new TextBlock(); }
                 BaseStructDialog.ShowControls(spControls, tb.Text);
                 btnDeleteFolder.Visibility = Visibility.Visible;
             }
@@ -160,8 +162,8 @@ namespace PhotoApp.Dialogs
         //aktualizace vybrané složky
         private void UpdateTreeLayer()
         {
-            TextBlock tb = BaseStructDialog.FindTextBlockByIndex(spFolderStructure, selectedFolderLevel);
-            tb.Text = FolderLevel(selectedStructure, selectedFolderLevel);
+            StackPanel sp = BaseStructDialog.FindTextBlockByIndex<StackPanel>(spFolderStructure, selectedFolderLevel);
+            ((TextBlock)sp.Children[1]).Text = FolderLevel(selectedStructure, selectedFolderLevel);
         }
 
 
@@ -199,7 +201,7 @@ namespace PhotoApp.Dialogs
 
                 //SelectTag(index);
                 selectedTag = BaseStructDialog.SelectTag(spNameStruct, selectedTag, cReturn.index);
-                TextBlock tb = BaseStructDialog.FindTextBlockByIndex(spNameStruct, selectedTag);
+                TextBlock tb = BaseStructDialog.FindTextBlockByIndex<TextBlock>(spNameStruct, selectedTag);
                 BaseStructDialog.ShowControls(spControls, tb.Text);
             }
         }
@@ -225,7 +227,8 @@ namespace PhotoApp.Dialogs
             }
             //SelectTag(selectedTag);
             selectedTag = BaseStructDialog.SelectTag(spNameStruct, selectedTag, selectedTag);
-            TextBlock tb = BaseStructDialog.FindTextBlockByIndex(spNameStruct, selectedTag);
+            TextBlock tb = BaseStructDialog.FindTextBlockByIndex<TextBlock>(spNameStruct, selectedTag);
+            if (tb == null) { tb = new TextBlock(); }
             BaseStructDialog.ShowControls(spControls, tb.Text);
         }
 
@@ -238,7 +241,7 @@ namespace PhotoApp.Dialogs
         private void DeleteSelectedFolder()
         {
             folderStructure.RemoveAt(selectedFolderLevel);
-            TextBlock tb = BaseStructDialog.FindTextBlockByIndex(spFolderStructure, selectedFolderLevel);
+            StackPanel tb = BaseStructDialog.FindTextBlockByIndex<StackPanel>(spFolderStructure, selectedFolderLevel);
             spFolderStructure.Children.Remove(tb);
             GenerateTree();
         }
@@ -251,8 +254,10 @@ namespace PhotoApp.Dialogs
             int i = 0;
             foreach (List<string> dir in folderStructure)
             {
-                TextBlock folderLevel = new TextBlock();
-                folderLevel.Text = FolderLevel(dir, i);
+                StackPanel folderLevel = MainWindow.CreateIconPanel(Tags.TagsToValues(dir),MaterialDesignThemes.Wpf.PackIconKind.FolderOutline,i,mainWindow.mainTextStyle);
+
+                //TextBlock folderLevel = new TextBlock();
+                //folderLevel.Text = FolderLevel(dir, i);
                 folderLevel.Tag = i;
                 folderLevel.MouseLeftButtonDown += FolderName_MouseLeftButtonDown;
                 spFolderStructure.Children.Add(folderLevel);
@@ -298,7 +303,7 @@ namespace PhotoApp.Dialogs
                 UpdateTreeLayer();
 
                 selectedTag = BaseStructDialog.SelectTag(spNameStruct, selectedTag, textPos);
-                TextBlock tb = BaseStructDialog.FindTextBlockByIndex(spNameStruct, selectedTag);
+                TextBlock tb = BaseStructDialog.FindTextBlockByIndex<TextBlock>(spNameStruct, selectedTag);
                 BaseStructDialog.ShowControls(spControls, tb.Text);
             }
 
@@ -344,7 +349,7 @@ namespace PhotoApp.Dialogs
                     ChangeSelectedFolder(i);
 
                     selectedTag = BaseStructDialog.SelectTag(spNameStruct, selectedTag, index);
-                    TextBlock tb = BaseStructDialog.FindTextBlockByIndex(spNameStruct, selectedTag);
+                    TextBlock tb = BaseStructDialog.FindTextBlockByIndex<TextBlock>(spNameStruct, selectedTag);
                     BaseStructDialog.ShowControls(spControls, tb.Text);
 
                     return false;

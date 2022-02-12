@@ -1,4 +1,5 @@
-﻿using MediaDevices;
+﻿using MaterialDesignThemes.Wpf;
+using MediaDevices;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -6,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace PhotoApp
 {
@@ -302,5 +304,34 @@ namespace PhotoApp
 
             return block;
         }
+        public static StackPanel TagsToStackPanel(string folders, string file, Style textStyle, Device device = null)
+        {
+            List<string> tagList = new List<string>();
+            StackPanel spMain = new StackPanel();
+            int i = 1;
+            while (folders != null && folders.Length > 0)
+            {
+                if (folders[0] == '\\')
+                {
+                    i++;
+                    folders = folders.Trim('\\');
+                }
+                string level = Regex.Match(folders, @"[^\\]*").ToString(); //ziskani urovne bez \
+                tagList = TagsToList(level);
+
+                spMain.Children.Add(MainWindow.CreateIconPanel(TagsToValues(tagList, device), PackIconKind.FolderOutline, i, textStyle));
+
+                folders = folders.Remove(0, level.Length);
+            }
+
+            if (file != null && file.Length > 0)
+            {
+                tagList = TagsToList(file);
+                spMain.Children.Add(MainWindow.CreateIconPanel(TagsToValues(tagList, device) + ".xxx", PackIconKind.ImageOutline, i + 1, textStyle));
+            }
+
+            return spMain;
+        }
     }
 }
+

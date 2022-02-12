@@ -181,7 +181,7 @@ namespace PhotoApp.Dialogs
         }
 
         //aktualni tagy slozky/souboru zobrazi ve stack panelu
-        public static void TagsToStackPanel(StackPanel sp, List<string> tags, MouseButtonEventHandler tagClick)
+        public static void TagsToStackPanel(StackPanel sp, List<string> tags, MouseButtonEventHandler tagClick, Style style = null)
         {
             sp.Children.Clear();
 
@@ -194,6 +194,10 @@ namespace PhotoApp.Dialogs
                 block.Padding = new Thickness(5, 0, 5, 0);
                 block.MouseLeftButtonDown += tagClick;
                 block.Tag = i;
+                if(style != null)
+                {
+                    block.Style = style;
+                }
                 sp.Children.Add(block);
                 i++;
             }
@@ -203,14 +207,15 @@ namespace PhotoApp.Dialogs
         public static int SelectTag(StackPanel tags, int selectedIndex, int newIndex)
         {
             //odstarnění zvýraznění u starého tagu
-            TextBlock oldBlock = FindTextBlockByIndex(tags, selectedIndex);
+            TextBlock oldBlock = FindTextBlockByIndex<TextBlock>(tags, selectedIndex);
             if (oldBlock != null)
             {
                 oldBlock.Background = Brushes.Transparent;
             }
 
             //vyhledání TextBlocku, který se má označit
-            TextBlock newBlock = FindTextBlockByIndex(tags, newIndex);
+            TextBlock newBlock = FindTextBlockByIndex<TextBlock>(tags, newIndex);
+            if(newBlock == null) { newBlock = new TextBlock(); }
 
             newBlock.Background = Brushes.Aqua;
 
@@ -219,10 +224,10 @@ namespace PhotoApp.Dialogs
 
 
         //vyhledání TextBlocku ve stackpanelu podle indexu
-        public static TextBlock FindTextBlockByIndex(StackPanel sp, int index)
+        public static T FindTextBlockByIndex<T>(StackPanel sp, int index) where T : DependencyObject
         {
             int i = 0;
-            foreach (TextBlock tb in sp.Children)
+            foreach (T tb in sp.Children)
             {
                 if (i == index)
                 {
@@ -230,7 +235,7 @@ namespace PhotoApp.Dialogs
                 }
                 i++;
             }
-            return new TextBlock();
+            return null;
         }
 
         //zobrazení ovládacích prvků pro zvolený tag
@@ -283,7 +288,7 @@ namespace PhotoApp.Dialogs
                     }
                     else
                     {
-                        tb.Visibility = Visibility.Collapsed;
+                        tb.Visibility = Visibility.Hidden;
                     }
                 }
                 else if (o.GetType() == typeof(Button))
@@ -295,7 +300,7 @@ namespace PhotoApp.Dialogs
                     }
                     else
                     {
-                        btn.Visibility = Visibility.Collapsed;
+                        btn.Visibility = Visibility.Hidden;
                     }
                 }
             }

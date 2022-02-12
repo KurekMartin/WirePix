@@ -12,10 +12,15 @@
                 <TextBlock Style="{StaticResource MaterialDesignHeadline6TextBlock}" Text="Název souboru" Padding="5" TextAlignment="Center"/>
             </materialDesign:ColorZone>
             <StackPanel Margin="15,20">
-                <StackPanel x:Name="spNameStruct" Orientation="Horizontal" Margin="0,10">
 
+                <StackPanel x:Name="spNameStruct" Orientation="Horizontal">
+                    <d:TextBlock Text="Tagy" Style="{StaticResource MaterialDesignBody2TextBlock}"/>
                 </StackPanel>
-                <TextBlock x:Name="tbFileName" Margin="10,0,10,5" Style="{StaticResource MaterialDesignBody2TextBlock}"/>
+
+                <StackPanel x:Name="spFileName" Visibility="Hidden" d:Visibility="Visible" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,5">
+                    <materialDesign:PackIcon Kind="ImageOutline" VerticalAlignment="Center"/>
+                    <TextBlock x:Name="tbFileName" d:Text="Název.xxx" Margin="5,0" VerticalAlignment="Center" Style="{StaticResource MaterialDesignBody2TextBlock}"/>
+                </StackPanel>
                 <StackPanel x:Name="spControls" Orientation="Horizontal" Grid.Column="0" Grid.Row="1">
                     <Button x:Name="btnDeleteTag" Content="Smazat tag" Height="Auto" VerticalAlignment="Center" Margin="5,0" Click="btnDeleteTag_Click"/>
 

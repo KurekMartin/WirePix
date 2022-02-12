@@ -67,32 +67,6 @@ namespace PhotoApp
             pbProgress.IsIndeterminate = true;
             lblTime.Visibility = Visibility.Collapsed;
         }
-
-        //public void TimeRemainUpdate()
-        //{
-        //    if (timeRemain.Ticks == 0)
-        //    {
-        //        lblTime.Text = "Počítám zbývající čas";
-        //    }
-        //    else
-        //    {
-        //        lblTime.Text = "Zbývá ";
-        //        if (timeRemain.Days > 0)
-        //        {
-        //            lblTime.Text += timeRemain.Days + "d ";
-        //        }
-        //        if (timeRemain.Hours > 0)
-        //        {
-        //            lblTime.Text += timeRemain.Hours + "h ";
-        //        }
-        //        if (timeRemain.Minutes > 0)
-        //        {
-        //            lblTime.Text += timeRemain.Minutes + "m ";
-        //        }
-        //        lblTime.Text += timeRemain.Seconds + "s ";
-        //    }
-        //}
-
         private async void Countdown()
         {
             TimeSpan sec = new TimeSpan(0, 0, 1);
