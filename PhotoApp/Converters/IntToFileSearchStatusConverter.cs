@@ -3,17 +3,17 @@ using System.Windows.Data;
 
 namespace PhotoApp.Converters
 {
-    class IntToStatusConverter : IValueConverter
+    class IntToFileSearchStatusConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
-            if ((int)value == Device.DEVICE_CANNOT_CONNECT)
+            if ((int)value == Device.DEVICE_FILES_SEARCHING)
             {
-                return "Nelze se připojit";
+                return "Probíhá";
             }
-            else if ((int)value == Device.DEVICE_READY)
+            else if ((int)value == Device.DEVICE_FILES_READY)
             {
-                return "Připraveno";
+                return "Dokončeno";
             }
             else
             {

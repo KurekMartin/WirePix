@@ -20,7 +20,8 @@ namespace PhotoApp
     public enum TaskType
     {
         FindFiles,
-        CopyFiles
+        CopyFiles,
+        GetFileTypes
     }
 
     public struct WorkerResult
@@ -44,7 +45,7 @@ namespace PhotoApp
 
         public DeviceList DeviceList { get; set; }
         static readonly IUsbEventWatcher usbEventWatcher = new UsbEventWatcher();
-        private ProgressDialog progressDialog = null;
+        public ProgressDialog progressDialog { get; private set; } = null;
         private BackgroundWorker backgroundWorker = null;
         private DateTime backupStart = new DateTime();
 
@@ -103,6 +104,8 @@ namespace PhotoApp
 
                 //zmena vybraneho zarizeni
                 DeviceList.SelectDevice(ListBoxDevices.SelectedIndex);
+
+                //DeviceList.SelectedDevice.FileTypes();
             }
             else
             {
@@ -116,7 +119,6 @@ namespace PhotoApp
         private void ListConnectedDevices()
         {
             ListBoxDevices.SelectedIndex = DeviceList.UpdateDevices();
-
         }
 
         private void GetProfiles(string SelectProfile = "")
@@ -148,6 +150,12 @@ namespace PhotoApp
             DeviceList.SelectedDevice.CopyFiles(worker, e, Settings);
         }
 
+        private void GetFileTypes(object sender, DoWorkEventArgs e)
+        {
+            BackgroundWorker worker = sender as BackgroundWorker;
+            DeviceList.SelectedDevice.FileTypes(worker, e);
+        }
+
         //obnovit seznam pripojenych zarizeni
         private void Refresh_Click(object sender, RoutedEventArgs e)
         {
@@ -158,7 +166,7 @@ namespace PhotoApp
         {
             if (CheckDeviceSelected())
             {
-                RunWorker(sender, TaskType.FindFiles);
+                RunWorker(sender, TaskType.FindFiles,true);
             }
         }
 
@@ -167,7 +175,7 @@ namespace PhotoApp
             if (CheckSettings())
             {
                 backupStart = DateTime.Now;
-                RunWorker(sender, TaskType.CopyFiles);
+                RunWorker(sender, TaskType.CopyFiles,true);
             }
 
         }
@@ -316,16 +324,19 @@ namespace PhotoApp
             tb.Visibility = Visibility.Visible;
         }
         //spusteni prace na pozadi podle typu ulohy
-        private void RunWorker(object sender, TaskType task)
+        private void RunWorker(object sender, TaskType task, bool showProgress)
         {
             backgroundWorker = new BackgroundWorker();
             backgroundWorker.WorkerSupportsCancellation = true;
-            backgroundWorker.WorkerReportsProgress = true;
+            backgroundWorker.WorkerReportsProgress = showProgress;
             backgroundWorker.ProgressChanged += worker_ProgressChanged;
             backgroundWorker.RunWorkerCompleted += worker_RunWorkerCompleted;
 
-            DialogHost.Show(progressDialog, "RootDialog");
-            progressDialog.btnCancel.Content = "Zrušit";
+            if (showProgress)
+            {
+                DialogHost.Show(progressDialog, "RootDialog");
+                progressDialog.btnCancel.Content = "Zrušit";
+            }
 
             if ((bool)cbNewFiles.IsChecked)
             {
@@ -339,6 +350,9 @@ namespace PhotoApp
                     break;
                 case TaskType.CopyFiles:
                     backgroundWorker.DoWork += CopyFiles;
+                    break;
+                case TaskType.GetFileTypes:
+                    backgroundWorker.DoWork += GetFileTypes;
                     break;
             }
             backgroundWorker.RunWorkerAsync();
@@ -692,6 +706,8 @@ namespace PhotoApp
                 CheckSettings();
             }
         }
+
+
 
         private void Window_Closing(object sender, CancelEventArgs e)
         {

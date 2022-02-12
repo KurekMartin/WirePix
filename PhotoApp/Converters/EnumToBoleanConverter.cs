@@ -2,7 +2,7 @@
 using System.Windows;
 using System.Windows.Data;
 
-namespace PhotoApp
+namespace PhotoApp.Converters
 {
     public class EnumToBoleanConverter : IValueConverter
     {

@@ -137,8 +137,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Converters\TimeSpanToString.cs" />
     <Compile Include="Converters\ArrayToProgress.cs" />
-    <Compile Include="Converters\IntToStatusConverter.cs" />
+    <Compile Include="Converters\IntToFileSearchStatusConverter.cs" />
+    <Compile Include="Converters\IntToDeviceStatusConverter.cs" />
     <Compile Include="Converters\LastBackupConverter.cs" />
     <Compile Include="Converters\ListToStringConverter.cs" />
     <Compile Include="Dialogs\BaseStructDialog.cs" />

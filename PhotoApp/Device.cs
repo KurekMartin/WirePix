@@ -42,6 +42,9 @@ namespace PhotoApp
         private List<MediaDirectoryInfo> _mediaDirList;
         private double[] _space;
         private IEnumerable<MediaFileInfo> filesToCopy;
+        private IEnumerable<MediaFileInfo> allFiles;
+        private bool fileSearchDone = false;
+        private List<string> fileTypes = new List<string>();
 
         public int FilesToCopyCount { get; private set; } = 0;
         private double sizeToProcess;
@@ -55,6 +58,11 @@ namespace PhotoApp
         public static int DEVICE_UNKNOWN_STATUS = -1;
         public static int DEVICE_CANNOT_CONNECT = 0;
         public static int DEVICE_READY = 1;
+
+        //files status
+        public static int DEVICE_FILES_READY = 1;
+        public static int DEVICE_FILES_SEARCHING = 0;
+        public static int DEVICE_FILES_ERROR = -1;
 
         private readonly Log _log = new Log();
 
@@ -97,6 +105,25 @@ namespace PhotoApp
                     return DEVICE_READY;
                 }
                 return DEVICE_UNKNOWN_STATUS;
+            }
+        }
+
+        public int FileSearchStatus
+        {
+            get
+            {
+                if (!fileSearchDone)
+                {
+                    return DEVICE_FILES_SEARCHING;
+                }
+                else if (fileSearchDone && allFiles.Count()>0)
+                {
+                    return DEVICE_FILES_READY;
+                }
+                else
+                {
+                    return DEVICE_FILES_ERROR;
+                }
             }
         }
 
@@ -146,7 +173,20 @@ namespace PhotoApp
             }
         }
 
+        public List<string> FileTypes(BackgroundWorker worker, DoWorkEventArgs e)
+        {
+            if (fileTypes != null)
+            {
+                return fileTypes;
+            }
+            IEnumerable<MediaFileInfo> mediaFiles = filesToCopy;
+            if (mediaFiles == null)
+            {
+                GetAllFiles(worker, e);
+            }
 
+            return fileTypes;
+        }
 
         public int FilesToDownload
         {
@@ -208,6 +248,15 @@ namespace PhotoApp
             return;
         }
 
+        private void GetAllFiles(BackgroundWorker worker, DoWorkEventArgs e, ProgressUpdateArgs progressArgs = new ProgressUpdateArgs())
+        {
+            allFiles = Enumerable.Empty<MediaFileInfo>();
+            foreach (string dir in MediaDirectories)
+            {
+                allFiles = allFiles.Concat(GetAllFilesList(dir, worker, e, progressArgs));
+            }
+        }
+
         //nalezeni souboru dle data
         public void GetFilesByDate(BackgroundWorker worker, DoWorkEventArgs e, Settings settings)
         {
@@ -248,9 +297,10 @@ namespace PhotoApp
             //hledani souboru ve vsech DCIM slozkach
             try
             {
+                //GetAllFiles(worker, e, progressArgs);
                 foreach (MediaDirectoryInfo dir in _mediaDirList)
                 {
-                    allFiles = allFiles.Concat(GetAllFilesList(dir.FullName, progressArgs, worker, e));
+                    allFiles = allFiles.Concat(GetAllFilesList(dir.FullName, worker, e, progressArgs));
                 }
                 if (_checkDateRange)
                 {
@@ -296,7 +346,7 @@ namespace PhotoApp
 
         //rekurzivni prohledani vsech slozek v adresari
         //vynechani slozek zacinajicich '.'
-        private IEnumerable<MediaFileInfo> GetAllFilesList(string path, ProgressUpdateArgs progressArgs, BackgroundWorker worker, DoWorkEventArgs e)
+        private IEnumerable<MediaFileInfo> GetAllFilesList(string path, BackgroundWorker worker, DoWorkEventArgs e, ProgressUpdateArgs progressArgs)
         {
             IEnumerable<MediaFileInfo> files = Enumerable.Empty<MediaFileInfo>();
             if (worker.CancellationPending)
@@ -308,10 +358,12 @@ namespace PhotoApp
             }
             else
             {
-
-                progressArgs.currentTask = path;
-                progressArgs.progressText = $"Nalezeno {FilesTotal} souborů";
-                worker.ReportProgress(0, progressArgs);
+                if (worker.WorkerReportsProgress)
+                {
+                    progressArgs.currentTask = path;
+                    progressArgs.progressText = $"Nalezeno {FilesTotal} souborů";
+                    worker.ReportProgress(0, progressArgs);
+                }
 
                 if (!_log.Running) { _log.Start(); }
                 try
@@ -321,8 +373,12 @@ namespace PhotoApp
                     files = dirInfo.EnumerateFiles("*", SearchOption.TopDirectoryOnly);
 
                     FilesTotal += files.Count();
-                    progressArgs.progressText = $"Nalezeno {FilesTotal} souborů";
-                    worker.ReportProgress(0, progressArgs);
+                    if (worker.WorkerReportsProgress)
+                    {
+                        progressArgs.progressText = $"Nalezeno {FilesTotal} souborů";
+                        worker.ReportProgress(0, progressArgs);
+                    }
+
 
                     //prohledani podslozek
                     IEnumerable<string> subdirs = _device.EnumerateDirectories(path);
@@ -330,7 +386,15 @@ namespace PhotoApp
                     {
                         if (!dir.ElementAt(dir.LastIndexOf('\\') + 1).Equals('.')) // vynechani slozek zacinajicich "."
                         {
-                            files = files.Concat(GetAllFilesList(dir, progressArgs, worker, e));
+                            var currentFiles = GetAllFilesList(dir, worker, e, progressArgs);
+                            files = files.Concat(currentFiles);
+
+                            //získat typy souborů
+                            currentFiles.ToList().ForEach(x =>
+                            {
+                                string ext = Path.GetExtension(x.Name).ToUpper();
+                                if (!fileTypes.Contains(ext)) { fileTypes.Add(ext); }
+                            });
                         }
                     }
                 }
@@ -379,7 +443,7 @@ namespace PhotoApp
 
             if (!_log.Running) { _log.Start(); }
 
-            System.IO.Directory.CreateDirectory(tmpFolder);
+            Directory.CreateDirectory(tmpFolder);
 
             DateTime start = DateTime.Now;
             FilesDoneCount = 0;
@@ -519,7 +583,7 @@ namespace PhotoApp
                           progressArgs.currentTask = $"Generuji náhled {item.origFile}";
                           worker.ReportProgress(FilesDoneCount * 100 / FilesToCopyCount, progressArgs);
                       }
-                      GenerateThumbnail(settings, item.fullDestPath, item.tmpFile, item.origFile, BitConverter.ToString(item.origHash).Replace("-", String.Empty).ToLowerInvariant());
+                      GenerateThumbnail(settings, item.fullDestPath, item.tmpFile, item.origFile, BitConverter.ToString(item.origHash).Replace("-", string.Empty).ToLowerInvariant());
                   }
 
 
@@ -585,20 +649,20 @@ namespace PhotoApp
             worker.ReportProgress(progressPercent, progressArgs);
             foreach (string file in files)
             {
-                
+
                 progressArgs.currentTask = $"Mažu soubor {file}";
                 worker.ReportProgress(progressPercent, progressArgs);
                 _device.DeleteFile(file);
                 Console.WriteLine($"file {file} deleted");
                 Console.WriteLine($"file {file} exists: {_device.FileExists(file)}");
-                
+
                 doneCount++;
                 progressPercent = doneCount * 100 / totalCount;
                 DateTime end = DateTime.Now;
                 TimeSpan timeTotal = end - start;
                 TimeSpan timeRemain = TimeSpan.FromTicks((timeTotal.Ticks / doneCount) * (totalCount - doneCount));
 
-                progressArgs.progressText = $"Smazáno {doneCount}/{totalCount} souborů";               
+                progressArgs.progressText = $"Smazáno {doneCount}/{totalCount} souborů";
                 progressArgs.timeRemain = timeRemain;
                 worker.ReportProgress(progressPercent, progressArgs);
             }

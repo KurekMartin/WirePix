@@ -5,12 +5,17 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:local="clr-namespace:PhotoApp" xmlns:system="clr-namespace:System;assembly=mscorlib"
+             xmlns:converters="clr-namespace:PhotoApp.Converters"
              mc:Ignorable="d" d:DesignWidth="800" Height="184.448" Loaded="UserControl_Loaded">
+    <UserControl.Resources>
+        <converters:TimeSpanToString x:Key="TimeToString"/>
+    </UserControl.Resources>
     <Grid>
         <StackPanel Orientation="Vertical" Margin="10,5">
             <TextBlock x:Name="lblCurrentTask" Text="CurrentTask" Margin="0,3" VerticalAlignment="Center" Style="{StaticResource MaterialDesignHeadline6TextBlock}"/>
             <TextBlock x:Name="lblProgress" Text="Progress" Margin="0,3" VerticalAlignment="Center" Style="{StaticResource MaterialDesignSubtitle1TextBlock}"/>
-            <TextBlock x:Name="lblTime" Text="time" Margin="0,3" VerticalAlignment="Center" Style="{StaticResource MaterialDesignSubtitle1TextBlock}"/>
+            <TextBlock x:Name="lblTime" Margin="0,3" VerticalAlignment="Center" Style="{StaticResource MaterialDesignSubtitle1TextBlock}"
+                       Text="{Binding progressDialog.timeRemain,Converter={StaticResource TimeToString}}"/>
             <TextBlock x:Name="lblCurrentFile" Text="filename" Margin="0,3" VerticalAlignment="Center" Style="{StaticResource MaterialDesignSubtitle1TextBlock}"/>
             <ProgressBar x:Name="pbProgress" Margin="0,5" materialDesign:TransitionAssist.DisableTransitions="True" Height="15"  VerticalAlignment="Center"/>
             <Button x:Name="btnCancel" Margin="0,10" IsEnabled="True"  Content="Zrušit" VerticalAlignment="Top" Click="btnCancel_Click"/>

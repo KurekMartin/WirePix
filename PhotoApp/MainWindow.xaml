@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PhotoApp"
-    xmlns:converters="clr-namespace:PhotoApp.Converters"
+        xmlns:converters="clr-namespace:PhotoApp.Converters"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" x:Class="PhotoApp.MainWindow"
         mc:Ignorable="d"
         Title="Photo Manager"
@@ -17,8 +17,9 @@
         FontFamily="{DynamicResource MaterialDesignFont}" MinWidth="800" MinHeight="600" Height="698" Width="800" SizeToContent="Height" ResizeMode="CanMinimize" Closing="Window_Closing" WindowStartupLocation="CenterScreen" Icon="/icon.ico">
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVisConverter" />
-        <local:EnumToBoleanConverter x:Key="EnumToBool"/>
-        <converters:IntToStatusConverter x:Key="IntToStatus"/>
+        <converters:EnumToBoleanConverter x:Key="EnumToBool"/>
+        <converters:IntToDeviceStatusConverter x:Key="IntToDeviceStatus"/>
+        <converters:IntToFileSearchStatusConverter x:Key="IntToFileSearchStatus"/>
         <converters:ListToStringConverter x:Key="ListToString"/>
         <converters:ArrayToProgress x:Key="ArrToProgress"/>
         <converters:LastBackupConverter x:Key="LastBckp"/>
@@ -165,16 +166,16 @@
                                         </StackPanel>
                                         <TextBlock x:Name="tbDeviceNameError" Foreground="Red" Visibility="Collapsed" Text="" Margin="0,5,0,3"/>
                                         <StackPanel Orientation="Horizontal" Margin="0,3">
-                                            <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}" Text="Poslední záloha: " FontWeight="Bold"/>
-                                            <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}" x:Name="lblLastBackup" Text="{Binding DeviceList.SelectedDeviceInfo.LastBackup,Converter={StaticResource LastBckp}}"/>
-                                        </StackPanel>
-                                        <StackPanel Orientation="Horizontal" Margin="0,3">
-                                            <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}" Text="Stav: " FontWeight="Bold"/>
-                                            <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}" x:Name="lblDeviceStatus" Text="{Binding DeviceList.SelectedDevice.Status,Converter={StaticResource IntToStatus},UpdateSourceTrigger=PropertyChanged}"/>
-                                        </StackPanel>
-                                        <StackPanel Orientation="Horizontal" Margin="0,3">
                                             <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}" Text="Výrobce: " HorizontalAlignment="Left" VerticalAlignment="Top" FontWeight="Bold"/>
                                             <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}" x:Name="lblManu" Text="{Binding DeviceList.SelectedDevice.Manufacturer}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                                        </StackPanel>                                        
+                                        <StackPanel Orientation="Horizontal" Margin="0,3">
+                                            <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}" Text="Stav: " FontWeight="Bold"/>
+                                            <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}" x:Name="lblDeviceStatus" Text="{Binding DeviceList.SelectedDevice.Status,Converter={StaticResource IntToDeviceStatus},UpdateSourceTrigger=PropertyChanged}"/>
+                                        </StackPanel>
+                                        <StackPanel Orientation="Horizontal" Margin="0,3">
+                                            <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}" Text="Poslední záloha: " FontWeight="Bold"/>
+                                            <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}" x:Name="lblLastBackup" Text="{Binding DeviceList.SelectedDeviceInfo.LastBackup,Converter={StaticResource LastBckp}}"/>
                                         </StackPanel>
                                         <StackPanel Orientation="Horizontal" Margin="0,3">
                                             <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}" Text="Umístění médií: " HorizontalAlignment="Left" VerticalAlignment="Top" FontWeight="Bold"/>
@@ -200,6 +201,15 @@
                                                 <TextBlock Style="{StaticResource MaterialDesignCaptionTextBlock}" x:Name="lblUsedSpace" Text="{Binding DeviceList.SelectedDevice.Space[2],StringFormat={}{0} GB}" VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="11"/>
                                             </StackPanel>
                                             <ProgressBar x:Name="pbSpace" materialDesign:TransitionAssist.DisableTransitions="True" HorizontalAlignment="Left" Height="6" Margin="0,5" VerticalAlignment="Top" Width="253" Value="{Binding DeviceList.SelectedDevice.Space,Converter={StaticResource ArrToProgress},Mode=OneWay}" Background="#FF1DDA26" Foreground="#FFE63434" BorderBrush="{x:Null}" BorderThickness="0"/>
+                                        </StackPanel>
+
+                                        <StackPanel Orientation="Horizontal" Margin="0,3" Visibility="Collapsed">
+                                            <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}" 
+                                                       Text="Vyhledávání souborů: " 
+                                                       FontWeight="Bold"/>
+                                            <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}" 
+                                                       x:Name="lblFileSearchStatus" 
+                                                       Text="{Binding DeviceList.SelectedDevice.FileSearchStatus,Converter={StaticResource IntToFileSearchStatus}}"/>
                                         </StackPanel>
                                     </StackPanel>
                                 </StackPanel>
@@ -261,6 +271,12 @@
                                     </StackPanel>
                                     <StackPanel Orientation="Horizontal" Margin="5">
                                         <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}" Text="Struktura uložení: " FontWeight="Bold"/>
+                                        <d:StackPanel x:Name="spDestExample">
+                                            <StackPanel Orientation="Horizontal">
+                                                <materialDesign:PackIcon Kind="FolderOutline"/>
+                                                <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}" FontWeight="SemiBold" Margin="3,0" Text="root"/>
+                                            </StackPanel>
+                                        </d:StackPanel>
                                         <TextBlock x:Name="tbRootDir" Text="{Binding Settings.Paths.Root,UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource MaterialDesignBody2TextBlock}"/>
                                         <TextBlock x:Name="tbStructure" FontWeight="DemiBold" Style="{StaticResource MaterialDesignBody2TextBlock}"/>
                                     </StackPanel>
