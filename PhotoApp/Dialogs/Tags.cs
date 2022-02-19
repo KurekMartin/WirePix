@@ -147,8 +147,9 @@ namespace PhotoApp
         }
 
         //získání hodnot pro zobrazení náhledu výsledného názvu
-        public static string GetSampleValueByTag(string codeTag, MediaFileInfo fileInfo = null, Device device = null, string filePath = null)
+        public static string GetSampleValueByTag(string visibleText, MediaFileInfo fileInfo = null, Device device = null, string filePath = null)
         {
+            string codeTag = GetTag(visibleText: visibleText).code;
             DateTime date = DateTime.Now;
             string manufacturer = "Manufacturer";
             string model = "DeviceName";
@@ -244,6 +245,10 @@ namespace PhotoApp
             else if (codeTag == Properties.Resources.SequenceNum)
             {
                 return "####";
+            }
+            else if (codeTag == Properties.Resources.CustomText)
+            {
+                return Regex.Match(visibleText, @"(?<=\().*?(?=\))").ToString();
             }
             else { return ""; }
         }
