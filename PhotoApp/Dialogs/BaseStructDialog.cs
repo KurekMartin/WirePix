@@ -118,7 +118,7 @@ namespace PhotoApp.Dialogs
         public static void FillComboBox(ComboBox cb, string codePartMatch)
         {
             int i = 0;
-            foreach (NameString item in Tags.GetTagListGroup(codePartMatch))
+            foreach (TagStruct item in Tags.GetTagListGroup(codePartMatch))
             {
                 ComboBoxItem cbItem = new ComboBoxItem();
                 cbItem.Content = item.buttonLabel;
@@ -343,7 +343,7 @@ namespace PhotoApp.Dialogs
         {
             ChangeReturn cReturn = new ChangeReturn();
             cReturn.index = 0;
-            NameString newTag = Tags.GetTagByButtonLabel(newItem.Content.ToString());
+            TagStruct newTag = Tags.GetTagByButtonLabel(newItem.Content.ToString());
 
             //přepsání tagu
             if (tagStructure.Count() > 0)
