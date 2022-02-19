@@ -18,23 +18,23 @@
 
                 <materialDesign:Card Padding="5" Margin="5">
                     <StackPanel>
-                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                        <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}"
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}"
                                    Text="Značky" VerticalAlignment="Center"
                                    Padding="5,12"/>
-                        <ListBox ItemsSource="{Binding FileStructure}" d:ItemsSource="{d:SampleData ItemCount=3}"
+                            <ListBox ItemsSource="{Binding FileStructure}" d:ItemsSource="{d:SampleData ItemCount=3}"
                                  Style="{StaticResource MaterialDesignChoiceChipPrimaryOutlineListBox}"
-                                 SelectionChanged="TagClick"
+                                 SelectionChanged="TagSelectionChanged"
                                  SelectedIndex="{Binding SelectedIndex, Mode=TwoWay}"
                                  VerticalAlignment="Center">
-                            <ListBox.ItemTemplate>
-                                <DataTemplate>
-                                    <TextBlock Text="{Binding .}"
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding .}"
                                                Margin="5,0"/>
-                                </DataTemplate>
-                            </ListBox.ItemTemplate>
-                        </ListBox>
-                    </StackPanel>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                        </StackPanel>
                         <StackPanel x:Name="spFileName" Visibility="Visible" d:Visibility="Visible" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,5">
                             <materialDesign:PackIcon 
                                 Kind="ImageOutline" 
@@ -63,32 +63,35 @@
                         </StackPanel>
                     </StackPanel>
                 </materialDesign:Card>
-                
-                
-                <StackPanel x:Name="spControls" Orientation="Horizontal" Grid.Column="0" Grid.Row="1">
-                    <Button x:Name="btnDeleteTag" Content="Smazat tag" Height="Auto" VerticalAlignment="Center" Margin="5,5" Click="btnDeleteTag_Click"/>
-                    <ComboBox x:Name="cbYear" Width="Auto" Margin="20,0" VerticalAlignment="Center" SelectionChanged="ComboBox_SelectionChanged"/>
-                    <ComboBox x:Name="cbMonth" Width="Auto" Margin="20,0" VerticalAlignment="Center" SelectionChanged="ComboBox_SelectionChanged"/>
-                    <ComboBox x:Name="cbDay" Width="Auto" Margin="20,0" VerticalAlignment="Center" SelectionChanged="ComboBox_SelectionChanged"/>
-                    <TextBox 
-                        x:Name="tbCustomText"
-                        Margin="20,0" 
-                        MaxLength="15"
-                        MaxLines="1"
-                        VerticalAlignment="Center"
-                        materialDesign:HintAssist.Hint="Custom text"
-                        PreviewTextInput="tbCustomText_PreviewTextInput"
-                        CommandManager.PreviewExecuted="tbCustomText_PreviewExecuted"
-                        Style="{StaticResource MaterialDesignFloatingHintTextBox}" TextChanged="tbCustomText_TextChanged"/>
-                </StackPanel>
 
-                <Grid x:Name="grdMain" HorizontalAlignment="Center" Margin="0,10">
+                <StackPanel>
+                    <StackPanel x:Name="spControls" Orientation="Horizontal" Grid.Column="0" Grid.Row="1">
+                        <Button x:Name="btnDeleteTag" Content="Smazat tag" Height="Auto" VerticalAlignment="Center" Margin="5,7" Click="btnDeleteTag_Click"/>
+                        <ComboBox x:Name="cbYear" Width="Auto" Margin="20,0" VerticalAlignment="Center" SelectionChanged="ComboBox_SelectionChanged"/>
+                        <ComboBox x:Name="cbMonth" Width="Auto" Margin="20,0" VerticalAlignment="Center" SelectionChanged="ComboBox_SelectionChanged"/>
+                        <ComboBox x:Name="cbDay" Width="Auto" Margin="20,0" VerticalAlignment="Center" SelectionChanged="ComboBox_SelectionChanged"/>
+                        <TextBox x:Name="tbCustomText"
+                                 Margin="20,0"
+                                 MaxLength="15"
+                                 MaxLines="1"
+                                 VerticalAlignment="Center"
+                                 materialDesign:HintAssist.Hint="Custom text"
+                                 PreviewTextInput="tbCustomText_PreviewTextInput"
+                                 Style="{StaticResource MaterialDesignFloatingHintTextBox}" 
+                                 TextChanged="tbCustomText_TextChanged"
+                                 MinWidth="100"/>
+                    </StackPanel>
+                    <TextBlock x:Name="tbControlsError"
+                               Style="{StaticResource MaterialDesignBody2TextBlock}"
+                               Foreground="Red"
+                               d:Text="Error"
+                               Margin="5,12,5,0"/>
+                </StackPanel>
+                <Grid x:Name="grdMain" HorizontalAlignment="Center" Margin="0,0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
-
-                    <StackPanel x:Name="spFolderStructure" Grid.Column="1" HorizontalAlignment="Left" Height="Auto" Margin="10" Grid.Row="1" VerticalAlignment="Top" Width="Auto"/>
                 </Grid>
                 <TextBlock x:Name="tbError" Text="" Margin="0,5,0,0" Foreground="#DDC90000" Style="{StaticResource MaterialDesignBody2TextBlock}"/>
                 <Button x:Name="btnDone" Content="Hotovo" Margin="0,5" Click="btnDone_Click"/>

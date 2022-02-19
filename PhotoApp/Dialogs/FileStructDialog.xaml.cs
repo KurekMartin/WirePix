@@ -9,6 +9,8 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using PhotoApp.Models;
+using System.IO;
+using System;
 
 namespace PhotoApp.Dialogs
 {
@@ -113,56 +115,87 @@ namespace PhotoApp.Dialogs
         {
             cbYear.Visibility = cbMonth.Visibility = cbDay.Visibility = tbCustomText.Visibility = Visibility.Collapsed;
 
-            if (SelectedIndex >= 0)
-            {
-                btnDeleteTag.Visibility = Visibility.Visible;
-                
-                string tagText = FileStructure[SelectedIndex];
-                TagStruct tag = Tags.GetTag(visibleText: tagText);
-                if (tag.code.StartsWith(Properties.Resources.Year))
-                {
-                    cbYear.Visibility = Visibility.Visible;
-                }
-                else if (tag.code.StartsWith(Properties.Resources.Month))
-                {
-                    cbMonth.Visibility = Visibility.Visible;
-                }
-                else if (tag.code.StartsWith(Properties.Resources.Day))
-                {
-                    cbDay.Visibility = Visibility.Visible;
-                }
-                else if (tag.code == Properties.Resources.CustomText)
-                {
-                    tbCustomText.Visibility = Visibility.Visible;
-                    tbCustomText.Text = Tags.GetTagParameter(tagText);
-                }
-            }
-            else
-            {
-                btnDeleteTag.Visibility = Visibility.Hidden;
-            }
-            if (FileStructure.Count > 0)
+            if (FileStructure.Count() > 0)
             {
                 tbFileExt.Visibility = Visibility.Visible;
+
+                if (SelectedIndex >= 0)
+                {
+                    btnDeleteTag.Visibility = Visibility.Visible;
+
+                    string tagText = FileStructure[SelectedIndex];
+                    TagStruct tag = Tags.GetTag(visibleText: tagText);
+                    if (tag.code.StartsWith(Properties.Resources.Year))
+                    {
+                        cbYear.Visibility = Visibility.Visible;
+                    }
+                    else if (tag.code.StartsWith(Properties.Resources.Month))
+                    {
+                        cbMonth.Visibility = Visibility.Visible;
+                    }
+                    else if (tag.code.StartsWith(Properties.Resources.Day))
+                    {
+                        cbDay.Visibility = Visibility.Visible;
+                    }
+                    else if (tag.code == Properties.Resources.CustomText)
+                    {
+                        tbCustomText.Visibility = Visibility.Visible;
+                        tbCustomText.Text = Tags.GetTagParameter(tagText);
+                    }
+                }
             }
             else
             {
                 tbFileExt.Visibility = Visibility.Hidden;
+                btnDeleteTag.Visibility = Visibility.Hidden;
             }
+            
         }
 
 
         //vyber tagu v nazvu souboru
-        private void TagClick(object sender, SelectionChangedEventArgs e)
+        private void TagSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            tbControlsError.Visibility = Visibility.Hidden;
+            if (e.AddedItems.Count > 0 && e.RemovedItems.Count > 0 && Tags.GetTag(visibleText: e.RemovedItems[0].ToString()).code == Properties.Resources.CustomText) //kontrola parametru CustomText
+            {
+                string tag = FileStructure.First(x => x == e.RemovedItems[0].ToString());
+                string text = Tags.GetTagParameter(tag);
+                if (!IsValidCustomText(text))
+                {
+                    SelectedIndex = FileStructure.IndexOf(tag);
+                    tbCustomText.Focus();
+                    ShowCustomTextError();
+                }
+            }
             ShowControls();
+        }
+
+        private void ShowCustomTextError()
+        {
+            string text = tbCustomText.Text;
+            if (text.Length == 0)
+            {
+                tbControlsError.Text = $"Chybí hodnota pro {Tags.GetTagByCode(Properties.Resources.CustomText).visibleText}.\n" +
+                    $"Doplňte tuto hodnotu nebo tag odstraňte";
+                tbControlsError.Visibility = Visibility.Visible;
+            }
+            else if (text.IndexOfAny(Path.GetInvalidFileNameChars()) >= 0)
+            {
+
+                List<char> invalidChars = text.Where(x => Path.GetInvalidFileNameChars().Contains(x)).ToList();
+                tbControlsError.Text = $"Text obsahuje neplatné znaky: {string.Join("", invalidChars)}";
+                tbControlsError.Visibility = Visibility.Visible;
+            }
         }
 
         //kontrola textBoxu - povolené jen písmena - _
         private void tbCustomText_PreviewTextInput(object sender, TextCompositionEventArgs e)
         {
-            Regex regex = new Regex(@"^[a-zA-Z0-9\-_]*$");
-            e.Handled = !regex.IsMatch(e.Text);
+            //Regex regex = new Regex(@"^[a-zA-Z0-9\-_]*$");
+            //e.Handled = !regex.IsMatch(e.Text);
+
+            e.Handled = e.Text.IndexOfAny(Path.GetInvalidFileNameChars()) >= 0;
         }
 
 
@@ -182,11 +215,20 @@ namespace PhotoApp.Dialogs
         private void btnDeleteTag_Click(object sender, RoutedEventArgs e)
         {
             int oldIndex = SelectedIndex;
+            
             if (FileStructure.Count > 0)
             {
                 FileStructure.RemoveAt(SelectedIndex);
-                SelectedIndex = oldIndex-1;
+                if(oldIndex >= FileStructure.Count)
+                {
+                    SelectedIndex = oldIndex - 1;
+                }
+                else
+                {
+                    SelectedIndex = oldIndex;
+                }
             }
+            
             ShowControls();
         }
 
@@ -194,42 +236,43 @@ namespace PhotoApp.Dialogs
         //změna CustomTextu -> update tagu
         private void tbCustomText_TextChanged(object sender, TextChangedEventArgs e)
         {
-            if (e.Changes.First().AddedLength == 1 || e.Changes.First().RemovedLength == 1)
-            {
-                int i = FileStructure[SelectedIndex].IndexOf("(");
-                if (i != -1)
-                {
-                    FileStructure[SelectedIndex] = FileStructure[SelectedIndex].Substring(0, i);
-                }
-                FileStructure[SelectedIndex] += $"({tbCustomText.Text})";
-            }
 
+            int oldIndex = SelectedIndex;
+            string tag = FileStructure[SelectedIndex];
+            int i = tag.IndexOf("(");
+            if (i != -1)
+            {
+                tag = tag.Substring(0, i);
+            }
+            tag += $"({tbCustomText.Text})";
+
+            FileStructure[SelectedIndex] = tag;
+            SelectedIndex = oldIndex;
+            tbCustomText.Focus();
+
+            if (tbCustomText.Text.IndexOfAny(Path.GetInvalidFileNameChars()) >= 0)
+            {
+                ShowCustomTextError();
+            }
+            else { tbError.Text = ""; }
         }
 
-        //zákaz vkládání textu do textBoxu
-        private void tbCustomText_PreviewExecuted(object sender, ExecutedRoutedEventArgs e)
+        private bool IsValidCustomText(string text)
         {
-            if (e.Command == ApplicationCommands.Paste)
-            {
-                e.Handled = true;
-            }
+            return text != string.Empty && text.IndexOfAny(Path.GetInvalidFileNameChars()) < 0;
         }
+
+
 
         //ukončení formuláře
         private void btnDone_Click(object sender, RoutedEventArgs e)
         {
-            //int i = BaseStructDialog.CheckCustomText(FileStructure.ToList());
-            //if (i > -1)
-            //{
-            //    selectedTag = BaseStructDialog.SelectTag(spNameStruct, selectedTag, i);
-            //    TextBlock tb = BaseStructDialog.FindTextBlockByIndex<TextBlock>(spNameStruct, selectedTag);
-            //    BaseStructDialog.ShowControls(spControls, tb.Text);
-
-            //    tbError.Text = $"Chybí hodnota pro {Tags.GetTagByCode(Properties.Resources.CustomText).visibleText}.\n" +
-            //        $"Doplňte tuto hodnotu nebo tag odstraňte";
-            //    tbCustomText.Focus();
-            //    return;
-            //}
+            if (tbCustomText.Visibility == Visibility.Visible && !IsValidCustomText(tbCustomText.Text))
+            {
+                tbCustomText.Focus();
+                ShowCustomTextError();
+                return;
+            }
             string result = string.Join("", FileStructure.ToList());
             mainWindow.DialogClose(this, result);
         }
