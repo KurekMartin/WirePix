@@ -248,7 +248,7 @@ namespace PhotoApp
             }
             else if (codeTag == Properties.Resources.CustomText)
             {
-                return Regex.Match(visibleText, @"(?<=\().*?(?=\))").ToString();
+                return Regex.Match(visibleText, @"(?<=\().*?(?=\))").ToString(); //vrátí parametr v ()
             }
             else { return ""; }
         }
