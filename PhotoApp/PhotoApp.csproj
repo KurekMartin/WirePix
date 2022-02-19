@@ -137,6 +137,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Converters\TagToValue.cs" />
     <Compile Include="Converters\TimeSpanToString.cs" />
     <Compile Include="Converters\ArrayToProgress.cs" />
     <Compile Include="Converters\IntToFileSearchStatusConverter.cs" />

@@ -2,10 +2,13 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:PhotoApp.Dialogs"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:converters="clr-namespace:PhotoApp.Converters"
              mc:Ignorable="d">
+    <UserControl.Resources>
+        <converters:TagToValue x:Key="TagToValueConverter"/>
+    </UserControl.Resources>
     <materialDesign:Card>
         <StackPanel Orientation="Vertical">
             <materialDesign:ColorZone Mode="PrimaryMid">
@@ -13,39 +16,73 @@
             </materialDesign:ColorZone>
             <StackPanel Margin="15,20">
 
-                <StackPanel x:Name="spNameStruct" Orientation="Horizontal">
-                    <d:TextBlock Text="Tagy" Style="{StaticResource MaterialDesignBody2TextBlock}"/>
-                </StackPanel>
-
-                <StackPanel x:Name="spFileName" Visibility="Hidden" d:Visibility="Visible" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,5">
-                    <materialDesign:PackIcon Kind="ImageOutline" VerticalAlignment="Center"/>
-                    <TextBlock x:Name="tbFileName" d:Text="Název.xxx" Margin="5,0" VerticalAlignment="Center" Style="{StaticResource MaterialDesignBody2TextBlock}"/>
-                </StackPanel>
+                <materialDesign:Card Padding="5" Margin="5">
+                    <StackPanel>
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}"
+                                   Text="Značky" VerticalAlignment="Center"
+                                   Padding="5,12"/>
+                        <ListBox ItemsSource="{Binding FileStructure}" d:ItemsSource="{d:SampleData ItemCount=3}"
+                                 Style="{StaticResource MaterialDesignChoiceChipPrimaryOutlineListBox}"
+                                 SelectionChanged="TagClick"
+                                 SelectedIndex="{Binding SelectedIndex, Mode=TwoWay}"
+                                 VerticalAlignment="Center">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding .}"
+                                               Margin="5,0"/>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </StackPanel>
+                        <StackPanel x:Name="spFileName" Visibility="Visible" d:Visibility="Visible" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,5">
+                            <materialDesign:PackIcon 
+                                Kind="ImageOutline" 
+                                VerticalAlignment="Center" 
+                                Width="22" 
+                                Height="22"
+                                Margin="5,0"/>
+                            <ItemsControl ItemsSource="{Binding FileStructure}" d:ItemsSource="{d:SampleData ItemCount=3}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel Orientation="Horizontal"/>
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding ., Converter={StaticResource TagToValueConverter}}"
+                                                   Style="{StaticResource MaterialDesignBody2TextBlock}"
+                                                   VerticalAlignment="Center"/>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                            <TextBlock x:Name="tbFileExt" 
+                                       Text=".xxx" 
+                                       Style="{StaticResource MaterialDesignBody2TextBlock}"
+                                       VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </StackPanel>
+                </materialDesign:Card>
+                
+                
                 <StackPanel x:Name="spControls" Orientation="Horizontal" Grid.Column="0" Grid.Row="1">
-                    <Button x:Name="btnDeleteTag" Content="Smazat tag" Height="Auto" VerticalAlignment="Center" Margin="5,0" Click="btnDeleteTag_Click"/>
-
-                    <ComboBox x:Name="cbYear" Width="Auto" Margin="20,0" VerticalAlignment="Center" SelectionChanged="ComboBox_SelectionChanged">
-                    </ComboBox>
-                    <ComboBox x:Name="cbMonth" Width="Auto" Margin="20,0" VerticalAlignment="Center" SelectionChanged="ComboBox_SelectionChanged">
-
-                    </ComboBox>
-                    <ComboBox x:Name="cbDay" Width="Auto" Margin="20,0" VerticalAlignment="Center" SelectionChanged="ComboBox_SelectionChanged">
-
-                    </ComboBox>
+                    <Button x:Name="btnDeleteTag" Content="Smazat tag" Height="Auto" VerticalAlignment="Center" Margin="5,5" Click="btnDeleteTag_Click"/>
+                    <ComboBox x:Name="cbYear" Width="Auto" Margin="20,0" VerticalAlignment="Center" SelectionChanged="ComboBox_SelectionChanged"/>
+                    <ComboBox x:Name="cbMonth" Width="Auto" Margin="20,0" VerticalAlignment="Center" SelectionChanged="ComboBox_SelectionChanged"/>
+                    <ComboBox x:Name="cbDay" Width="Auto" Margin="20,0" VerticalAlignment="Center" SelectionChanged="ComboBox_SelectionChanged"/>
                     <TextBox 
-                x:Name="tbCustomText"
-                Margin="20,0"
-                MaxLength="15"
-                MaxLines="1"
-                VerticalAlignment="Center"
-                materialDesign:HintAssist.Hint="Custom text"
-                PreviewTextInput="tbCustomText_PreviewTextInput"
-                CommandManager.PreviewExecuted="tbCustomText_PreviewExecuted"
-                Style="{StaticResource MaterialDesignFloatingHintTextBox}" TextChanged="tbCustomText_TextChanged"/>
-
+                        x:Name="tbCustomText"
+                        Margin="20,0" 
+                        MaxLength="15"
+                        MaxLines="1"
+                        VerticalAlignment="Center"
+                        materialDesign:HintAssist.Hint="Custom text"
+                        PreviewTextInput="tbCustomText_PreviewTextInput"
+                        CommandManager.PreviewExecuted="tbCustomText_PreviewExecuted"
+                        Style="{StaticResource MaterialDesignFloatingHintTextBox}" TextChanged="tbCustomText_TextChanged"/>
                 </StackPanel>
 
-                <Grid x:Name="grdMain" HorizontalAlignment="Left" Margin="0,10">
+                <Grid x:Name="grdMain" HorizontalAlignment="Center" Margin="0,10">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="Auto"/>
