@@ -96,6 +96,26 @@ namespace PhotoApp
             Properties.Resources.DayLong,
             Properties.Resources.DayShort
         };
+        public static NameString GetTag(string code = null, string visibleText = null, string label = null)
+        {
+            if (code != null)
+            {
+                return tagList.First(x => x.code == code);
+            }
+            else if (visibleText != null)
+            {
+                if (visibleText.Contains('('))
+                {
+                    visibleText = Regex.Match(visibleText, @"\{.*?\}").ToString(); //v případě tagu s parametrem {tag}(param) odstraní parametr
+                }
+                return tagList.First(x => x.visibleText == visibleText);
+            }
+            else if (label != null)
+            {
+                return tagList.First(x => x.buttonLabel == label);
+            }
+            return new NameString();
+        }
 
         public static NameString GetTagByCode(string code)
         {
