@@ -9,7 +9,7 @@ namespace PhotoApp.Converters
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             string tag = value as string;
-            return Tags.GetSampleValueByTag(Tags.GetTag(visibleText: tag).code);
+            return Tags.GetSampleValueByTag(tag);
 
         }
 
