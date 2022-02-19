@@ -11,9 +11,9 @@ using System.Windows.Controls;
 
 namespace PhotoApp
 {
-    public readonly struct NameString
+    public readonly struct TagStruct
     {
-        public NameString(string code, string visibleText, string buttonLabel)
+        public TagStruct(string code, string visibleText, string buttonLabel)
         {
             this.code = code;
             this.visibleText = visibleText;
@@ -23,11 +23,11 @@ namespace PhotoApp
         public string visibleText { get; }
         public string buttonLabel { get; }
 
-        public static bool operator ==(NameString n1, NameString n2)
+        public static bool operator ==(TagStruct n1, TagStruct n2)
         {
             return (n1.code == n2.code && n1.visibleText == n2.visibleText && n1.buttonLabel == n2.buttonLabel);
         }
-        public static bool operator !=(NameString n1, NameString n2)
+        public static bool operator !=(TagStruct n1, TagStruct n2)
         {
             return (n1.code != n2.code || n1.visibleText != n2.visibleText || n1.buttonLabel != n2.buttonLabel);
         }
@@ -37,7 +37,7 @@ namespace PhotoApp
     {
         public ButtonStruct(string code)
         {
-            NameString nameString = Tags.GetTagByCode(code);
+            TagStruct nameString = Tags.GetTagByCode(code);
             this.btnText = nameString.buttonLabel;
             insertValue = nameString.visibleText;
         }
@@ -66,25 +66,25 @@ namespace PhotoApp
     }
     static class Tags
     {
-        private static readonly List<NameString> tagList = new List<NameString>()
+        private static readonly List<TagStruct> tagList = new List<TagStruct>()
         {
             //            code                              visible text        button label
-            new NameString(Properties.Resources.YearLong,   "{YearLong}",       "Rok"),
-            new NameString(Properties.Resources.Year,       "{Year}",           "Rok krátce (YY)"),
-            new NameString(Properties.Resources.Month,      "{Month}",          "Měsíc"),
-            new NameString(Properties.Resources.MonthShort, "{MonthShort}",     "Měsíc krátce (název)"),
-            new NameString(Properties.Resources.MonthLong,  "{MonthLong}",      "Měsíc dlouze (název)"),
-            new NameString(Properties.Resources.Day,        "{Day}",            "Den"),
-            new NameString(Properties.Resources.DayShort,   "{DayShort}",       "Den krátce (název)"),
-            new NameString(Properties.Resources.DayLong,    "{DayLong}",        "Den dlouze (název)"),
-            new NameString(Properties.Resources.DeviceName, "{DeviceName}",     "Název"),
-            new NameString(Properties.Resources.DeviceManuf,"{DeviceMan}",      "Výrobce"),
-            new NameString(Properties.Resources.SequenceNum,"{SequenceNum}",    "Číslo"),
-            new NameString(Properties.Resources.CustomText, "{CustomText}",     "Text"),
-            new NameString(Properties.Resources.FileName,   "{FileName}",       "Název souboru"),
-            new NameString(Properties.Resources.NewFolder,  "\\",               "Nová složka"),
-            new NameString(Properties.Resources.Hyphen,     "-",                "-"),
-            new NameString(Properties.Resources.Underscore, "_",                "_")
+            new TagStruct(Properties.Resources.YearLong,   "{YearLong}",       "Rok"),
+            new TagStruct(Properties.Resources.Year,       "{Year}",           "Rok krátce (YY)"),
+            new TagStruct(Properties.Resources.Month,      "{Month}",          "Měsíc"),
+            new TagStruct(Properties.Resources.MonthShort, "{MonthShort}",     "Měsíc krátce (název)"),
+            new TagStruct(Properties.Resources.MonthLong,  "{MonthLong}",      "Měsíc dlouze (název)"),
+            new TagStruct(Properties.Resources.Day,        "{Day}",            "Den"),
+            new TagStruct(Properties.Resources.DayShort,   "{DayShort}",       "Den krátce (název)"),
+            new TagStruct(Properties.Resources.DayLong,    "{DayLong}",        "Den dlouze (název)"),
+            new TagStruct(Properties.Resources.DeviceName, "{DeviceName}",     "Název"),
+            new TagStruct(Properties.Resources.DeviceManuf,"{DeviceMan}",      "Výrobce"),
+            new TagStruct(Properties.Resources.SequenceNum,"{SequenceNum}",    "Číslo"),
+            new TagStruct(Properties.Resources.CustomText, "{CustomText}",     "Text"),
+            new TagStruct(Properties.Resources.FileName,   "{FileName}",       "Název souboru"),
+            new TagStruct(Properties.Resources.NewFolder,  "\\",               "Nová složka"),
+            new TagStruct(Properties.Resources.Hyphen,     "-",                "-"),
+            new TagStruct(Properties.Resources.Underscore, "_",                "_")
         };
         private static readonly List<string> dateTags = new List<string>(){
             Properties.Resources.Year,
@@ -96,7 +96,7 @@ namespace PhotoApp
             Properties.Resources.DayLong,
             Properties.Resources.DayShort
         };
-        public static NameString GetTag(string code = null, string visibleText = null, string label = null)
+        public static TagStruct GetTag(string code = null, string visibleText = null, string label = null)
         {
             if (code != null)
             {
@@ -114,15 +114,20 @@ namespace PhotoApp
             {
                 return tagList.First(x => x.buttonLabel == label);
             }
-            return new NameString();
+            return new TagStruct();
         }
 
-        public static NameString GetTagByCode(string code)
+        public static string GetTagParameter(string visibleText)
+        {
+            return Regex.Match(visibleText, @"(?<=\().+?(?=\))").ToString();
+        }
+
+        public static TagStruct GetTagByCode(string code)
         {
             return tagList.First(x => x.code == code);
         }
 
-        public static NameString GetTagByVisibleText(string text)
+        public static TagStruct GetTagByVisibleText(string text)
         {
             if (text.Contains('('))
             {
@@ -131,12 +136,12 @@ namespace PhotoApp
             return tagList.First(x => x.visibleText == text);
         }
 
-        public static NameString GetTagByButtonLabel(string label)
+        public static TagStruct GetTagByButtonLabel(string label)
         {
             return tagList.First(x => x.buttonLabel == label);
         }
 
-        public static List<NameString> GetTagListGroup(string matchCodePart)
+        public static List<TagStruct> GetTagListGroup(string matchCodePart)
         {
             return tagList.FindAll(x => x.code.Contains(matchCodePart));
         }
@@ -279,7 +284,7 @@ namespace PhotoApp
 
                 if (str.Length > 2)
                 {
-                    NameString nameString = GetTagByVisibleText(str);
+                    TagStruct nameString = GetTagByVisibleText(str);
                     if (nameString.code == Properties.Resources.CustomText)
                     {
                         values += Regex.Match(tag, @"(?<=\().*?(?=\))").ToString(); //ziskani hodnoty cutomText
@@ -351,6 +356,11 @@ namespace PhotoApp
             }
 
             return spMain;
+        }
+
+        public static bool IsValidTag(string text)
+        {
+          return GetTag(visibleText: text).code != null;
         }
     }
 }
