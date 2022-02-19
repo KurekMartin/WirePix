@@ -53,6 +53,8 @@ namespace PhotoApp.Dialogs
             BaseStructDialog.FillComboBox(cbMonth, Properties.Resources.Month);
             BaseStructDialog.FillComboBox(cbDay, Properties.Resources.Day);
 
+
+
             FileStructure = new ObservableCollection<string>(Tags.TagsToList(initStructure));
             ShowControls();
         }
@@ -114,8 +116,7 @@ namespace PhotoApp.Dialogs
             if (SelectedIndex >= 0)
             {
                 btnDeleteTag.Visibility = Visibility.Visible;
-                tbFileExt.Visibility = Visibility.Visible;
-
+                
                 string tagText = FileStructure[SelectedIndex];
                 TagStruct tag = Tags.GetTag(visibleText: tagText);
                 if (tag.code.StartsWith(Properties.Resources.Year))
@@ -139,6 +140,13 @@ namespace PhotoApp.Dialogs
             else
             {
                 btnDeleteTag.Visibility = Visibility.Hidden;
+            }
+            if (FileStructure.Count > 0)
+            {
+                tbFileExt.Visibility = Visibility.Visible;
+            }
+            else
+            {
                 tbFileExt.Visibility = Visibility.Hidden;
             }
         }
