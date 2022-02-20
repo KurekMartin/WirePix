@@ -65,9 +65,15 @@
                     <StackPanel x:Name="spControls" Orientation="Horizontal" Grid.Column="0" Grid.Row="1" MinHeight="50">
                         <Button x:Name="btnDeleteTag" Content="Smazat tag" Height="Auto" VerticalAlignment="Center" Margin="5,7" Click="btnDeleteTag_Click"/>
                         <Button x:Name="btnDeleteFolder" Content="Smazat složku" Height="Auto" VerticalAlignment="Center" Margin="5,0" Click="btnDeleteFolder_Click"/>
-                        <ComboBox x:Name="cbYear" Width="Auto" Margin="20,0,20,0" VerticalAlignment="Center" SelectionChanged="ComboBox_SelectionChanged"/>
-                        <ComboBox x:Name="cbMonth" Width="Auto" Margin="20,0,20,0" VerticalAlignment="Center" SelectionChanged="ComboBox_SelectionChanged"/>
-                        <ComboBox x:Name="cbDay" Width="Auto" Margin="20,0,20,0" VerticalAlignment="Center" SelectionChanged="ComboBox_SelectionChanged"/>
+                        <ComboBox x:Name="cbGroupSelect" Width="Auto" Margin="20,0" VerticalAlignment="Center" SelectionChanged="ComboBox_SelectionChanged"
+                                  d:ItemsSource="{d:SampleData}">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding ButtonLabel}"
+                                               Tag="{Binding Code}"/>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
                         <TextBox x:Name="tbCustomText"
                                  Margin="20,0"
                                  MaxLength="15"

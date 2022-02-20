@@ -17,7 +17,6 @@ namespace PhotoApp.Dialogs
     public partial class FileStructDialog : UserControl, INotifyPropertyChanged
     {
         private MainWindow mainWindow;
-
         private ObservableCollection<string> _fileStructure = new ObservableCollection<string>(); //struktura souboru
         private List<ButtonGroupStruct> _buttons = new List<ButtonGroupStruct>();
         private Point _buttonGridSize = new Point();
@@ -81,7 +80,7 @@ namespace PhotoApp.Dialogs
             {
                 if (tags.Count() == 0) //tagy, které neobsahují {} (např. - _)
                 {
-                    error.Text = $"Nelze použít {Tags.GetTagByVisibleText(insertValue).visibleText} na začátku názvu.";
+                    error.Text = $"Nelze použít {Tags.GetTagByVisibleText(insertValue).VisibleText} na začátku názvu.";
                     return false;
                 }
 
@@ -89,7 +88,7 @@ namespace PhotoApp.Dialogs
                 if (lastTag == Tags.GetTag(code: Properties.Resources.Hyphen) ||
                     lastTag == Tags.GetTag(code: Properties.Resources.Underscore))
                 {
-                    error.Text = $"Nelze použít {insertValue} po {lastTag.visibleText}.";
+                    error.Text = $"Nelze použít {insertValue} po {lastTag.VisibleText}.";
                     return false;
                 }
             }
@@ -118,7 +117,7 @@ namespace PhotoApp.Dialogs
 
         private void ShowControls()
         {
-            cbYear.Visibility = cbMonth.Visibility = cbDay.Visibility = tbCustomText.Visibility = Visibility.Collapsed;
+            cbGroupSelect.Visibility = tbCustomText.Visibility = Visibility.Collapsed;
 
             if (FileStructure.Count() > 0)
             {
@@ -130,19 +129,15 @@ namespace PhotoApp.Dialogs
 
                     string tagText = FileStructure[SelectedIndex];
                     TagStruct tag = Tags.GetTag(visibleText: tagText);
-                    if (tag.code.StartsWith(Properties.Resources.Year))
+                    List<TagStruct> tagGroup = Tags.GetTagGroup(tag.Group);
+
+                    if (tagGroup.Count > 0)
                     {
-                        cbYear.Visibility = Visibility.Visible;
+                        cbGroupSelect.ItemsSource = tagGroup;
+                        cbGroupSelect.SelectedIndex = tagGroup.IndexOf(tag);
+                        cbGroupSelect.Visibility = Visibility.Visible;
                     }
-                    else if (tag.code.StartsWith(Properties.Resources.Month))
-                    {
-                        cbMonth.Visibility = Visibility.Visible;
-                    }
-                    else if (tag.code.StartsWith(Properties.Resources.Day))
-                    {
-                        cbDay.Visibility = Visibility.Visible;
-                    }
-                    else if (tag.code == Properties.Resources.CustomText)
+                    else if (tag.Code == Properties.Resources.CustomText)
                     {
                         tbCustomText.Visibility = Visibility.Visible;
                         tbCustomText.Text = Tags.GetTagParameter(tagText);
@@ -162,7 +157,7 @@ namespace PhotoApp.Dialogs
         private void TagSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             tbControlsError.Visibility = Visibility.Hidden;
-            if (e.AddedItems.Count > 0 && e.RemovedItems.Count > 0 && Tags.GetTag(visibleText: e.RemovedItems[0].ToString()).code == Properties.Resources.CustomText) //kontrola parametru CustomText
+            if (e.AddedItems.Count > 0 && e.RemovedItems.Count > 0 && Tags.GetTag(visibleText: e.RemovedItems[0].ToString()).Code == Properties.Resources.CustomText) //kontrola parametru CustomText
             {
                 string tag = FileStructure.First(x => x == e.RemovedItems[0].ToString());
                 string text = Tags.GetTagParameter(tag);
@@ -181,7 +176,7 @@ namespace PhotoApp.Dialogs
             string text = tbCustomText.Text;
             if (text.Length == 0)
             {
-                tbControlsError.Text = $"Chybí hodnota pro {Tags.GetTagByCode(Properties.Resources.CustomText).visibleText}.\n" +
+                tbControlsError.Text = $"Chybí hodnota pro {Tags.GetTagByCode(Properties.Resources.CustomText).VisibleText}.\n" +
                     $"Doplňte tuto hodnotu nebo tag odstraňte";
                 tbControlsError.Visibility = Visibility.Visible;
             }
@@ -207,11 +202,11 @@ namespace PhotoApp.Dialogs
         //změna vybraneho tagu
         private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (e.RemovedItems.Count > 0)
+            if (e.RemovedItems.Count > 0 && ((ComboBox)sender).SelectedIndex > -1)
             {
-                ComboBoxItem cbItem = ((ComboBox)sender).SelectedItem as ComboBoxItem;
+                TagStruct tag = (TagStruct)((ComboBox)sender).SelectedItem;
                 int oldIndex = SelectedIndex;
-                FileStructure[SelectedIndex] = Tags.GetTag(label: cbItem.Content.ToString()).visibleText;
+                FileStructure[SelectedIndex] = tag.VisibleText;
                 SelectedIndex = oldIndex;
             }
         }

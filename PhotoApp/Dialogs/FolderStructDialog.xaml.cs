@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PhotoApp.Models;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
@@ -150,10 +151,10 @@ namespace PhotoApp.Dialogs
             {
                 if (tags.Count() == 0) //tagy, které neobsahují {} (např. - _)
                 {
-                    error.Text = $"Nelze použít {Tags.GetTagByVisibleText(insertValue).visibleText} na začátku názvu.";
+                    error.Text = $"Nelze použít {Tags.GetTagByVisibleText(insertValue).VisibleText} na začátku názvu.";
                     return false;
                 }
-                else if (insertValue == Tags.GetTag(code: Properties.Resources.NewFolder).visibleText)
+                else if (insertValue == Tags.GetTag(code: Properties.Resources.NewFolder).VisibleText)
                 {
                     if (!tbCustomText.IsVisible || (tbCustomText.IsVisible && IsValidCustomText(tbCustomText.Text)))
                     {
@@ -172,7 +173,7 @@ namespace PhotoApp.Dialogs
                 if (lastTag == Tags.GetTag(code: Properties.Resources.Hyphen) ||
                     lastTag == Tags.GetTag(code: Properties.Resources.Underscore))
                 {
-                    error.Text = $"Nelze použít {insertValue} po {lastTag.visibleText}.";
+                    error.Text = $"Nelze použít {insertValue} po {lastTag.VisibleText}.";
                     return false;
                 }
             }
@@ -202,11 +203,11 @@ namespace PhotoApp.Dialogs
         //změna vybraneho tagu
         private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (e.RemovedItems.Count > 0)
+            if (e.RemovedItems.Count > 0 && ((ComboBox)sender).SelectedIndex > -1)
             {
-                ComboBoxItem cbItem = ((ComboBox)sender).SelectedItem as ComboBoxItem;
+                TagStruct tag = (TagStruct)((ComboBox)sender).SelectedItem;
                 int oldIndex = SelectedTagIndex;
-                FolderStructure[SelectedFolderIndex][SelectedTagIndex] = Tags.GetTag(label: cbItem.Content.ToString()).visibleText;
+                FolderStructure[SelectedFolderIndex][SelectedTagIndex] = tag.VisibleText;
                 SelectedTagIndex = oldIndex;
             }
         }
@@ -215,7 +216,7 @@ namespace PhotoApp.Dialogs
         private void TagSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             tbControlsError.Visibility = Visibility.Hidden;
-            if (e.AddedItems.Count > 0 && e.RemovedItems.Count > 0 && Tags.GetTag(visibleText: e.RemovedItems[0].ToString()).code == Properties.Resources.CustomText) //kontrola parametru CustomText
+            if (e.AddedItems.Count > 0 && e.RemovedItems.Count > 0 && Tags.GetTag(visibleText: e.RemovedItems[0].ToString()).Code == Properties.Resources.CustomText) //kontrola parametru CustomText
             {
                 string tag = FolderStructure[SelectedFolderIndex].First(x => x == e.RemovedItems[0].ToString());
                 string text = Tags.GetTagParameter(tag);
@@ -297,7 +298,7 @@ namespace PhotoApp.Dialogs
             string text = tbCustomText.Text;
             if (text.Length == 0)
             {
-                tbControlsError.Text = $"Chybí hodnota pro {Tags.GetTagByCode(Properties.Resources.CustomText).visibleText}.\n" +
+                tbControlsError.Text = $"Chybí hodnota pro {Tags.GetTagByCode(Properties.Resources.CustomText).VisibleText}.\n" +
                     $"Doplňte tuto hodnotu nebo tag odstraňte";
                 tbControlsError.Visibility = Visibility.Visible;
             }
@@ -312,7 +313,7 @@ namespace PhotoApp.Dialogs
 
         private void ShowControls()
         {
-            cbYear.Visibility = cbMonth.Visibility = cbDay.Visibility = tbCustomText.Visibility = btnDeleteTag.Visibility = Visibility.Collapsed;
+            cbGroupSelect.Visibility = tbCustomText.Visibility = btnDeleteTag.Visibility = Visibility.Collapsed;
 
             if (FolderStructure.Count() > 0 && FolderStructure[SelectedFolderIndex].Count() > 0)
             {
@@ -324,19 +325,15 @@ namespace PhotoApp.Dialogs
 
                     string tagText = FolderStructure[SelectedFolderIndex][SelectedTagIndex];
                     TagStruct tag = Tags.GetTag(visibleText: tagText);
-                    if (tag.code.StartsWith(Properties.Resources.Year))
+                    List<TagStruct> tagGroup = Tags.GetTagGroup(tag.Group);
+
+                    if (tagGroup.Count > 0)
                     {
-                        cbYear.Visibility = Visibility.Visible;
+                        cbGroupSelect.ItemsSource = tagGroup;
+                        cbGroupSelect.SelectedIndex = tagGroup.IndexOf(tag);
+                        cbGroupSelect.Visibility = Visibility.Visible;
                     }
-                    else if (tag.code.StartsWith(Properties.Resources.Month))
-                    {
-                        cbMonth.Visibility = Visibility.Visible;
-                    }
-                    else if (tag.code.StartsWith(Properties.Resources.Day))
-                    {
-                        cbDay.Visibility = Visibility.Visible;
-                    }
-                    else if (tag.code == Properties.Resources.CustomText)
+                    else if (tag.Code == Properties.Resources.CustomText)
                     {
                         tbCustomText.Visibility = Visibility.Visible;
                         tbCustomText.Text = Tags.GetTagParameter(tagText);
