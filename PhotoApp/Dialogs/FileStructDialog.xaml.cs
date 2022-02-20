@@ -19,18 +19,31 @@ namespace PhotoApp.Dialogs
         private MainWindow mainWindow;
 
         private ObservableCollection<string> _fileStructure = new ObservableCollection<string>(); //struktura souboru
-
+        private List<ButtonGroupStruct> _buttons = new List<ButtonGroupStruct>();
+        private Point _buttonGridSize = new Point();
+        int _selectedIndex = -1;
         public ObservableCollection<string> FileStructure
         {
             get { return _fileStructure; }
             set { _fileStructure = value; OnPropertyChanged(); }
         }
 
-        int _selectedIndex = -1;
         public int SelectedIndex
         {
             get { return _selectedIndex; }
             set { _selectedIndex = value; OnPropertyChanged(); }
+        }
+
+        public List<ButtonGroupStruct> Buttons
+        {
+            get { return _buttons; }
+            set { _buttons = value; OnPropertyChanged(); }
+        }
+
+        public Point ButtonGridSize
+        {
+            get { return _buttonGridSize; }
+            set { _buttonGridSize = value; OnPropertyChanged(); }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -39,23 +52,15 @@ namespace PhotoApp.Dialogs
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        //private int selectedTag = 0; //index vybraneho tagu
-
-        public FileStructDialog(MainWindow window, List<ButtonGroupStruct> groupList, string initStructure = "")
+        public FileStructDialog(MainWindow window, List<ButtonGroupStruct> buttons, string initStructure = "")
         {
             DataContext = this;
             InitializeComponent();
             mainWindow = window;
 
-            Grid groupGrid = BaseStructDialog.CreateMainGrid(groupList, Button_Click);
-
-            grdMain.Children.Add(groupGrid);
-
-            BaseStructDialog.FillComboBox(cbYear, Properties.Resources.Year);
-            BaseStructDialog.FillComboBox(cbMonth, Properties.Resources.Month);
-            BaseStructDialog.FillComboBox(cbDay, Properties.Resources.Day);
-
-
+            ButtonGridSize = new Point(buttons.Max(x => x.gridPosition.X)+1,
+                                       buttons.Max(x => x.gridPosition.Y)+1);
+            Buttons = buttons;
 
             FileStructure = new ObservableCollection<string>(Tags.TagsToList(initStructure));
             ShowControls();
@@ -149,7 +154,7 @@ namespace PhotoApp.Dialogs
                 tbFileExt.Visibility = Visibility.Hidden;
                 btnDeleteTag.Visibility = Visibility.Hidden;
             }
-            
+
         }
 
 
@@ -215,11 +220,11 @@ namespace PhotoApp.Dialogs
         private void btnDeleteTag_Click(object sender, RoutedEventArgs e)
         {
             int oldIndex = SelectedIndex;
-            
+
             if (FileStructure.Count > 0)
             {
                 FileStructure.RemoveAt(SelectedIndex);
-                if(oldIndex >= FileStructure.Count)
+                if (oldIndex >= FileStructure.Count)
                 {
                     SelectedIndex = oldIndex - 1;
                 }
@@ -228,7 +233,7 @@ namespace PhotoApp.Dialogs
                     SelectedIndex = oldIndex;
                 }
             }
-            
+
             ShowControls();
         }
 

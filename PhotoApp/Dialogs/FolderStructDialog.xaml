@@ -61,7 +61,7 @@
                     </StackPanel>
                 </materialDesign:Card>
 
-                <StackPanel>
+                <StackPanel HorizontalAlignment="Center">
                     <StackPanel x:Name="spControls" Orientation="Horizontal" Grid.Column="0" Grid.Row="1" MinHeight="50">
                         <Button x:Name="btnDeleteTag" Content="Smazat tag" Height="Auto" VerticalAlignment="Center" Margin="5,7" Click="btnDeleteTag_Click"/>
                         <Button x:Name="btnDeleteFolder" Content="Smazat složku" Height="Auto" VerticalAlignment="Center" Margin="5,0" Click="btnDeleteFolder_Click"/>
@@ -84,17 +84,46 @@
                                Foreground="Red"
                                d:Text="Error"
                                Margin="5,12,5,0"/>
-                </StackPanel>
-
-                <Grid x:Name="grdMain" HorizontalAlignment="Center" Margin="0,0">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
 
 
-
-                    <ListBox ItemsSource="{Binding FolderStructure}" d:ItemsSource="{d:SampleData ItemCount=5}"
+                    <Grid x:Name="grdMain" HorizontalAlignment="Center" Margin="0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <ItemsControl ItemsSource="{Binding Buttons}" d:ItemsSource="{d:SampleData ItemCount=4}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <UniformGrid Columns="{Binding ButtonGridSize.X}" 
+                                             Rows="{Binding ButtonGridSize.Y}"/>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <GroupBox Header="{Binding groupName}"
+                                          Margin="5">
+                                        <ItemsControl ItemsSource="{Binding buttons}">
+                                            <ItemsControl.ItemsPanel>
+                                                <ItemsPanelTemplate>
+                                                    <StackPanel Orientation="Horizontal"
+                                                            HorizontalAlignment="Center"/>
+                                                </ItemsPanelTemplate>
+                                            </ItemsControl.ItemsPanel>
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate>
+                                                    <Button Content="{Binding btnText}"
+                                                        Tag="{Binding insertValue}"
+                                                        Click="Button_Click"
+                                                        Height="Auto"
+                                                        Margin="5,0"/>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                    </GroupBox>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                        <ListBox ItemsSource="{Binding FolderStructure}" d:ItemsSource="{d:SampleData ItemCount=5}"
                              SelectedIndex="{Binding SelectedFolderIndex, Mode=TwoWay}"
                              SelectionChanged="FolderSelectionChanged"
                              Grid.Column="1"                                  
@@ -103,31 +132,32 @@
                              VerticalAlignment="Top"
                              Margin="15"
                              MinWidth="150">
-                        <ListBox.ItemTemplate>
-                            <DataTemplate>
-                                <StackPanel Orientation="Horizontal">
-                                    <materialDesign:PackIcon Kind="FolderOutline"/>
-                                    <ItemsControl ItemsSource="{Binding .}">
-                                        <ItemsControl.ItemsPanel>
-                                            <ItemsPanelTemplate>
-                                                <StackPanel Orientation="Horizontal"/>
-                                            </ItemsPanelTemplate>
-                                        </ItemsControl.ItemsPanel>
-                                        <ItemsControl.ItemTemplate>
-                                            <DataTemplate>
-                                                <TextBlock Text="{Binding ., Converter={StaticResource TagToValueConverter}}"
-                                                           Style="{StaticResource MaterialDesignBody2TextBlock}"
-                                                           VerticalAlignment="Center"/>
-                                            </DataTemplate>
-                                        </ItemsControl.ItemTemplate>
-                                    </ItemsControl>
-                                </StackPanel>
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-                    </ListBox>
-                </Grid>
-                <TextBlock x:Name="tbError" Text="" Margin="15,5,15,0" Foreground="#DDC90000" Style="{StaticResource MaterialDesignBody2TextBlock}"/>
-                <Button x:Name="btnDone" Content="Hotovo" Margin="15,5" Click="btnDone_Click"/>
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <materialDesign:PackIcon Kind="FolderOutline"/>
+                                        <ItemsControl ItemsSource="{Binding .}">
+                                            <ItemsControl.ItemsPanel>
+                                                <ItemsPanelTemplate>
+                                                    <StackPanel Orientation="Horizontal"/>
+                                                </ItemsPanelTemplate>
+                                            </ItemsControl.ItemsPanel>
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Text="{Binding ., Converter={StaticResource TagToValueConverter}}"
+                                                               Style="{StaticResource MaterialDesignBody2TextBlock}"
+                                                               VerticalAlignment="Center"/>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </Grid>
+                    <TextBlock x:Name="tbError" Text="" Margin="15,5,15,0" Foreground="#DDC90000" Style="{StaticResource MaterialDesignBody2TextBlock}"/>
+                    <Button x:Name="btnDone" Content="Hotovo" Margin="15,5" Click="btnDone_Click" MaxWidth="150"/>
+                </StackPanel>
             </StackPanel>
         </StackPanel>
     </materialDesign:Card>

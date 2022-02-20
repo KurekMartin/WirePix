@@ -64,8 +64,8 @@
                     </StackPanel>
                 </materialDesign:Card>
 
-                <StackPanel>
-                    <StackPanel x:Name="spControls" Orientation="Horizontal" Grid.Column="0" Grid.Row="1">
+                <StackPanel HorizontalAlignment="Center">
+                    <StackPanel x:Name="spControls" Orientation="Horizontal" Grid.Column="0" Grid.Row="1" MinHeight="50">
                         <Button x:Name="btnDeleteTag" Content="Smazat tag" Height="Auto" VerticalAlignment="Center" Margin="5,7" Click="btnDeleteTag_Click"/>
                         <ComboBox x:Name="cbYear" Width="Auto" Margin="20,0" VerticalAlignment="Center" SelectionChanged="ComboBox_SelectionChanged"/>
                         <ComboBox x:Name="cbMonth" Width="Auto" Margin="20,0" VerticalAlignment="Center" SelectionChanged="ComboBox_SelectionChanged"/>
@@ -86,15 +86,42 @@
                                Foreground="Red"
                                d:Text="Error"
                                Margin="5,12,5,0"/>
+
+                    <ItemsControl ItemsSource="{Binding Buttons}" d:ItemsSource="{d:SampleData ItemCount=4}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <UniformGrid Columns="{Binding ButtonGridSize.X}" 
+                                             Rows="{Binding ButtonGridSize.Y}"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <GroupBox Header="{Binding groupName}"
+                                          Margin="5">
+                                    <ItemsControl ItemsSource="{Binding buttons}">
+                                        <ItemsControl.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <StackPanel Orientation="Horizontal"
+                                                            HorizontalAlignment="Center"/>
+                                            </ItemsPanelTemplate>
+                                        </ItemsControl.ItemsPanel>
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <Button Content="{Binding btnText}"
+                                                        Tag="{Binding insertValue}"
+                                                        Click="Button_Click"
+                                                        Height="Auto"
+                                                        Margin="5,0"/>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </GroupBox>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                    <TextBlock x:Name="tbError" Text="" Margin="0,5,0,0" Foreground="#DDC90000" Style="{StaticResource MaterialDesignBody2TextBlock}"/>
+                <Button x:Name="btnDone" Content="Hotovo" Margin="0,5" Click="btnDone_Click" MaxWidth="150"/>
                 </StackPanel>
-                <Grid x:Name="grdMain" HorizontalAlignment="Center" Margin="0,0">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
-                </Grid>
-                <TextBlock x:Name="tbError" Text="" Margin="0,5,0,0" Foreground="#DDC90000" Style="{StaticResource MaterialDesignBody2TextBlock}"/>
-                <Button x:Name="btnDone" Content="Hotovo" Margin="0,5" Click="btnDone_Click"/>
             </StackPanel>
         </StackPanel>
     </materialDesign:Card>

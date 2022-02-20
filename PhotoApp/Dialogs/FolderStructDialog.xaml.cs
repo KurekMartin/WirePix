@@ -18,8 +18,8 @@ namespace PhotoApp.Dialogs
     {
         private MainWindow mainWindow;
         private ObservableCollection<ObservableCollection<string>> _folderStructure = new ObservableCollection<ObservableCollection<string>>(); //struktura pro uložení fotek
-        //private List<string> selectedStructure = new List<string>(); //struktura aktuální složky
-
+        private List<ButtonGroupStruct> _buttons = new List<ButtonGroupStruct>();
+        private Point _buttonGridSize = new Point();
         private int _selectedFolderIndex = -1; //index vybrané složky
         private int _selectedTagIndex = -1; //index vybraneho tagu
 
@@ -52,7 +52,6 @@ namespace PhotoApp.Dialogs
                 if (SelectedFolderIndex > -1 && SelectedFolderIndex < FolderStructure.Count)
                 {
                     ObservableCollection<string> result = FolderStructure[SelectedFolderIndex];
-                    //result.CollectionChanged += SelectedFolder_CollectionChanged;
                     return result;
                 }
                 else
@@ -66,6 +65,17 @@ namespace PhotoApp.Dialogs
                 OnPropertyChanged();
             }
         }
+        public List<ButtonGroupStruct> Buttons
+        {
+            get { return _buttons; }
+            set { _buttons = value; OnPropertyChanged(); }
+        }
+
+        public Point ButtonGridSize
+        {
+            get { return _buttonGridSize; }
+            set { _buttonGridSize = value; OnPropertyChanged(); }
+        }
 
         private void SelectedFolder_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
@@ -77,19 +87,15 @@ namespace PhotoApp.Dialogs
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
-        public FolderStructDialog(MainWindow window, List<ButtonGroupStruct> groupList, string initStructure = "")
+        public FolderStructDialog(MainWindow window, List<ButtonGroupStruct> buttons, string initStructure = "")
         {
             DataContext = this;
             InitializeComponent();
             mainWindow = window;
 
-            Grid groupGrid = BaseStructDialog.CreateMainGrid(groupList, Button_Click);
-
-            grdMain.Children.Add(groupGrid);
-
-            BaseStructDialog.FillComboBox(cbYear, Properties.Resources.Year);
-            BaseStructDialog.FillComboBox(cbMonth, Properties.Resources.Month);
-            BaseStructDialog.FillComboBox(cbDay, Properties.Resources.Day);
+            ButtonGridSize = new Point(buttons.Max(x => x.gridPosition.X) + 1,
+                                       buttons.Max(x => x.gridPosition.Y) + 1);
+            Buttons = buttons;
 
             while (initStructure.Length > 0)
             {
