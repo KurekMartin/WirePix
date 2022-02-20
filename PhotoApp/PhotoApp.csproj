@@ -172,6 +172,11 @@
     <Compile Include="Models\Thumbnails.cs" />
     <Compile Include="Models\Settings.cs" />
     <Compile Include="Dialogs\Tags.cs" />
+    <Compile Include="Properties\TagGroups.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>TagGroups.resx</DependentUpon>
+    </Compile>
     <Page Include="CircularProgress.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -246,6 +251,10 @@
     <EmbeddedResource Include="Properties\TagCodes.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>TagCodes.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\TagGroups.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>TagGroups.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <None Include="MediaDevices.chm" />
     <None Include="packages.config" />
