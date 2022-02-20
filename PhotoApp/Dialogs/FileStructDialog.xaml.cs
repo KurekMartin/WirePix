@@ -81,8 +81,8 @@ namespace PhotoApp.Dialogs
                 }
 
                 TagStruct lastTag = Tags.GetTag(visibleText: tags.Last());
-                if (lastTag == Tags.GetTag(code: Properties.Resources.Hyphen) ||
-                    lastTag == Tags.GetTag(code: Properties.Resources.Underscore))
+                if (lastTag == Tags.GetTag(code: Properties.TagCodes.Hyphen) ||
+                    lastTag == Tags.GetTag(code: Properties.TagCodes.Underscore))
                 {
                     error.Text = $"Nelze použít {insertValue} po {lastTag.VisibleText}.";
                     return false;
@@ -133,7 +133,7 @@ namespace PhotoApp.Dialogs
                         cbGroupSelect.SelectedIndex = tagGroup.IndexOf(tag);
                         cbGroupSelect.Visibility = Visibility.Visible;
                     }
-                    else if (tag.Code == Properties.Resources.CustomText)
+                    else if (tag.Code == Properties.TagCodes.CustomText)
                     {
                         tbCustomText.Visibility = Visibility.Visible;
                         tbCustomText.Text = Tags.GetTagParameter(tagText);
@@ -153,7 +153,7 @@ namespace PhotoApp.Dialogs
         private void TagSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             tbControlsError.Visibility = Visibility.Hidden;
-            if (e.AddedItems.Count > 0 && e.RemovedItems.Count > 0 && Tags.GetTag(visibleText: e.RemovedItems[0].ToString()).Code == Properties.Resources.CustomText) //kontrola parametru CustomText
+            if (e.AddedItems.Count > 0 && e.RemovedItems.Count > 0 && Tags.GetTag(visibleText: e.RemovedItems[0].ToString()).Code == Properties.TagCodes.CustomText) //kontrola parametru CustomText
             {
                 string tag = FileStructure.First(x => x == e.RemovedItems[0].ToString());
                 string text = Tags.GetTagParameter(tag);
@@ -172,7 +172,7 @@ namespace PhotoApp.Dialogs
             string text = tbCustomText.Text;
             if (text.Length == 0)
             {
-                tbControlsError.Text = $"Chybí hodnota pro {Tags.GetTagByCode(Properties.Resources.CustomText).VisibleText}.\n" +
+                tbControlsError.Text = $"Chybí hodnota pro {Tags.GetTagByCode(Properties.TagCodes.CustomText).VisibleText}.\n" +
                     $"Doplňte tuto hodnotu nebo tag odstraňte";
                 tbControlsError.Visibility = Visibility.Visible;
             }

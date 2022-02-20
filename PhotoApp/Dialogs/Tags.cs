@@ -71,32 +71,32 @@ namespace PhotoApp
         private static readonly List<TagStruct> tagList = new List<TagStruct>()
         {
             //            code                              visible text        button label
-            new TagStruct(Properties.Resources.YearLong,   "{YearLong}",       "Rok",                       Properties.Resources.Year),
-            new TagStruct(Properties.Resources.Year,       "{Year}",           "Rok krátce (YY)",           Properties.Resources.Year),
-            new TagStruct(Properties.Resources.Month,      "{Month}",          "Měsíc",                     Properties.Resources.Month),
-            new TagStruct(Properties.Resources.MonthShort, "{MonthShort}",     "Měsíc krátce (název)",      Properties.Resources.Month),
-            new TagStruct(Properties.Resources.MonthLong,  "{MonthLong}",      "Měsíc dlouze (název)",      Properties.Resources.Month),
-            new TagStruct(Properties.Resources.Day,        "{Day}",            "Den",                       Properties.Resources.Day),
-            new TagStruct(Properties.Resources.DayShort,   "{DayShort}",       "Den krátce (název)",        Properties.Resources.Day),
-            new TagStruct(Properties.Resources.DayLong,    "{DayLong}",        "Den dlouze (název)",        Properties.Resources.Day),
-            new TagStruct(Properties.Resources.DeviceName, "{DeviceName}",     "Název"),
-            new TagStruct(Properties.Resources.DeviceManuf,"{DeviceMan}",      "Výrobce"),
-            new TagStruct(Properties.Resources.SequenceNum,"{SequenceNum}",    "Číslo"),
-            new TagStruct(Properties.Resources.CustomText, "{CustomText}",     "Text"),
-            new TagStruct(Properties.Resources.FileName,   "{FileName}",       "Název souboru"),
-            new TagStruct(Properties.Resources.NewFolder,  "\\",               "Nová složka"),
-            new TagStruct(Properties.Resources.Hyphen,     "-",                "-"),
-            new TagStruct(Properties.Resources.Underscore, "_",                "_")
+            new TagStruct(Properties.TagCodes.YearLong,   "{YearLong}",       "Rok",                       Properties.TagCodes.Year),
+            new TagStruct(Properties.TagCodes.Year,       "{Year}",           "Rok krátce (YY)",           Properties.TagCodes.Year),
+            new TagStruct(Properties.TagCodes.Month,      "{Month}",          "Měsíc",                     Properties.TagCodes.Month),
+            new TagStruct(Properties.TagCodes.MonthShort, "{MonthShort}",     "Měsíc krátce (název)",      Properties.TagCodes.Month),
+            new TagStruct(Properties.TagCodes.MonthLong,  "{MonthLong}",      "Měsíc dlouze (název)",      Properties.TagCodes.Month),
+            new TagStruct(Properties.TagCodes.Day,        "{Day}",            "Den",                       Properties.TagCodes.Day),
+            new TagStruct(Properties.TagCodes.DayShort,   "{DayShort}",       "Den krátce (název)",        Properties.TagCodes.Day),
+            new TagStruct(Properties.TagCodes.DayLong,    "{DayLong}",        "Den dlouze (název)",        Properties.TagCodes.Day),
+            new TagStruct(Properties.TagCodes.DeviceName, "{DeviceName}",     "Název"),
+            new TagStruct(Properties.TagCodes.DeviceManuf,"{DeviceMan}",      "Výrobce"),
+            new TagStruct(Properties.TagCodes.SequenceNum,"{SequenceNum}",    "Číslo"),
+            new TagStruct(Properties.TagCodes.CustomText, "{CustomText}",     "Text"),
+            new TagStruct(Properties.TagCodes.FileName,   "{FileName}",       "Název souboru"),
+            new TagStruct(Properties.TagCodes.NewFolder,  "\\",               "Nová složka"),
+            new TagStruct(Properties.TagCodes.Hyphen,     "-",                "-"),
+            new TagStruct(Properties.TagCodes.Underscore, "_",                "_")
         };
         private static readonly List<string> dateTags = new List<string>(){
-            Properties.Resources.Year,
-            Properties.Resources.YearLong,
-            Properties.Resources.Month,
-            Properties.Resources.MonthShort,
-            Properties.Resources.MonthLong,
-            Properties.Resources.Day,
-            Properties.Resources.DayLong,
-            Properties.Resources.DayShort
+            Properties.TagCodes.Year,
+            Properties.TagCodes.YearLong,
+            Properties.TagCodes.Month,
+            Properties.TagCodes.MonthShort,
+            Properties.TagCodes.MonthLong,
+            Properties.TagCodes.Day,
+            Properties.TagCodes.DayLong,
+            Properties.TagCodes.DayShort
         };
         public static TagStruct GetTag(string code = null, string visibleText = null, string label = null)
         {
@@ -119,7 +119,7 @@ namespace PhotoApp
             return new TagStruct();
         }
 
-        public static bool IsValidCustomText(string text)
+        public  bool IsValidCustomText(string text)
         {
             return text != string.Empty && text.IndexOfAny(Path.GetInvalidFileNameChars()) < 0;
         }
@@ -186,7 +186,7 @@ namespace PhotoApp
                     }
                 }
 
-                if (codeTag == Properties.Resources.DeviceManuf)
+                if (codeTag == Properties.TagCodes.DeviceManuf)
                 {
                     manufacturer = FileExif.GetManufacturer(filePath);
                     if (manufacturer == null || manufacturer == string.Empty)
@@ -195,7 +195,7 @@ namespace PhotoApp
                     }
                 }
 
-                if (codeTag == Properties.Resources.DeviceName)
+                if (codeTag == Properties.TagCodes.DeviceName)
                 {
                     model = FileExif.GetModel(filePath);
                     if (model == null || model == string.Empty)
@@ -204,61 +204,61 @@ namespace PhotoApp
                     }
                 }
 
-                if (codeTag == Properties.Resources.FileName)
+                if (codeTag == Properties.TagCodes.FileName)
                 {
                     filename = Path.GetFileNameWithoutExtension(fileInfo.Name);
                 }
             }
 
-            if (codeTag == Properties.Resources.YearLong)
+            if (codeTag == Properties.TagCodes.YearLong)
             {
                 return date.Year.ToString();
             }
-            else if (codeTag == Properties.Resources.Year)
+            else if (codeTag == Properties.TagCodes.Year)
             {
                 return (date.Year % 100).ToString();
             }
-            else if (codeTag == Properties.Resources.Month)
+            else if (codeTag == Properties.TagCodes.Month)
             {
                 return date.Month.ToString("00");
             }
-            else if (codeTag == Properties.Resources.MonthShort)
+            else if (codeTag == Properties.TagCodes.MonthShort)
             {
                 return CultureInfo.CurrentCulture.DateTimeFormat.GetAbbreviatedMonthName(date.Month);
             }
-            else if (codeTag == Properties.Resources.MonthLong)
+            else if (codeTag == Properties.TagCodes.MonthLong)
             {
                 return CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(date.Month);
             }
-            else if (codeTag == Properties.Resources.Day)
+            else if (codeTag == Properties.TagCodes.Day)
             {
                 return date.Day.ToString("00");
             }
-            else if (codeTag == Properties.Resources.DayShort)
+            else if (codeTag == Properties.TagCodes.DayShort)
             {
                 return CultureInfo.CurrentCulture.DateTimeFormat.GetAbbreviatedDayName(date.DayOfWeek);
             }
-            else if (codeTag == Properties.Resources.DayLong)
+            else if (codeTag == Properties.TagCodes.DayLong)
             {
                 return CultureInfo.CurrentCulture.DateTimeFormat.GetDayName(date.DayOfWeek);
             }
-            else if (codeTag == Properties.Resources.DeviceName)
+            else if (codeTag == Properties.TagCodes.DeviceName)
             {
                 return model;
             }
-            else if (codeTag == Properties.Resources.DeviceManuf)
+            else if (codeTag == Properties.TagCodes.DeviceManuf)
             {
                 return manufacturer;
             }
-            else if (codeTag == Properties.Resources.FileName)
+            else if (codeTag == Properties.TagCodes.FileName)
             {
                 return filename;
             }
-            else if (codeTag == Properties.Resources.SequenceNum)
+            else if (codeTag == Properties.TagCodes.SequenceNum)
             {
                 return "####";
             }
-            else if (codeTag == Properties.Resources.CustomText)
+            else if (codeTag == Properties.TagCodes.CustomText)
             {
                 return Regex.Match(visibleText, @"(?<=\().*?(?=\))").ToString(); //vrátí parametr v ()
             }
@@ -302,11 +302,11 @@ namespace PhotoApp
                 if (str.Length > 2)
                 {
                     TagStruct nameString = GetTagByVisibleText(str);
-                    if (nameString.Code == Properties.Resources.CustomText)
+                    if (nameString.Code == Properties.TagCodes.CustomText)
                     {
                         values += Regex.Match(tag, @"(?<=\().*?(?=\))").ToString(); //ziskani hodnoty cutomText
                     }
-                    values += GetSampleValueByTag(nameString.VisibleText, fileInfo, device, filePath);
+                    values += GetSampleValueByTag(nameString.Code, fileInfo, device, filePath);
                 }
                 else
                 {
