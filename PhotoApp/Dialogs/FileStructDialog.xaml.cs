@@ -157,7 +157,7 @@ namespace PhotoApp.Dialogs
             {
                 string tag = FileStructure.First(x => x == e.RemovedItems[0].ToString());
                 string text = Tags.GetTagParameter(tag);
-                if (!IsValidCustomText(text))
+                if (!Tags.IsValidCustomText(text))
                 {
                     SelectedIndex = FileStructure.IndexOf(tag);
                     tbCustomText.Focus();
@@ -253,17 +253,10 @@ namespace PhotoApp.Dialogs
             else { tbError.Text = ""; }
         }
 
-        private bool IsValidCustomText(string text)
-        {
-            return text != string.Empty && text.IndexOfAny(Path.GetInvalidFileNameChars()) < 0;
-        }
-
-
-
         //ukončení formuláře
         private void btnDone_Click(object sender, RoutedEventArgs e)
         {
-            if (tbCustomText.Visibility == Visibility.Visible && !IsValidCustomText(tbCustomText.Text))
+            if (tbCustomText.Visibility == Visibility.Visible && !Tags.IsValidCustomText(tbCustomText.Text))
             {
                 tbCustomText.Focus();
                 ShowCustomTextError();

@@ -153,7 +153,7 @@ namespace PhotoApp.Dialogs
                 }
                 else if (insertValue == Tags.GetTag(code: Properties.Resources.NewFolder).VisibleText)
                 {
-                    if (!tbCustomText.IsVisible || (tbCustomText.IsVisible && IsValidCustomText(tbCustomText.Text)))
+                    if (!tbCustomText.IsVisible || (tbCustomText.IsVisible && Tags.IsValidCustomText(tbCustomText.Text)))
                     {
                         NewFolderLevel();
                         return false;
@@ -217,7 +217,7 @@ namespace PhotoApp.Dialogs
             {
                 string tag = FolderStructure[SelectedFolderIndex].First(x => x == e.RemovedItems[0].ToString());
                 string text = Tags.GetTagParameter(tag);
-                if (!IsValidCustomText(text))
+                if (!Tags.IsValidCustomText(text))
                 {
                     SelectedTagIndex = FolderStructure[SelectedFolderIndex].IndexOf(tag);
                     ShowCustomTextError();
@@ -285,11 +285,6 @@ namespace PhotoApp.Dialogs
             else { tbError.Text = ""; }
         }
 
-        private bool IsValidCustomText(string text)
-        {
-            return text != string.Empty && text.IndexOfAny(Path.GetInvalidFileNameChars()) < 0;
-        }
-
         private void ShowCustomTextError()
         {
             string text = tbCustomText.Text;
@@ -347,13 +342,12 @@ namespace PhotoApp.Dialogs
                 btnDeleteFolder.Visibility = Visibility.Hidden;
 
             }
-
         }
 
         //ukončení formuláře
         private void btnDone_Click(object sender, RoutedEventArgs e)
         {
-            if (tbCustomText.Visibility == Visibility.Visible && !IsValidCustomText(tbCustomText.Text))
+            if (tbCustomText.Visibility == Visibility.Visible && !Tags.IsValidCustomText(tbCustomText.Text))
             {
                 tbCustomText.Focus();
                 ShowCustomTextError();

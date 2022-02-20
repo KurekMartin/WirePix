@@ -119,6 +119,11 @@ namespace PhotoApp
             return new TagStruct();
         }
 
+        public static bool IsValidCustomText(string text)
+        {
+            return text != string.Empty && text.IndexOfAny(Path.GetInvalidFileNameChars()) < 0;
+        }
+
         public static List<TagStruct> GetTagGroup(string code)
         {
             return tagList.Where(x=>x.Group==code).ToList();
@@ -301,7 +306,7 @@ namespace PhotoApp
                     {
                         values += Regex.Match(tag, @"(?<=\().*?(?=\))").ToString(); //ziskani hodnoty cutomText
                     }
-                    values += GetSampleValueByTag(nameString.Code, fileInfo, device, filePath);
+                    values += GetSampleValueByTag(nameString.VisibleText, fileInfo, device, filePath);
                 }
                 else
                 {
