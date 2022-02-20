@@ -1,5 +1,4 @@
-﻿using Microsoft.Win32;
-using System;
+﻿using System;
 using System.Deployment.Application;
 using System.IO;
 using System.Reflection;
