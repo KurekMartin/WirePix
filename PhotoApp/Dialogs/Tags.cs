@@ -71,14 +71,14 @@ namespace PhotoApp
         private static readonly List<TagStruct> tagList = new List<TagStruct>()
         {
             //            code                              visible text        button label
-            new TagStruct(Properties.TagCodes.YearLong,   "{YearLong}",       "Rok",                       Properties.TagCodes.Year),
-            new TagStruct(Properties.TagCodes.Year,       "{Year}",           "Rok krátce (YY)",           Properties.TagCodes.Year),
-            new TagStruct(Properties.TagCodes.Month,      "{Month}",          "Měsíc",                     Properties.TagCodes.Month),
-            new TagStruct(Properties.TagCodes.MonthShort, "{MonthShort}",     "Měsíc krátce (název)",      Properties.TagCodes.Month),
-            new TagStruct(Properties.TagCodes.MonthLong,  "{MonthLong}",      "Měsíc dlouze (název)",      Properties.TagCodes.Month),
-            new TagStruct(Properties.TagCodes.Day,        "{Day}",            "Den",                       Properties.TagCodes.Day),
-            new TagStruct(Properties.TagCodes.DayShort,   "{DayShort}",       "Den krátce (název)",        Properties.TagCodes.Day),
-            new TagStruct(Properties.TagCodes.DayLong,    "{DayLong}",        "Den dlouze (název)",        Properties.TagCodes.Day),
+            new TagStruct(Properties.TagCodes.YearLong,   "{YearLong}",       "Rok",                       Properties.TagGroups.Year),
+            new TagStruct(Properties.TagCodes.Year,       "{Year}",           "Rok krátce (YY)",           Properties.TagGroups.Year),
+            new TagStruct(Properties.TagCodes.Month,      "{Month}",          "Měsíc",                     Properties.TagGroups.Month),
+            new TagStruct(Properties.TagCodes.MonthShort, "{MonthShort}",     "Měsíc krátce (název)",      Properties.TagGroups.Month),
+            new TagStruct(Properties.TagCodes.MonthLong,  "{MonthLong}",      "Měsíc dlouze (název)",      Properties.TagGroups.Month),
+            new TagStruct(Properties.TagCodes.Day,        "{Day}",            "Den",                       Properties.TagGroups.Day),
+            new TagStruct(Properties.TagCodes.DayShort,   "{DayShort}",       "Den krátce (název)",        Properties.TagGroups.Day),
+            new TagStruct(Properties.TagCodes.DayLong,    "{DayLong}",        "Den dlouze (název)",        Properties.TagGroups.Day),
             new TagStruct(Properties.TagCodes.DeviceName, "{DeviceName}",     "Název"),
             new TagStruct(Properties.TagCodes.DeviceManuf,"{DeviceMan}",      "Výrobce"),
             new TagStruct(Properties.TagCodes.SequenceNum,"{SequenceNum}",    "Číslo"),
@@ -119,7 +119,7 @@ namespace PhotoApp
             return new TagStruct();
         }
 
-        public  bool IsValidCustomText(string text)
+        public static bool IsValidCustomText(string text)
         {
             return text != string.Empty && text.IndexOfAny(Path.GetInvalidFileNameChars()) < 0;
         }
