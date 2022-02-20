@@ -138,7 +138,7 @@ namespace PhotoApp.Dialogs
             {
                 if (tags.Count() == 0) //tagy, které neobsahují {} (např. - _)
                 {
-                    error.Text = $"Nelze použít {Tags.GetTagByVisibleText(insertValue).VisibleText} na začátku názvu.";
+                    error.Text = $"Nelze použít {Tags.GetTag(visibleText: insertValue).VisibleText} na začátku názvu.";
                     return false;
                 }
                 else if (insertValue == Tags.GetTag(code: Properties.TagCodes.NewFolder).VisibleText)
@@ -280,7 +280,7 @@ namespace PhotoApp.Dialogs
             string text = tbCustomText.Text;
             if (text.Length == 0)
             {
-                tbControlsError.Text = $"Chybí hodnota pro {Tags.GetTagByCode(Properties.TagCodes.CustomText).VisibleText}.\n" +
+                tbControlsError.Text = $"Chybí hodnota pro {Tags.GetTag(code: Properties.TagCodes.CustomText).VisibleText}.\n" +
                     $"Doplňte tuto hodnotu nebo tag odstraňte";
                 tbControlsError.Visibility = Visibility.Visible;
             }

@@ -39,7 +39,7 @@ namespace PhotoApp
     {
         public ButtonStruct(string code)
         {
-            TagStruct nameString = Tags.GetTagByCode(code);
+            TagStruct nameString = Tags.GetTag(code: code);
             this.btnText = nameString.ButtonLabel;
             insertValue = nameString.VisibleText;
         }
@@ -132,25 +132,6 @@ namespace PhotoApp
         public static string GetTagParameter(string visibleText)
         {
             return Regex.Match(visibleText, @"(?<=\().+?(?=\))").ToString();
-        }
-
-        public static TagStruct GetTagByCode(string code)
-        {
-            return tagList.First(x => x.Code == code);
-        }
-
-        public static TagStruct GetTagByVisibleText(string text)
-        {
-            if (text.Contains('('))
-            {
-                text = Regex.Match(text, @"\{.*?\}").ToString(); //v případě tagu s parametrem {tag}(param) odstraní parametr
-            }
-            return tagList.First(x => x.VisibleText == text);
-        }
-
-        public static TagStruct GetTagByButtonLabel(string label)
-        {
-            return tagList.First(x => x.ButtonLabel == label);
         }
 
         public static List<TagStruct> GetTagListGroup(string matchCodePart)
