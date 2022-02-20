@@ -301,12 +301,12 @@ namespace PhotoApp
 
                 if (str.Length > 2)
                 {
-                    TagStruct nameString = GetTagByVisibleText(str);
+                    TagStruct nameString = GetTag(visibleText: str);
                     if (nameString.Code == Properties.TagCodes.CustomText)
                     {
                         values += Regex.Match(tag, @"(?<=\().*?(?=\))").ToString(); //ziskani hodnoty cutomText
                     }
-                    values += GetSampleValueByTag(nameString.Code, fileInfo, device, filePath);
+                    values += GetSampleValueByTag(nameString.VisibleText, fileInfo, device, filePath);
                 }
                 else
                 {
@@ -314,6 +314,12 @@ namespace PhotoApp
                 }
             }
             return values;
+        }
+        internal static string TagsToValues(List<List<string>> folderTags, Device device, MediaFileInfo file, string tmpFile)
+        {
+            List<string> folders = new List<string>();
+            folderTags.ForEach(x=>folders.Add(TagsToValues(x, device, file, tmpFile)));
+            return string.Join("\\", folders);
         }
 
         //prevod stringu na strukturu slozek
@@ -379,6 +385,8 @@ namespace PhotoApp
         {
             return GetTag(visibleText: text).Code != null;
         }
+
+
     }
 }
 
