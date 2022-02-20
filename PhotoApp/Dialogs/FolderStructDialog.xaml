@@ -5,52 +5,130 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:PhotoApp.Dialogs"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:converters="clr-namespace:PhotoApp.Converters"
              mc:Ignorable="d">
+    <UserControl.Resources>
+        <converters:TagToValue x:Key="TagToValueConverter"/>
+    </UserControl.Resources>
     <materialDesign:Card>
         <StackPanel Orientation="Vertical">
             <materialDesign:ColorZone Mode="PrimaryMid">
                 <TextBlock Style="{StaticResource MaterialDesignHeadline6TextBlock}" Text="Pojmenování složek" Padding="5" TextAlignment="Center"/>
             </materialDesign:ColorZone>
-            <StackPanel Margin="0,20">
-                <StackPanel x:Name="spNameStruct" Orientation="Horizontal" Margin="15,10,15,10">
 
+            <StackPanel Margin="15,20">
+                <materialDesign:Card Padding="5" Margin="5">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}"
+                                   Text="Značky" VerticalAlignment="Center"
+                                   Padding="5,12"/>
+                            <ListBox ItemsSource="{Binding SelectedFolder}" d:ItemsSource="{d:SampleData ItemCount=3}"
+                                 Style="{StaticResource MaterialDesignChoiceChipPrimaryOutlineListBox}"
+                                 SelectionChanged="TagSelectionChanged"
+                                 SelectedIndex="{Binding SelectedTagIndex, Mode=TwoWay}"
+                                 VerticalAlignment="Center">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding .}"
+                                               Margin="5,0"/>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                        </StackPanel>
+                        <StackPanel x:Name="spFileName" Visibility="Visible" d:Visibility="Visible" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,5">
+                            <materialDesign:PackIcon 
+                                Kind="FolderOutline" 
+                                VerticalAlignment="Center" 
+                                Width="22" 
+                                Height="22"
+                                Margin="5,0"/>
+                            <ItemsControl ItemsSource="{Binding SelectedFolder}" d:ItemsSource="{d:SampleData ItemCount=3}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel Orientation="Horizontal"/>
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding ., Converter={StaticResource TagToValueConverter}}"
+                                                   Style="{StaticResource MaterialDesignBody2TextBlock}"
+                                                   VerticalAlignment="Center"/>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+                    </StackPanel>
+                </materialDesign:Card>
+
+                <StackPanel>
+                    <StackPanel x:Name="spControls" Orientation="Horizontal" Grid.Column="0" Grid.Row="1" MinHeight="50">
+                        <Button x:Name="btnDeleteTag" Content="Smazat tag" Height="Auto" VerticalAlignment="Center" Margin="5,7" Click="btnDeleteTag_Click"/>
+                        <Button x:Name="btnDeleteFolder" Content="Smazat složku" Height="Auto" VerticalAlignment="Center" Margin="5,0" Click="btnDeleteFolder_Click"/>
+                        <ComboBox x:Name="cbYear" Width="Auto" Margin="20,0,20,0" VerticalAlignment="Center" SelectionChanged="ComboBox_SelectionChanged"/>
+                        <ComboBox x:Name="cbMonth" Width="Auto" Margin="20,0,20,0" VerticalAlignment="Center" SelectionChanged="ComboBox_SelectionChanged"/>
+                        <ComboBox x:Name="cbDay" Width="Auto" Margin="20,0,20,0" VerticalAlignment="Center" SelectionChanged="ComboBox_SelectionChanged"/>
+                        <TextBox x:Name="tbCustomText"
+                                 Margin="20,0"
+                                 MaxLength="15"
+                                 MaxLines="1"
+                                 VerticalAlignment="Center"
+                                 materialDesign:HintAssist.Hint="Custom text"
+                                 PreviewTextInput="tbCustomText_PreviewTextInput"
+                                 Style="{StaticResource MaterialDesignFloatingHintTextBox}" 
+                                 TextChanged="tbCustomText_TextChanged"
+                                 MinWidth="100"/>
+                    </StackPanel>
+                    <TextBlock x:Name="tbControlsError"
+                               Style="{StaticResource MaterialDesignBody2TextBlock}"
+                               Foreground="Red"
+                               d:Text="Error"
+                               Margin="5,12,5,0"/>
                 </StackPanel>
-                <StackPanel x:Name="spControls" Orientation="Horizontal" Grid.Column="0" Grid.Row="1" Margin="15,0">
 
-                    <Button x:Name="btnDeleteTag" Content="Smazat tag" Height="Auto" VerticalAlignment="Center" Margin="5,0" Click="btnDeleteTag_Click"/>
-                    <Button x:Name="btnDeleteFolder" Content="Smazat složku" Height="Auto" VerticalAlignment="Center" Margin="5,0" Click="btnDeleteFolder_Click"/>
-
-                    <ComboBox x:Name="cbYear" Width="Auto" Margin="20,0,20,0" VerticalAlignment="Center" SelectionChanged="ComboBox_SelectionChanged">
-                    </ComboBox>
-                    <ComboBox x:Name="cbMonth" Width="Auto" Margin="20,0,20,0" VerticalAlignment="Center" SelectionChanged="ComboBox_SelectionChanged">
-
-                    </ComboBox>
-                    <ComboBox x:Name="cbDay" Width="Auto" Margin="20,0,20,0" VerticalAlignment="Center" SelectionChanged="ComboBox_SelectionChanged">
-
-                    </ComboBox>
-                    <TextBox 
-                x:Name="tbCustomText"
-                Margin="20,0,20,0"
-                MaxLength="15"
-                MaxLines="1"
-                VerticalAlignment="Center"
-                materialDesign:HintAssist.Hint="Custom text"
-                PreviewTextInput="tbCustomText_PreviewTextInput"
-                CommandManager.PreviewExecuted="tbCustomText_PreviewExecuted"
-                Style="{StaticResource MaterialDesignFloatingHintTextBox}" TextChanged="tbCustomText_TextChanged"/>
-                </StackPanel>
-
-                <Grid x:Name="grdMain" HorizontalAlignment="Left" Margin="0,10">
+                <Grid x:Name="grdMain" HorizontalAlignment="Center" Margin="0,0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
 
-                    <StackPanel x:Name="spFolderStructure" Grid.Column="1" HorizontalAlignment="Left" Height="Auto" Margin="10" Grid.Row="1" VerticalAlignment="Top" Width="Auto" MinWidth="150"/>
+
+
+                    <ListBox ItemsSource="{Binding FolderStructure}" d:ItemsSource="{d:SampleData ItemCount=5}"
+                             SelectedIndex="{Binding SelectedFolderIndex, Mode=TwoWay}"
+                             SelectionChanged="FolderSelectionChanged"
+                             Grid.Column="1"                                  
+                             Grid.Row="1"
+                             HorizontalAlignment="Left"
+                             VerticalAlignment="Top"
+                             Margin="15"
+                             MinWidth="150">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <materialDesign:PackIcon Kind="FolderOutline"/>
+                                    <ItemsControl ItemsSource="{Binding .}">
+                                        <ItemsControl.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <StackPanel Orientation="Horizontal"/>
+                                            </ItemsPanelTemplate>
+                                        </ItemsControl.ItemsPanel>
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="{Binding ., Converter={StaticResource TagToValueConverter}}"
+                                                           Style="{StaticResource MaterialDesignBody2TextBlock}"
+                                                           VerticalAlignment="Center"/>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
                 </Grid>
                 <TextBlock x:Name="tbError" Text="" Margin="15,5,15,0" Foreground="#DDC90000" Style="{StaticResource MaterialDesignBody2TextBlock}"/>
                 <Button x:Name="btnDone" Content="Hotovo" Margin="15,5" Click="btnDone_Click"/>
             </StackPanel>
         </StackPanel>
     </materialDesign:Card>
-    </UserControl>
+</UserControl>

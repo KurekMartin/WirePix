@@ -1,6 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
@@ -9,17 +14,72 @@ using System.Windows.Media;
 
 namespace PhotoApp.Dialogs
 {
-    public partial class FolderStructDialog : UserControl
+    public partial class FolderStructDialog : UserControl, INotifyPropertyChanged
     {
         private MainWindow mainWindow;
-        private List<List<string>> folderStructure = new List<List<string>>(); //struktura pro uložení fotek
-        private List<string> selectedStructure = new List<string>(); //struktura aktuální složky
+        private ObservableCollection<ObservableCollection<string>> _folderStructure = new ObservableCollection<ObservableCollection<string>>(); //struktura pro uložení fotek
+        //private List<string> selectedStructure = new List<string>(); //struktura aktuální složky
 
-        private int selectedFolderLevel = 0; //index vybrané složky
-        private int selectedTag = 0; //index vybraneho tagu
+        private int _selectedFolderIndex = -1; //index vybrané složky
+        private int _selectedTagIndex = -1; //index vybraneho tagu
 
+        public ObservableCollection<ObservableCollection<string>> FolderStructure
+        {
+            get { return _folderStructure; }
+            set { _folderStructure = value; OnPropertyChanged(); }
+        }
+
+        public int SelectedFolderIndex
+        {
+            get { return _selectedFolderIndex; }
+            set
+            {
+                _selectedFolderIndex = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public int SelectedTagIndex
+        {
+            get { return _selectedTagIndex; }
+            set { _selectedTagIndex = value; OnPropertyChanged(); }
+        }
+
+        public ObservableCollection<string> SelectedFolder
+        {
+            get
+            {
+                if (SelectedFolderIndex > -1 && SelectedFolderIndex < FolderStructure.Count)
+                {
+                    ObservableCollection<string> result = FolderStructure[SelectedFolderIndex];
+                    //result.CollectionChanged += SelectedFolder_CollectionChanged;
+                    return result;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            set
+            {
+                FolderStructure[SelectedFolderIndex] = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private void SelectedFolder_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            OnPropertyChanged("SelectedFolder");
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
         public FolderStructDialog(MainWindow window, List<ButtonGroupStruct> groupList, string initStructure = "")
         {
+            DataContext = this;
             InitializeComponent();
             mainWindow = window;
 
@@ -37,19 +97,16 @@ namespace PhotoApp.Dialogs
 
                 string folder = Regex.Match(initStructure, @"[^\\]*").ToString(); //ziskani složky bez \
 
-                folderStructure.Add(Tags.TagsToList(folder));
+                FolderStructure.Add(new ObservableCollection<string>(Tags.TagsToList(folder)));
 
                 initStructure = initStructure.Remove(0, folder.Length);
             }
-            if (folderStructure.Count > 0)
-            {
-                GenerateTree();
-            }
-            else
+            if (FolderStructure.Count == 0)
             {
                 //vytvoreni korene treeView
                 NewFolderLevel();
             }
+            ShowControls();
         }
 
 
@@ -59,130 +116,80 @@ namespace PhotoApp.Dialogs
             tbError.Text = ""; //reset chybové hlášky
             string insertValue = ((Button)sender).Tag.ToString();
 
-            ClickReturn retVal = BaseStructDialog.AddTag(insertValue, selectedStructure);
-            if (retVal.error.Length > 0)
+            if (TagAdd(insertValue, FolderStructure[SelectedFolderIndex].ToList(), tbError))
             {
-                tbError.Text = retVal.error;
+                FolderStructure[SelectedFolderIndex].Add(insertValue);
+                SelectedTagIndex++;
+            }
+
+            if (FolderStructure[SelectedFolderIndex].Count() > 0)
+            {
+                ShowControls();
+            }
+
+        }
+
+        private bool TagAdd(string insertValue, List<string> tags, TextBlock error)
+        {
+            if (insertValue.StartsWith("{"))
+            {
+                //omezeni maximalniho poctu tagu
+                if (tags.Count(x => x.StartsWith("{")) > 6)
+                {
+                    error.Text = "Lze použít maximálně 6 tagů";
+                    return false;
+                }
             }
             else
             {
-                selectedStructure = retVal.tags;
-            }
-            if (selectedStructure.Last() == Tags.GetTagByCode(Properties.Resources.NewFolder).visibleText)
-            {
-                selectedStructure.RemoveAt(selectedStructure.Count() - 1);
-                if (selectedStructure.Count(x => x.StartsWith("{")) > 0)
+                if (tags.Count() == 0) //tagy, které neobsahují {} (např. - _)
                 {
-                    NewFolderLevel();
-                    btnDeleteFolder.Visibility = Visibility.Hidden;
+                    error.Text = $"Nelze použít {Tags.GetTagByVisibleText(insertValue).visibleText} na začátku názvu.";
+                    return false;
+                }
+                else if (insertValue == Tags.GetTag(code: Properties.Resources.NewFolder).visibleText)
+                {
+                    if (!tbCustomText.IsVisible || (tbCustomText.IsVisible && IsValidCustomText(tbCustomText.Text)))
+                    {
+                        NewFolderLevel();
+                        return false;
+                    }
+                    else
+                    {
+                        ShowCustomTextError();
+                        return false;
+                    }
+
+                }
+
+                TagStruct lastTag = Tags.GetTag(visibleText: tags.Last());
+                if (lastTag == Tags.GetTag(code: Properties.Resources.Hyphen) ||
+                    lastTag == Tags.GetTag(code: Properties.Resources.Underscore))
+                {
+                    error.Text = $"Nelze použít {insertValue} po {lastTag.visibleText}.";
+                    return false;
                 }
             }
-
-            BaseStructDialog.TagsToStackPanel(spNameStruct, selectedStructure, TagClick);
-
-            UpdateTreeLayer();
-            if (selectedStructure.Count() > 0)
-            {
-                int index = selectedStructure.Count() - 1;
-
-                selectedTag = BaseStructDialog.SelectTag(spNameStruct, selectedTag, index);
-                TextBlock tb = BaseStructDialog.FindTextBlockByIndex<TextBlock>(spNameStruct, index);
-                BaseStructDialog.ShowControls(spControls, tb.Text);
-            }
-
-            //pokud obsahuje alespoň jeden tag -> možnost smazání složky
-            if (selectedStructure.Count() > 0)
-            {
-                btnDeleteFolder.Visibility = Visibility.Visible;
-            }
-
+            return true;
         }
 
         //vytvoření nové složky
         private void NewFolderLevel()
         {
-            spNameStruct.Children.Clear();
-
-            int index = folderStructure.Count();
-            StackPanel newItem = MainWindow.CreateIconPanel("", MaterialDesignThemes.Wpf.PackIconKind.FolderOutline, index, mainWindow.mainTextStyle);
-
-            //TextBlock newItem = new TextBlock();
-            spFolderStructure.Children.Add(newItem);
-            selectedStructure = new List<string>();
-            folderStructure.Add(selectedStructure);
-
-            newItem.Tag = index;
-            ChangeSelectedFolder(index);
-
-            newItem.MouseLeftButtonDown += FolderName_MouseLeftButtonDown;
+            FolderStructure.Add(new ObservableCollection<string>());
+            SelectedFolderIndex++;
+            SelectedTagIndex = -1;
             btnDeleteFolder.Visibility = Visibility.Collapsed;
-
-            UpdateTreeLayer();
-        }
-
-        //výběr složky
-        private void FolderName_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            TextBlock selectedItem = (TextBlock)sender;
-            ChangeSelectedFolder((int)selectedItem.Tag);
-        }
-
-
-        //zvýraznění vybrané úrovně
-        private void ChangeSelectedFolder(int newIndex)
-        {
-            StackPanel oldSelect = BaseStructDialog.FindTextBlockByIndex<StackPanel>(spFolderStructure, selectedFolderLevel);
-            StackPanel newSelect = BaseStructDialog.FindTextBlockByIndex<StackPanel>(spFolderStructure, newIndex);
-            oldSelect.Background = Brushes.Transparent;
-
-            //nová složka neobsahuje žádný tag a vybereme jinou složku -> odstranění prázdné složky
-            if (selectedStructure.Count() == 0 && newIndex != folderStructure.Count() - 1)
-            {
-                spFolderStructure.Children.Remove(oldSelect);
-                folderStructure.RemoveAt(selectedFolderLevel);
-            }
-            selectedFolderLevel = newIndex;
-
-            spNameStruct.Children.Clear();
-            //zobrazení tagů vybrané složky
-            if (newIndex < folderStructure.Count())
-            {
-                selectedStructure = folderStructure.ElementAt(newIndex);
-                BaseStructDialog.TagsToStackPanel(spNameStruct, selectedStructure, TagClick);
-
-                selectedTag = BaseStructDialog.SelectTag(spNameStruct, 0, 0);
-                TextBlock tb = BaseStructDialog.FindTextBlockByIndex<TextBlock>(spNameStruct, selectedTag);
-                if(tb== null) { tb = new TextBlock(); }
-                BaseStructDialog.ShowControls(spControls, tb.Text);
-                btnDeleteFolder.Visibility = Visibility.Visible;
-            }
-            newSelect.Background = Brushes.Aqua;
-        }
-
-        //aktualizace vybrané složky
-        private void UpdateTreeLayer()
-        {
-            StackPanel sp = BaseStructDialog.FindTextBlockByIndex<StackPanel>(spFolderStructure, selectedFolderLevel);
-            ((TextBlock)sp.Children[1]).Text = FolderLevel(selectedStructure, selectedFolderLevel);
-        }
-
-
-        //vyber tagu v nazvu aktualni slozky
-        private void TagClick(object sender, MouseButtonEventArgs e)
-        {
-            TextBlock block = sender as TextBlock;
-            int index = (int)block.Tag;
-
-            selectedTag = BaseStructDialog.SelectTag(spNameStruct, selectedTag, index);
-            BaseStructDialog.ShowControls(spControls, block.Text);
         }
 
 
         //kontrola textBoxu - povolené jen písmena - _
         private void tbCustomText_PreviewTextInput(object sender, TextCompositionEventArgs e)
         {
-            Regex regex = new Regex(@"^[a-zA-Z0-9\-_]*$");
-            e.Handled = !regex.IsMatch(e.Text);
+            //Regex regex = new Regex(@"^[a-zA-Z0-9\-_]*$");
+            //e.Handled = !regex.IsMatch(e.Text);
+
+            e.Handled = e.Text.IndexOfAny(Path.GetInvalidFileNameChars()) >= 0;
         }
 
 
@@ -192,44 +199,48 @@ namespace PhotoApp.Dialogs
             if (e.RemovedItems.Count > 0)
             {
                 ComboBoxItem cbItem = ((ComboBox)sender).SelectedItem as ComboBoxItem;
-
-                ChangeReturn cReturn = BaseStructDialog.ComboBoxChanged(cbItem, selectedTag, selectedStructure);
-                selectedStructure = cReturn.tagStructure;
-
-                BaseStructDialog.TagsToStackPanel(spNameStruct, selectedStructure, TagClick);
-                UpdateTreeLayer();
-
-                //SelectTag(index);
-                selectedTag = BaseStructDialog.SelectTag(spNameStruct, selectedTag, cReturn.index);
-                TextBlock tb = BaseStructDialog.FindTextBlockByIndex<TextBlock>(spNameStruct, selectedTag);
-                BaseStructDialog.ShowControls(spControls, tb.Text);
+                int oldIndex = SelectedTagIndex;
+                FolderStructure[SelectedFolderIndex][SelectedTagIndex] = Tags.GetTag(label: cbItem.Content.ToString()).visibleText;
+                SelectedTagIndex = oldIndex;
             }
         }
 
-
+        //vyber tagu v nazvu souboru
+        private void TagSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            tbControlsError.Visibility = Visibility.Hidden;
+            if (e.AddedItems.Count > 0 && e.RemovedItems.Count > 0 && Tags.GetTag(visibleText: e.RemovedItems[0].ToString()).code == Properties.Resources.CustomText) //kontrola parametru CustomText
+            {
+                string tag = FolderStructure[SelectedFolderIndex].First(x => x == e.RemovedItems[0].ToString());
+                string text = Tags.GetTagParameter(tag);
+                if (!IsValidCustomText(text))
+                {
+                    SelectedTagIndex = FolderStructure[SelectedFolderIndex].IndexOf(tag);
+                    ShowCustomTextError();
+                }
+            }
+            ShowControls();
+        }
 
         //smazani vybraneho tagu
         private void btnDeleteTag_Click(object sender, RoutedEventArgs e)
         {
-            selectedStructure.RemoveAt(selectedTag);
-            if (selectedStructure.Count() == 0)
-            {
-                DeleteSelectedFolder();
-            }
-            BaseStructDialog.TagsToStackPanel(spNameStruct, selectedStructure, TagClick);
-            UpdateTreeLayer();
+            int oldIndex = SelectedTagIndex;
 
-            //pokud smažeme poslední tag -> vybere se opět poslední
-            if (selectedTag >= selectedStructure.Count())
+            if (FolderStructure[SelectedFolderIndex].Count > 0)
             {
-                selectedTag = selectedStructure.Count() - 1;
-
+                FolderStructure[SelectedFolderIndex].RemoveAt(SelectedTagIndex);
+                if (oldIndex >= FolderStructure[SelectedFolderIndex].Count)
+                {
+                    SelectedTagIndex = oldIndex - 1;
+                }
+                else
+                {
+                    SelectedTagIndex = oldIndex;
+                }
             }
-            //SelectTag(selectedTag);
-            selectedTag = BaseStructDialog.SelectTag(spNameStruct, selectedTag, selectedTag);
-            TextBlock tb = BaseStructDialog.FindTextBlockByIndex<TextBlock>(spNameStruct, selectedTag);
-            if (tb == null) { tb = new TextBlock(); }
-            BaseStructDialog.ShowControls(spControls, tb.Text);
+
+            ShowControls();
         }
 
         //smazani vybrane slozky
@@ -240,96 +251,116 @@ namespace PhotoApp.Dialogs
 
         private void DeleteSelectedFolder()
         {
-            folderStructure.RemoveAt(selectedFolderLevel);
-            StackPanel tb = BaseStructDialog.FindTextBlockByIndex<StackPanel>(spFolderStructure, selectedFolderLevel);
-            spFolderStructure.Children.Remove(tb);
-            GenerateTree();
-        }
-
-        //strom složek
-        private void GenerateTree()
-        {
-            spFolderStructure.Children.Clear();
-
-            int i = 0;
-            foreach (List<string> dir in folderStructure)
-            {
-                StackPanel folderLevel = MainWindow.CreateIconPanel(Tags.TagsToValues(dir),MaterialDesignThemes.Wpf.PackIconKind.FolderOutline,i,mainWindow.mainTextStyle);
-
-                //TextBlock folderLevel = new TextBlock();
-                //folderLevel.Text = FolderLevel(dir, i);
-                folderLevel.Tag = i;
-                folderLevel.MouseLeftButtonDown += FolderName_MouseLeftButtonDown;
-                spFolderStructure.Children.Add(folderLevel);
-                i++;
-            }
-
-            if (spFolderStructure.Children.Count == 0)
+            FolderStructure.RemoveAt(SelectedFolderIndex);
+            if (FolderStructure.Count == 0)
             {
                 NewFolderLevel();
             }
-
-            ChangeSelectedFolder(spFolderStructure.Children.Count - 1);
-        }
-
-        //odsazení + dosazení hodnot za tagy
-        private string FolderLevel(List<string> tags, int level)
-        {
-            string folderName = "";
-            if (level > 0)
-            {
-                folderName += new string(' ', level);
-                folderName += "└> ";
-            }
-            folderName += Tags.TagsToValues(tags);
-            return folderName;
         }
 
         //změna CustomTextu -> update tagu
         private void tbCustomText_TextChanged(object sender, TextChangedEventArgs e)
         {
-            if (e.Changes.First().AddedLength == 1 || e.Changes.First().RemovedLength == 1)
+            int oldIndex = SelectedTagIndex;
+            string tag = FolderStructure[SelectedFolderIndex][SelectedTagIndex];
+            int i = tag.IndexOf("(");
+            if (i != -1)
             {
-
-                int textPos = selectedTag;
-                int i = selectedStructure[textPos].IndexOf("(");
-                if (i != -1)
-                {
-                    selectedStructure[textPos] = selectedStructure[textPos].Substring(0, i);
-                }
-                selectedStructure[textPos] += $"({tbCustomText.Text})";
-
-                BaseStructDialog.TagsToStackPanel(spNameStruct, selectedStructure, TagClick);
-                UpdateTreeLayer();
-
-                selectedTag = BaseStructDialog.SelectTag(spNameStruct, selectedTag, textPos);
-                TextBlock tb = BaseStructDialog.FindTextBlockByIndex<TextBlock>(spNameStruct, selectedTag);
-                BaseStructDialog.ShowControls(spControls, tb.Text);
+                tag = tag.Substring(0, i);
             }
+            tag += $"({tbCustomText.Text})";
 
+            FolderStructure[SelectedFolderIndex][SelectedTagIndex] = tag;
+            SelectedTagIndex = oldIndex;
+            tbCustomText.Focus();
+
+            if (tbCustomText.Text.IndexOfAny(Path.GetInvalidFileNameChars()) >= 0)
+            {
+                ShowCustomTextError();
+            }
+            else { tbError.Text = ""; }
         }
 
-        //zákaz vkládání textu do textBoxu
-        private void tbCustomText_PreviewExecuted(object sender, ExecutedRoutedEventArgs e)
+        private bool IsValidCustomText(string text)
         {
-            if (e.Command == ApplicationCommands.Paste)
+            return text != string.Empty && text.IndexOfAny(Path.GetInvalidFileNameChars()) < 0;
+        }
+
+        private void ShowCustomTextError()
+        {
+            string text = tbCustomText.Text;
+            if (text.Length == 0)
             {
-                e.Handled = true;
+                tbControlsError.Text = $"Chybí hodnota pro {Tags.GetTagByCode(Properties.Resources.CustomText).visibleText}.\n" +
+                    $"Doplňte tuto hodnotu nebo tag odstraňte";
+                tbControlsError.Visibility = Visibility.Visible;
             }
+            else if (text.IndexOfAny(Path.GetInvalidFileNameChars()) >= 0)
+            {
+                List<char> invalidChars = text.Where(x => Path.GetInvalidFileNameChars().Contains(x)).ToList();
+                tbControlsError.Text = $"Text obsahuje neplatné znaky: {string.Join("", invalidChars)}";
+                tbControlsError.Visibility = Visibility.Visible;
+            }
+            tbCustomText.Focus();
+        }
+
+        private void ShowControls()
+        {
+            cbYear.Visibility = cbMonth.Visibility = cbDay.Visibility = tbCustomText.Visibility = btnDeleteTag.Visibility = Visibility.Collapsed;
+
+            if (FolderStructure.Count() > 0 && FolderStructure[SelectedFolderIndex].Count() > 0)
+            {
+                btnDeleteFolder.Visibility = Visibility.Visible;
+
+                if (SelectedTagIndex >= 0)
+                {
+                    btnDeleteTag.Visibility = Visibility.Visible;
+
+                    string tagText = FolderStructure[SelectedFolderIndex][SelectedTagIndex];
+                    TagStruct tag = Tags.GetTag(visibleText: tagText);
+                    if (tag.code.StartsWith(Properties.Resources.Year))
+                    {
+                        cbYear.Visibility = Visibility.Visible;
+                    }
+                    else if (tag.code.StartsWith(Properties.Resources.Month))
+                    {
+                        cbMonth.Visibility = Visibility.Visible;
+                    }
+                    else if (tag.code.StartsWith(Properties.Resources.Day))
+                    {
+                        cbDay.Visibility = Visibility.Visible;
+                    }
+                    else if (tag.code == Properties.Resources.CustomText)
+                    {
+                        tbCustomText.Visibility = Visibility.Visible;
+                        tbCustomText.Text = Tags.GetTagParameter(tagText);
+                        tbCustomText.Focus();
+                    }
+                }
+                else
+                {
+                    btnDeleteTag.Visibility = Visibility.Collapsed;
+                }
+            }
+            else
+            {
+                btnDeleteFolder.Visibility = Visibility.Hidden;
+
+            }
+
         }
 
         //ukončení formuláře
         private void btnDone_Click(object sender, RoutedEventArgs e)
         {
-            if (!CheckCustomText())
+            if (tbCustomText.Visibility == Visibility.Visible && !IsValidCustomText(tbCustomText.Text))
             {
-                tbError.Text = $"Chybí hodnota pro {Tags.GetTagByCode(Properties.Resources.CustomText).visibleText}.\n" +
-                    $"Doplňte tuto hodnotu nebo tag odstraňte";
                 tbCustomText.Focus();
+                ShowCustomTextError();
                 return;
             }
             string result = "";
-            foreach (List<string> dir in folderStructure)
+            foreach (ObservableCollection<string> dir in FolderStructure)
             {
                 result = Path.Combine(result, string.Join("", dir.ToArray()));
             }
@@ -337,27 +368,14 @@ namespace PhotoApp.Dialogs
             mainWindow.DialogClose(this, result);
         }
 
-        //kontrola, zda všechny tagy CustomText mají vyplněnou hodnotu
-        private bool CheckCustomText()
+        private void FolderSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            int i = 0;
-            foreach (List<string> dir in folderStructure)
+            OnPropertyChanged("SelectedFolder");
+            ShowControls();
+            if (FolderStructure.Count > 0 && SelectedFolderIndex != FolderStructure.Count() - 1 && FolderStructure.Last().Count == 0)
             {
-                int index = BaseStructDialog.CheckCustomText(dir);
-                if (index > -1)
-                {
-                    ChangeSelectedFolder(i);
-
-                    selectedTag = BaseStructDialog.SelectTag(spNameStruct, selectedTag, index);
-                    TextBlock tb = BaseStructDialog.FindTextBlockByIndex<TextBlock>(spNameStruct, selectedTag);
-                    BaseStructDialog.ShowControls(spControls, tb.Text);
-
-                    return false;
-                }
-                i++;
+                FolderStructure.Remove(FolderStructure.Last());
             }
-
-            return true;
         }
     }
 }
