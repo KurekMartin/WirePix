@@ -98,17 +98,6 @@ namespace PhotoApp
             Properties.Resources.DayLong,
             Properties.Resources.DayShort
         };
-        private static readonly Dictionary<string, List<string>> tagGroups = new Dictionary<string, List<string>>()
-        {
-            {Properties.Resources.Year, new List<string>(){ Properties.Resources.Year,
-                                                            Properties.Resources.YearLong} },
-            {Properties.Resources.Month, new List<string>(){ Properties.Resources.Month,
-                                                             Properties.Resources.MonthShort,
-                                                             Properties.Resources.MonthLong} },
-            {Properties.Resources.Day, new List<string>(){ Properties.Resources.Day,
-                                                           Properties.Resources.DayShort,
-                                                           Properties.Resources.DayLong}}
-        };
         public static TagStruct GetTag(string code = null, string visibleText = null, string label = null)
         {
             if (code != null)
@@ -128,6 +117,11 @@ namespace PhotoApp
                 return tagList.First(x => x.ButtonLabel == label);
             }
             return new TagStruct();
+        }
+
+        public static List<TagStruct> GetTagGroup(string code)
+        {
+            return tagList.Where(x=>x.Group==code).ToList();
         }
 
         public static string GetTagParameter(string visibleText)
