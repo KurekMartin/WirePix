@@ -49,8 +49,7 @@ namespace PhotoApp.Dialogs
             {
                 if (SelectedFolderIndex > -1 && SelectedFolderIndex < FolderStructure.Count)
                 {
-                    ObservableCollection<string> result = FolderStructure[SelectedFolderIndex];
-                    return result;
+                    return FolderStructure[SelectedFolderIndex];
                 }
                 else
                 {
@@ -85,7 +84,7 @@ namespace PhotoApp.Dialogs
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
-        public FolderStructDialog(MainWindow window, List<ButtonGroupStruct> buttons, string initStructure = "")
+        public FolderStructDialog(MainWindow window, List<ButtonGroupStruct> buttons, List<List<string>> initStructure = null)
         {
             DataContext = this;
             InitializeComponent();
@@ -95,16 +94,7 @@ namespace PhotoApp.Dialogs
                                        buttons.Max(x => x.gridPosition.Y) + 1);
             Buttons = buttons;
 
-            while (initStructure.Length > 0)
-            {
-                initStructure = initStructure.Trim('\\');
-
-                string folder = Regex.Match(initStructure, @"[^\\]*").ToString(); //ziskani složky bez \
-
-                FolderStructure.Add(new ObservableCollection<string>(Tags.TagsToList(folder)));
-
-                initStructure = initStructure.Remove(0, folder.Length);
-            }
+            initStructure.ForEach(x=>FolderStructure.Add(new ObservableCollection<string>(x)));
             if (FolderStructure.Count == 0)
             {
                 //vytvoreni korene treeView
@@ -353,12 +343,8 @@ namespace PhotoApp.Dialogs
                 ShowCustomTextError();
                 return;
             }
-            string result = "";
-            foreach (ObservableCollection<string> dir in FolderStructure)
-            {
-                result = Path.Combine(result, string.Join("", dir.ToArray()));
-            }
-
+            List<List<string>> result = new List<List<string>>();
+            FolderStructure.ToList().ForEach(x => result.Add(x.ToList()));
             mainWindow.DialogClose(this, result);
         }
 

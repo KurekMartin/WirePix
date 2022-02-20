@@ -5,7 +5,7 @@ namespace PhotoApp.Models
     public class PathStruct : BaseObserveObject
     {
         private string _root = string.Empty;
-        private string _folderTags = string.Empty;
+        private List<List<string>> _folderTags = new List<List<string>>();
         private List<string> _fileTags = new List<string>();
         private string _backup = string.Empty;
         private string _thumbnail = string.Empty;
@@ -21,7 +21,7 @@ namespace PhotoApp.Models
                 }
             }
         }
-        public string FolderTags
+        public List<List<string>> FolderTags
         {
             get => _folderTags;
             set

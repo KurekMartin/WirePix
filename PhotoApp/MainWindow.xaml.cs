@@ -262,7 +262,7 @@ namespace PhotoApp
             }
 
 
-            if (Settings.Paths.FolderTags == null || Settings.Paths.FolderTags.Length == 0)
+            if (Settings.Paths.FolderTags == null || Settings.Paths.FolderTags.Count == 0)
             {
                 BtnError(btnFolderStruct);
                 SetErrorMessage(tbFolderStructError, "Zvlote strukturu složek pro uložení");
@@ -496,7 +496,7 @@ namespace PhotoApp
         {
             if (sender.GetType() == typeof(FolderStructDialog))
             {
-                Settings.Paths.FolderTags = (string)result;
+                Settings.Paths.FolderTags = (List<List<string>>)result;
                 UpdateDestExample();
             }
             else if (sender.GetType() == typeof(FileStructDialog))

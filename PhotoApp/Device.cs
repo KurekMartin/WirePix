@@ -525,7 +525,7 @@ namespace PhotoApp
                             }
 
                             // dosazení hodnot za tagy
-                            string folder = Tags.TagsToValues(Tags.TagsToList(settings.Paths.FolderTags), this, file, tmpFile);
+                            string folder = "";// Tags.TagsToValues(Tags.TagsToList(settings.Paths.FolderTags), this, file, tmpFile);
                             string fileName = Tags.TagsToValues(settings.Paths.FileTags, this, file, tmpFile);
                             fileName += Path.GetExtension(file.Name);
                             string destFullName = Path.Combine(folder, fileName);
