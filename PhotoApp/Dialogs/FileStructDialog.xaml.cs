@@ -47,7 +47,7 @@ namespace PhotoApp.Dialogs
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        public FileStructDialog(MainWindow window, List<ButtonGroupStruct> buttons, string initStructure = "")
+        public FileStructDialog(MainWindow window, List<ButtonGroupStruct> buttons, List<string> initStructure = null)
         {
             DataContext = this;
             InitializeComponent();
@@ -57,7 +57,7 @@ namespace PhotoApp.Dialogs
                                        buttons.Max(x => x.gridPosition.Y)+1);
             Buttons = buttons;
 
-            FileStructure = new ObservableCollection<string>(Tags.TagsToList(initStructure));
+            FileStructure = new ObservableCollection<string>(initStructure);
             ShowControls();
         }
 
@@ -262,8 +262,7 @@ namespace PhotoApp.Dialogs
                 ShowCustomTextError();
                 return;
             }
-            string result = string.Join("", FileStructure.ToList());
-            mainWindow.DialogClose(this, result);
+            mainWindow.DialogClose(this, FileStructure.ToList());
         }
     }
 }

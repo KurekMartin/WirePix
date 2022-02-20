@@ -1,10 +1,12 @@
-﻿namespace PhotoApp.Models
+﻿using System.Collections.Generic;
+
+namespace PhotoApp.Models
 {
     public class PathStruct : BaseObserveObject
     {
         private string _root = string.Empty;
         private string _folderTags = string.Empty;
-        private string _fileTags = string.Empty;
+        private List<string> _fileTags = new List<string>();
         private string _backup = string.Empty;
         private string _thumbnail = string.Empty;
         public string Root
@@ -31,7 +33,7 @@
                 }
             }
         }
-        public string FileTags
+        public List<string> FileTags
         {
             get => _fileTags;
             set

@@ -269,7 +269,7 @@ namespace PhotoApp
                 correct = false;
             }
 
-            if (Settings.Paths.FileTags == null || Settings.Paths.FileTags.Length == 0)
+            if (Settings.Paths.FileTags == null || Settings.Paths.FileTags.Count == 0)
             {
                 BtnError(btnFileStruct);
                 SetErrorMessage(tbFileStructError, "Zvlote strukturu pro název souboru");
@@ -501,7 +501,7 @@ namespace PhotoApp
             }
             else if (sender.GetType() == typeof(FileStructDialog))
             {
-                Settings.Paths.FileTags = (string)result;
+                Settings.Paths.FileTags = (List<string>)result;
                 UpdateDestExample();
             }
             else if (sender.GetType() == typeof(SaveDialog))
@@ -522,7 +522,7 @@ namespace PhotoApp
             }
             DialogHost.CloseDialogCommand.Execute(null, null);
 
-            tbStructure.Text = Tags.TagsToBlock(Settings.Paths.FolderTags, Settings.Paths.FileTags, DeviceList.SelectedDevice);
+            //tbStructure.Text = Tags.TagsToBlock(Settings.Paths.FolderTags, Settings.Paths.FileTags, DeviceList.SelectedDevice);
         }
 
         //vytvoreni a zobrazeni dialogu pro nazev souboru
@@ -725,7 +725,7 @@ namespace PhotoApp
                 spDestExample.Children.Add(CreateIconPanel(Settings.Paths.Root, PackIconKind.Folder, 0, textStyle));
             }
 
-            spDestExample.Children.Add(Tags.TagsToStackPanel(Settings.Paths.FolderTags, Settings.Paths.FileTags, textStyle, DeviceList.SelectedDevice));
+            //spDestExample.Children.Add(Tags.TagsToStackPanel(Settings.Paths.FolderTags, Settings.Paths.FileTags, textStyle, DeviceList.SelectedDevice));
         }
 
         public static StackPanel CreateIconPanel(string text, PackIconKind iconKind, int level, Style textStyle)
