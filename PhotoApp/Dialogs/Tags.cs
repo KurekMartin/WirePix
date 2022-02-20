@@ -13,23 +13,25 @@ namespace PhotoApp
 {
     public readonly struct TagStruct
     {
-        public TagStruct(string code, string visibleText, string buttonLabel)
+        public TagStruct(string code, string visibleText, string buttonLabel, string group = "")
         {
-            this.code = code;
-            this.visibleText = visibleText;
-            this.buttonLabel = buttonLabel;
+            this.Code = code;
+            this.VisibleText = visibleText;
+            this.ButtonLabel = buttonLabel;
+            this.Group = group;
         }
-        public string code { get; }
-        public string visibleText { get; }
-        public string buttonLabel { get; }
+        public string Code { get; }
+        public string VisibleText { get; }
+        public string ButtonLabel { get; }
+        public string Group { get; }
 
         public static bool operator ==(TagStruct n1, TagStruct n2)
         {
-            return (n1.code == n2.code && n1.visibleText == n2.visibleText && n1.buttonLabel == n2.buttonLabel);
+            return (n1.Code == n2.Code && n1.VisibleText == n2.VisibleText && n1.ButtonLabel == n2.ButtonLabel);
         }
         public static bool operator !=(TagStruct n1, TagStruct n2)
         {
-            return (n1.code != n2.code || n1.visibleText != n2.visibleText || n1.buttonLabel != n2.buttonLabel);
+            return (n1.Code != n2.Code || n1.VisibleText != n2.VisibleText || n1.ButtonLabel != n2.ButtonLabel);
         }
     }
 
@@ -38,8 +40,8 @@ namespace PhotoApp
         public ButtonStruct(string code)
         {
             TagStruct nameString = Tags.GetTagByCode(code);
-            this.btnText = nameString.buttonLabel;
-            insertValue = nameString.visibleText;
+            this.btnText = nameString.ButtonLabel;
+            insertValue = nameString.VisibleText;
         }
         public string btnText { get; }
         public string insertValue { get; }
@@ -69,14 +71,14 @@ namespace PhotoApp
         private static readonly List<TagStruct> tagList = new List<TagStruct>()
         {
             //            code                              visible text        button label
-            new TagStruct(Properties.Resources.YearLong,   "{YearLong}",       "Rok"),
-            new TagStruct(Properties.Resources.Year,       "{Year}",           "Rok krátce (YY)"),
-            new TagStruct(Properties.Resources.Month,      "{Month}",          "Měsíc"),
-            new TagStruct(Properties.Resources.MonthShort, "{MonthShort}",     "Měsíc krátce (název)"),
-            new TagStruct(Properties.Resources.MonthLong,  "{MonthLong}",      "Měsíc dlouze (název)"),
-            new TagStruct(Properties.Resources.Day,        "{Day}",            "Den"),
-            new TagStruct(Properties.Resources.DayShort,   "{DayShort}",       "Den krátce (název)"),
-            new TagStruct(Properties.Resources.DayLong,    "{DayLong}",        "Den dlouze (název)"),
+            new TagStruct(Properties.Resources.YearLong,   "{YearLong}",       "Rok",                       Properties.Resources.Year),
+            new TagStruct(Properties.Resources.Year,       "{Year}",           "Rok krátce (YY)",           Properties.Resources.Year),
+            new TagStruct(Properties.Resources.Month,      "{Month}",          "Měsíc",                     Properties.Resources.Month),
+            new TagStruct(Properties.Resources.MonthShort, "{MonthShort}",     "Měsíc krátce (název)",      Properties.Resources.Month),
+            new TagStruct(Properties.Resources.MonthLong,  "{MonthLong}",      "Měsíc dlouze (název)",      Properties.Resources.Month),
+            new TagStruct(Properties.Resources.Day,        "{Day}",            "Den",                       Properties.Resources.Day),
+            new TagStruct(Properties.Resources.DayShort,   "{DayShort}",       "Den krátce (název)",        Properties.Resources.Day),
+            new TagStruct(Properties.Resources.DayLong,    "{DayLong}",        "Den dlouze (název)",        Properties.Resources.Day),
             new TagStruct(Properties.Resources.DeviceName, "{DeviceName}",     "Název"),
             new TagStruct(Properties.Resources.DeviceManuf,"{DeviceMan}",      "Výrobce"),
             new TagStruct(Properties.Resources.SequenceNum,"{SequenceNum}",    "Číslo"),
@@ -96,7 +98,7 @@ namespace PhotoApp
             Properties.Resources.DayLong,
             Properties.Resources.DayShort
         };
-        private static readonly Dictionary<string, List<string>> tagsGroups = new Dictionary<string, List<string>>()
+        private static readonly Dictionary<string, List<string>> tagGroups = new Dictionary<string, List<string>>()
         {
             {Properties.Resources.Year, new List<string>(){ Properties.Resources.Year,
                                                             Properties.Resources.YearLong} },
@@ -111,7 +113,7 @@ namespace PhotoApp
         {
             if (code != null)
             {
-                return tagList.First(x => x.code == code);
+                return tagList.First(x => x.Code == code);
             }
             else if (visibleText != null)
             {
@@ -119,11 +121,11 @@ namespace PhotoApp
                 {
                     visibleText = Regex.Match(visibleText, @"\{.*?\}").ToString(); //v případě tagu s parametrem {tag}(param) odstraní parametr
                 }
-                return tagList.First(x => x.visibleText == visibleText);
+                return tagList.First(x => x.VisibleText == visibleText);
             }
             else if (label != null)
             {
-                return tagList.First(x => x.buttonLabel == label);
+                return tagList.First(x => x.ButtonLabel == label);
             }
             return new TagStruct();
         }
@@ -135,7 +137,7 @@ namespace PhotoApp
 
         public static TagStruct GetTagByCode(string code)
         {
-            return tagList.First(x => x.code == code);
+            return tagList.First(x => x.Code == code);
         }
 
         public static TagStruct GetTagByVisibleText(string text)
@@ -144,23 +146,23 @@ namespace PhotoApp
             {
                 text = Regex.Match(text, @"\{.*?\}").ToString(); //v případě tagu s parametrem {tag}(param) odstraní parametr
             }
-            return tagList.First(x => x.visibleText == text);
+            return tagList.First(x => x.VisibleText == text);
         }
 
         public static TagStruct GetTagByButtonLabel(string label)
         {
-            return tagList.First(x => x.buttonLabel == label);
+            return tagList.First(x => x.ButtonLabel == label);
         }
 
         public static List<TagStruct> GetTagListGroup(string matchCodePart)
         {
-            return tagList.FindAll(x => x.code.Contains(matchCodePart));
+            return tagList.FindAll(x => x.Code.Contains(matchCodePart));
         }
 
         //získání hodnot pro zobrazení náhledu výsledného názvu
         public static string GetSampleValueByTag(string visibleText, MediaFileInfo fileInfo = null, Device device = null, string filePath = null)
         {
-            string codeTag = GetTag(visibleText: visibleText).code;
+            string codeTag = GetTag(visibleText: visibleText).Code;
             DateTime date = DateTime.Now;
             string manufacturer = "Manufacturer";
             string model = "DeviceName";
@@ -301,11 +303,11 @@ namespace PhotoApp
                 if (str.Length > 2)
                 {
                     TagStruct nameString = GetTagByVisibleText(str);
-                    if (nameString.code == Properties.Resources.CustomText)
+                    if (nameString.Code == Properties.Resources.CustomText)
                     {
                         values += Regex.Match(tag, @"(?<=\().*?(?=\))").ToString(); //ziskani hodnoty cutomText
                     }
-                    values += GetSampleValueByTag(nameString.code, fileInfo, device, filePath);
+                    values += GetSampleValueByTag(nameString.Code, fileInfo, device, filePath);
                 }
                 else
                 {
@@ -376,7 +378,7 @@ namespace PhotoApp
 
         public static bool IsValidTag(string text)
         {
-            return GetTag(visibleText: text).code != null;
+            return GetTag(visibleText: text).Code != null;
         }
     }
 }
