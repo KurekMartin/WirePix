@@ -9,7 +9,10 @@
              mc:Ignorable="d">
     <UserControl.Resources>
         <converters:TagToValue x:Key="TagToValueConverter"/>
+        <converters:IndexToMargin x:Key="IndexToMarginConverter"/>
+        <CollectionViewSource x:Key="folderStructure" Source="{Binding Path=FolderStructure}" />
     </UserControl.Resources>
+    
     <materialDesign:Card>
         <StackPanel Orientation="Vertical">
             <materialDesign:ColorZone Mode="PrimaryMid">
@@ -101,7 +104,9 @@
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
                                     <UniformGrid Columns="{Binding ButtonGridSize.X}" 
-                                             Rows="{Binding ButtonGridSize.Y}"/>
+                                                 Rows="{Binding ButtonGridSize.Y}"
+                                                 VerticalAlignment="Top"
+                                                 HorizontalAlignment="Stretch"/>
                                 </ItemsPanelTemplate>
                             </ItemsControl.ItemsPanel>
                             <ItemsControl.ItemTemplate>
@@ -140,12 +145,15 @@
                              MinWidth="150">
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
-                                    <StackPanel Orientation="Horizontal">
+                                    <StackPanel Orientation="Horizontal" 
+                                                Margin="{Binding Converter={StaticResource IndexToMarginConverter},
+                                                                 ConverterParameter={StaticResource folderStructure}}">
                                         <materialDesign:PackIcon Kind="FolderOutline"/>
                                         <ItemsControl ItemsSource="{Binding .}">
                                             <ItemsControl.ItemsPanel>
                                                 <ItemsPanelTemplate>
-                                                    <StackPanel Orientation="Horizontal"/>
+                                                    <StackPanel Orientation="Horizontal" 
+                                                                Margin="5,0"/>
                                                 </ItemsPanelTemplate>
                                             </ItemsControl.ItemsPanel>
                                             <ItemsControl.ItemTemplate>

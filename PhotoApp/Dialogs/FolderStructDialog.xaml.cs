@@ -5,7 +5,6 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -20,6 +19,8 @@ namespace PhotoApp.Dialogs
         private Point _buttonGridSize = new Point();
         private int _selectedFolderIndex = -1; //index vybrané složky
         private int _selectedTagIndex = -1; //index vybraneho tagu
+
+        private static int _folderLimit = 7;
 
         public ObservableCollection<ObservableCollection<string>> FolderStructure
         {
@@ -94,7 +95,7 @@ namespace PhotoApp.Dialogs
                                        buttons.Max(x => x.gridPosition.Y) + 1);
             Buttons = buttons;
 
-            initStructure.ForEach(x=>FolderStructure.Add(new ObservableCollection<string>(x)));
+            initStructure.ForEach(x => FolderStructure.Add(new ObservableCollection<string>(x)));
             if (FolderStructure.Count == 0)
             {
                 //vytvoreni korene treeView
@@ -130,7 +131,7 @@ namespace PhotoApp.Dialogs
                 //omezeni maximalniho poctu tagu
                 if (tags.Count(x => x.StartsWith("{")) > 6)
                 {
-                    error.Text = "Lze použít maximálně 6 tagů";
+                    error.Text = "Lze použít maximálně 6 značek";
                     return false;
                 }
             }
@@ -143,7 +144,12 @@ namespace PhotoApp.Dialogs
                 }
                 else if (insertValue == Tags.GetTag(code: Properties.TagCodes.NewFolder).VisibleText)
                 {
-                    if (!tbCustomText.IsVisible || (tbCustomText.IsVisible && Tags.IsValidCustomText(tbCustomText.Text)))
+                    if (FolderStructure.Count() >= _folderLimit)
+                    {
+                        error.Text = $"Můžete použít maximálně {_folderLimit} složek";
+                        return false;
+                    }
+                    else if (!tbCustomText.IsVisible || (tbCustomText.IsVisible && Tags.IsValidCustomText(tbCustomText.Text)))
                     {
                         NewFolderLevel();
                         return false;
