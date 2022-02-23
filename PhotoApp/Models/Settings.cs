@@ -13,10 +13,10 @@ namespace PhotoApp
 
     public class Settings : BaseObserveObject
     {
-        public PathStruct Paths { get; set; }
+        public PathStruct Paths { get; set; } = new PathStruct();
         [XmlIgnore]
-        public DateRange Date { get; set; }
-        public Thumbnails ThumbnailSettings { get; set; }
+        public DateRange Date { get; set; } = new DateRange();
+        public Thumbnails ThumbnailSettings { get; set; } = new Thumbnails();
         private bool _checkFiles = false;
         private bool _deleteFiles = false;
         private bool _backup = false;
