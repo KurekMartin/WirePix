@@ -23,6 +23,9 @@
         <converters:ListToStringConverter x:Key="ListToString"/>
         <converters:ArrayToProgress x:Key="ArrToProgress"/>
         <converters:LastBackupConverter x:Key="LastBckp"/>
+        <converters:IndexToMargin x:Key="IndexToMarginConverter"/>
+        <converters:TagToValue x:Key="TagToValueConverter"/>
+        <CollectionViewSource x:Key="folderStructure" Source="{Binding Path=Settings.Paths.FolderTags}"/>
     </Window.Resources>
     <materialDesign:DialogHost x:Name="dhDialog" Identifier="RootDialog">
         <Grid Width="Auto" Height="Auto">
@@ -31,7 +34,7 @@
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
             <materialDesign:Card Margin="10,5" Padding="10" Grid.Row="0" UniformCornerRadius="5">
-                <StackPanel Orientation="Vertical" HorizontalAlignment="Left">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
                     <Button
                             ToolTip="O aplikaci"
                             Width="Auto"
@@ -48,82 +51,6 @@
                 </StackPanel>
 
             </materialDesign:Card>
-            <!--<Menu Grid.Row="0"
-  IsMainMenu="True" VerticalAlignment="Top" Height="30" BorderBrush="#4C000000" BorderThickness="0,0,0,1">
-                <MenuItem
-    Header="_File" Height="30">
-                    <MenuItem
-      Header="Save">
-                        <MenuItem.Icon>
-                            <materialDesign:PackIcon
-          Kind="ContentSave" />
-                        </MenuItem.Icon>
-                    </MenuItem>
-                    <MenuItem
-      Header="Save As.." />
-                    <MenuItem
-      Header="Exit"
-      InputGestureText="Ctrl+E">
-                        <MenuItem.Icon>
-                            <materialDesign:PackIcon
-          Kind="ExitToApp" />
-                        </MenuItem.Icon>
-                    </MenuItem>
-                    <Separator />
-                    <MenuItem
-      Header="Excellent"
-      IsCheckable="True"
-      IsChecked="True" />
-                    <MenuItem
-      Header="Rubbish"
-      IsCheckable="True" />
-                    <MenuItem
-      Header="Dig Deeper"
-      InputGestureText="Ctrl+D">
-                        <MenuItem
-        Header="Enlightenment?"
-        IsCheckable="True" />
-                        <MenuItem
-        Header="Disappointment"
-        IsCheckable="True" />
-                    </MenuItem>
-                    <MenuItem
-      Header="Look Deeper"
-      InputGestureText="Ctrl+D">
-                        <MenuItem
-        Header="Plain" />
-                        <MenuItem
-        Header="Ice Cream" />
-                    </MenuItem>
-                </MenuItem>
-                <MenuItem
-    Header="_Edit" Height="30">
-                    <MenuItem
-      Header="_Cut"
-      Command="Cut">
-                        <MenuItem.Icon>
-                            <materialDesign:PackIcon
-          Kind="ContentCut" />
-                        </MenuItem.Icon>
-                    </MenuItem>
-                    <MenuItem
-      Header="_Copy"
-      Command="Copy">
-                        <MenuItem.Icon>
-                            <materialDesign:PackIcon
-          Kind="ContentCopy" />
-                        </MenuItem.Icon>
-                    </MenuItem>
-                    <MenuItem
-      Header="_Paste"
-      Command="Paste">
-                        <MenuItem.Icon>
-                            <materialDesign:PackIcon
-          Kind="ContentPaste" />
-                        </MenuItem.Icon>
-                    </MenuItem>
-                </MenuItem>
-            </Menu>-->
             <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Width="Auto">
                 <Grid x:Name="Window" Margin="0" VerticalAlignment="Top">
                     <Grid.RowDefinitions>
@@ -286,11 +213,43 @@
                                     </StackPanel>
                                     <StackPanel Orientation="Vertical" Margin="10,5" x:Name="spDestExample">
                                         <!--<TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}" Text="Struktura uložení: " FontWeight="Bold"/>-->
+                                        <ItemsControl x:Name="icFolder" ItemsSource="{Binding Settings.Paths.FolderTags}" d:ItemsSource="{d:SampleData ItemCount=3}">
+                                            <ItemsControl.ItemsPanel>
+                                                <ItemsPanelTemplate>
+                                                    <StackPanel Margin="10,0"/>
+                                                </ItemsPanelTemplate>
+                                            </ItemsControl.ItemsPanel>
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate>
+                                                    <StackPanel Orientation="Horizontal"
+                                                                Margin="{Binding Converter={StaticResource IndexToMarginConverter},
+                                                                         ConverterParameter={StaticResource folderStructure}}">
+                                                        <materialDesign:PackIcon Kind="FolderOutline"/>
+                                                        <ItemsControl ItemsSource="{Binding .}">
+                                                            <ItemsControl.ItemsPanel>
+                                                                <ItemsPanelTemplate>
+                                                                    <StackPanel Orientation="Horizontal" 
+                                                                                Margin="5,0"/>
+                                                                </ItemsPanelTemplate>
+                                                            </ItemsControl.ItemsPanel>
+                                                            <ItemsControl.ItemTemplate>
+                                                                <DataTemplate>
+                                                                    <TextBlock Text="{Binding ., Converter={StaticResource TagToValueConverter}}"
+                                                                       Style="{StaticResource MaterialDesignBody2TextBlock}"
+                                                                       VerticalAlignment="Center"/>
+                                                                </DataTemplate>
+                                                            </ItemsControl.ItemTemplate>
+                                                        </ItemsControl>
+                                                    </StackPanel>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
                                         <d:StackPanel>
                                             <StackPanel Orientation="Horizontal" Margin="0,0,0,0">
                                                 <materialDesign:PackIcon Kind="Folder"/>
                                                 <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}" FontWeight="SemiBold" Margin="3,0" Text="root"/>
                                             </StackPanel>
+
                                             <StackPanel Orientation="Horizontal" Margin="10,0,0,0">
                                                 <materialDesign:PackIcon Kind="FolderOutline"/>
                                                 <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}" FontWeight="SemiBold" Margin="3,0" Text="root"/>

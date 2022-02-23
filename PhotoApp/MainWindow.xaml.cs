@@ -64,13 +64,15 @@ namespace PhotoApp
 
         public MainWindow()
         {
+            DataContext = this;
             Settings = new Settings();
             Profiles = new List<string>();
             DeviceList = new DeviceList();
 
             DeviceList.Load();
+
             InitializeComponent();
-            DataContext = this;
+
             progressDialog = new ProgressDialog(this);
 
             spDeviceInfo.Visibility = Visibility.Hidden;
@@ -169,7 +171,7 @@ namespace PhotoApp
         {
             if (CheckDeviceSelected())
             {
-                RunWorker(sender, TaskType.FindFiles,true);
+                RunWorker(sender, TaskType.FindFiles, true);
             }
         }
 
@@ -178,7 +180,7 @@ namespace PhotoApp
             if (CheckSettings())
             {
                 backupStart = DateTime.Now;
-                RunWorker(sender, TaskType.CopyFiles,true);
+                RunWorker(sender, TaskType.CopyFiles, true);
             }
 
         }
@@ -497,12 +499,10 @@ namespace PhotoApp
             if (sender.GetType() == typeof(FolderStructDialog))
             {
                 Settings.Paths.FolderTags = (List<List<string>>)result;
-                UpdateDestExample();
             }
             else if (sender.GetType() == typeof(FileStructDialog))
             {
                 Settings.Paths.FileTags = (List<string>)result;
-                UpdateDestExample();
             }
             else if (sender.GetType() == typeof(SaveDialog))
             {
@@ -581,7 +581,6 @@ namespace PhotoApp
             if (result != string.Empty)
             {
                 Settings.Paths.Root = result;
-                UpdateDestExample();
             }
         }
 
@@ -642,7 +641,7 @@ namespace PhotoApp
             {
                 SetErrorMessage(tbDateRangeError, "Počáteční datum nemůže být větší než koncové");
             }
-            else
+            else if (tbDateRangeError != null)
             {
                 tbDateRangeError.Visibility = Visibility.Collapsed;
             }
@@ -707,26 +706,26 @@ namespace PhotoApp
                 Settings.Load(cb.SelectedItem.ToString());
                 OnPropertyChanged("Settings");
                 //tbStructure.Text = Tags.TagsToBlock(Settings.Paths.FolderTags, Settings.Paths.FileTags, DeviceList.SelectedDevice);
-                UpdateDestExample();
+                //UpdateDestExample();
 
                 RemoveAllErrors();
                 CheckSettings();
             }
         }
 
-        private void UpdateDestExample()
-        {
-            spDestExample.Children.Clear();
+        //private void UpdateDestExample()
+        //{
+        //    spDestExample.Children.Clear();
 
-            Style textStyle = (Style)FindResource("MaterialDesignBody2TextBlock");
+        //    Style textStyle = (Style)FindResource("MaterialDesignBody2TextBlock");
 
-            if (Settings.Paths.Root.Length > 0)
-            {
-                spDestExample.Children.Add(CreateIconPanel(Settings.Paths.Root, PackIconKind.Folder, 0, textStyle));
-            }
+        //    if (Settings.Paths.Root.Length > 0)
+        //    {
+        //        spDestExample.Children.Add(CreateIconPanel(Settings.Paths.Root, PackIconKind.Folder, 0, textStyle));
+        //    }
 
-            //spDestExample.Children.Add(Tags.TagsToStackPanel(Settings.Paths.FolderTags, Settings.Paths.FileTags, textStyle, DeviceList.SelectedDevice));
-        }
+        //    //spDestExample.Children.Add(Tags.TagsToStackPanel(Settings.Paths.FolderTags, Settings.Paths.FileTags, textStyle, DeviceList.SelectedDevice));
+        //}
 
         public static StackPanel CreateIconPanel(string text, PackIconKind iconKind, int level, Style textStyle)
         {
