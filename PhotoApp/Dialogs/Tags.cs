@@ -142,108 +142,113 @@ namespace PhotoApp
         //získání hodnot pro zobrazení náhledu výsledného názvu
         public static string GetSampleValueByTag(string visibleText, MediaFileInfo fileInfo = null, Device device = null, string filePath = null)
         {
-            string codeTag = GetTag(visibleText: visibleText).Code;
-            DateTime date = DateTime.Now;
-            string manufacturer = "Manufacturer";
-            string model = "DeviceName";
-            string filename = "FileName";
-            if (File.Exists(filePath) && fileInfo != null)
+            TagStruct tag = GetTag(visibleText: visibleText);
+            if (tag != null)
             {
-                if (dateTags.Contains(codeTag))
+                string codeTag = tag.Code;
+                DateTime date = DateTime.Now;
+                string manufacturer = GetTag(code: Properties.TagCodes.DeviceManuf).VisibleText;
+                string model = GetTag(code: Properties.TagCodes.DeviceName).VisibleText;
+                string filename = GetTag(code: Properties.TagCodes.FileName).VisibleText;
+                if (File.Exists(filePath) && fileInfo != null)
                 {
-                    date = FileExif.GetDateTimeOriginal(filePath);
-                    // soubor nemusí obsahovat EXIF informace
-                    if (date == new DateTime())
+                    if (dateTags.Contains(codeTag))
                     {
-                        date = (DateTime)fileInfo.CreationTime; // nemusí obsahovat správné datum (někdy se používá DateAuthored nebo LastWriteTime)
+                        date = FileExif.GetDateTimeOriginal(filePath);
+                        // soubor nemusí obsahovat EXIF informace
                         if (date == new DateTime())
                         {
-                            date = (DateTime)fileInfo.DateAuthored;
+                            date = (DateTime)fileInfo.CreationTime; // nemusí obsahovat správné datum (někdy se používá DateAuthored nebo LastWriteTime)
+                            if (date == new DateTime())
+                            {
+                                date = (DateTime)fileInfo.DateAuthored;
+                            }
+                            if (date == new DateTime())
+                            {
+                                date = (DateTime)fileInfo.LastWriteTime;
+                            }
                         }
-                        if (date == new DateTime())
+                    }
+
+                    if (codeTag == Properties.TagCodes.DeviceManuf)
+                    {
+                        manufacturer = FileExif.GetManufacturer(filePath);
+                        if (manufacturer == null || manufacturer == string.Empty)
                         {
-                            date = (DateTime)fileInfo.LastWriteTime;
+                            manufacturer = device.Manufacturer;
                         }
                     }
-                }
 
-                if (codeTag == Properties.TagCodes.DeviceManuf)
-                {
-                    manufacturer = FileExif.GetManufacturer(filePath);
-                    if (manufacturer == null || manufacturer == string.Empty)
+                    if (codeTag == Properties.TagCodes.DeviceName)
                     {
-                        manufacturer = device.Manufacturer;
+                        model = FileExif.GetModel(filePath);
+                        if (model == null || model == string.Empty)
+                        {
+                            model = device.Name;
+                        }
+                    }
+
+                    if (codeTag == Properties.TagCodes.FileName)
+                    {
+                        filename = Path.GetFileNameWithoutExtension(fileInfo.Name);
                     }
                 }
 
-                if (codeTag == Properties.TagCodes.DeviceName)
+                if (codeTag == Properties.TagCodes.YearLong)
                 {
-                    model = FileExif.GetModel(filePath);
-                    if (model == null || model == string.Empty)
-                    {
-                        model = device.Name;
-                    }
+                    return date.Year.ToString();
                 }
-
-                if (codeTag == Properties.TagCodes.FileName)
+                else if (codeTag == Properties.TagCodes.Year)
                 {
-                    filename = Path.GetFileNameWithoutExtension(fileInfo.Name);
+                    return (date.Year % 100).ToString();
                 }
+                else if (codeTag == Properties.TagCodes.Month)
+                {
+                    return date.Month.ToString("00");
+                }
+                else if (codeTag == Properties.TagCodes.MonthShort)
+                {
+                    return CultureInfo.CurrentCulture.DateTimeFormat.GetAbbreviatedMonthName(date.Month);
+                }
+                else if (codeTag == Properties.TagCodes.MonthLong)
+                {
+                    return CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(date.Month);
+                }
+                else if (codeTag == Properties.TagCodes.Day)
+                {
+                    return date.Day.ToString("00");
+                }
+                else if (codeTag == Properties.TagCodes.DayShort)
+                {
+                    return CultureInfo.CurrentCulture.DateTimeFormat.GetAbbreviatedDayName(date.DayOfWeek);
+                }
+                else if (codeTag == Properties.TagCodes.DayLong)
+                {
+                    return CultureInfo.CurrentCulture.DateTimeFormat.GetDayName(date.DayOfWeek);
+                }
+                else if (codeTag == Properties.TagCodes.DeviceName)
+                {
+                    return model;
+                }
+                else if (codeTag == Properties.TagCodes.DeviceManuf)
+                {
+                    return manufacturer;
+                }
+                else if (codeTag == Properties.TagCodes.FileName)
+                {
+                    return filename;
+                }
+                else if (codeTag == Properties.TagCodes.SequenceNum)
+                {
+                    return "####";
+                }
+                else if (codeTag == Properties.TagCodes.CustomText)
+                {
+                    return Regex.Match(visibleText, @"(?<=\().*?(?=\))").ToString(); //vrátí parametr v ()
+                }
+                else { return tag.VisibleText; }
             }
-
-            if (codeTag == Properties.TagCodes.YearLong)
-            {
-                return date.Year.ToString();
-            }
-            else if (codeTag == Properties.TagCodes.Year)
-            {
-                return (date.Year % 100).ToString();
-            }
-            else if (codeTag == Properties.TagCodes.Month)
-            {
-                return date.Month.ToString("00");
-            }
-            else if (codeTag == Properties.TagCodes.MonthShort)
-            {
-                return CultureInfo.CurrentCulture.DateTimeFormat.GetAbbreviatedMonthName(date.Month);
-            }
-            else if (codeTag == Properties.TagCodes.MonthLong)
-            {
-                return CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(date.Month);
-            }
-            else if (codeTag == Properties.TagCodes.Day)
-            {
-                return date.Day.ToString("00");
-            }
-            else if (codeTag == Properties.TagCodes.DayShort)
-            {
-                return CultureInfo.CurrentCulture.DateTimeFormat.GetAbbreviatedDayName(date.DayOfWeek);
-            }
-            else if (codeTag == Properties.TagCodes.DayLong)
-            {
-                return CultureInfo.CurrentCulture.DateTimeFormat.GetDayName(date.DayOfWeek);
-            }
-            else if (codeTag == Properties.TagCodes.DeviceName)
-            {
-                return model;
-            }
-            else if (codeTag == Properties.TagCodes.DeviceManuf)
-            {
-                return manufacturer;
-            }
-            else if (codeTag == Properties.TagCodes.FileName)
-            {
-                return filename;
-            }
-            else if (codeTag == Properties.TagCodes.SequenceNum)
-            {
-                return "####";
-            }
-            else if (codeTag == Properties.TagCodes.CustomText)
-            {
-                return Regex.Match(visibleText, @"(?<=\().*?(?=\))").ToString(); //vrátí parametr v ()
-            }
-            else { return ""; }
+            else { return string.Empty; }
         }
 
 
