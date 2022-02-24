@@ -11,10 +11,12 @@ namespace PhotoApp.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            Thickness margin = new Thickness(0, 0, 0, 0);
-            margin.Left = System.Convert.ToDouble((int)value) * 10;
-
-            return margin;
+            if (value is int)
+            {
+                int margin = (int)value * 10;
+                return new Thickness(margin, 0, 0, 0);
+            }
+            return new Thickness(0);
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
