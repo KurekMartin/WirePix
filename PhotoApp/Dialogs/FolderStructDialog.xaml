@@ -12,7 +12,7 @@
         <converters:IndexToMargin x:Key="IndexToMarginConverter"/>
         <CollectionViewSource x:Key="folderStructure" Source="{Binding Path=FolderStructure}" />
     </UserControl.Resources>
-    
+
     <materialDesign:Card>
         <StackPanel Orientation="Vertical">
             <materialDesign:ColorZone Mode="PrimaryMid">
@@ -26,7 +26,7 @@
                             <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}"
                                    Text="Značky" VerticalAlignment="Center"
                                    Padding="5,12"/>
-                            <ListBox ItemsSource="{Binding SelectedFolder}" d:ItemsSource="{d:SampleData ItemCount=3}"
+                            <ListBox ItemsSource="{Binding SelectedFolder.Tags}" d:ItemsSource="{d:SampleData ItemCount=3}"
                                  Style="{StaticResource MaterialDesignChoiceChipPrimaryOutlineListBox}"
                                  SelectionChanged="TagSelectionChanged"
                                  SelectedIndex="{Binding SelectedTagIndex, Mode=TwoWay}"
@@ -46,7 +46,7 @@
                                 Width="22" 
                                 Height="22"
                                 Margin="5,0"/>
-                            <ItemsControl ItemsSource="{Binding SelectedFolder}" d:ItemsSource="{d:SampleData ItemCount=3}">
+                            <ItemsControl ItemsSource="{Binding SelectedFolder.Tags}" d:ItemsSource="{d:SampleData ItemCount=3}">
                                 <ItemsControl.ItemsPanel>
                                     <ItemsPanelTemplate>
                                         <StackPanel Orientation="Horizontal"/>
@@ -135,21 +135,20 @@
                             </ItemsControl.ItemTemplate>
                         </ItemsControl>
                         <ListBox ItemsSource="{Binding FolderStructure}" d:ItemsSource="{d:SampleData ItemCount=5}"
-                             SelectedIndex="{Binding SelectedFolderIndex, Mode=TwoWay}"
-                             SelectionChanged="FolderSelectionChanged"
-                             Grid.Column="1"                                  
-                             Grid.Row="1"
-                             HorizontalAlignment="Left"
-                             VerticalAlignment="Top"
-                             Margin="15"
-                             MinWidth="150">
+                                 SelectedIndex="{Binding SelectedFolderIndex, Mode=TwoWay}"
+                                 SelectionChanged="FolderSelectionChanged"
+                                 Grid.Column="1"                                  
+                                 Grid.Row="1"
+                                 HorizontalAlignment="Left"
+                                 VerticalAlignment="Top"
+                                 Margin="15"
+                                 MinWidth="150">
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal" 
-                                                Margin="{Binding Converter={StaticResource IndexToMarginConverter},
-                                                                 ConverterParameter={StaticResource folderStructure}}">
+                                                Margin="{Binding Index, Converter={StaticResource IndexToMarginConverter}}"                                                >
                                         <materialDesign:PackIcon Kind="FolderOutline"/>
-                                        <ItemsControl ItemsSource="{Binding .}">
+                                        <ItemsControl ItemsSource="{Binding Tags}">
                                             <ItemsControl.ItemsPanel>
                                                 <ItemsPanelTemplate>
                                                     <StackPanel Orientation="Horizontal" 
