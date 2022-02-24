@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using PhotoApp.Models;
+using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
@@ -11,10 +13,54 @@ using System.Windows.Input;
 
 namespace PhotoApp.Dialogs
 {
+    public class FolderLevel : BaseObserveObject
+    {
+        private int _index;
+        private ObservableCollection<string> _tags;
+
+        public FolderLevel(int index, List<string> tags = null)
+        {
+            Index = index;
+            if (tags != null)
+            {
+                Tags = new ObservableCollection<string>(tags);
+            }
+            else
+            {
+                Tags = new ObservableCollection<string>();
+            }
+
+        }
+        public int Index
+        {
+            get { return _index; }
+            set
+            {
+                _index = value;
+                OnPropertyChanged();
+            }
+        }
+        public ObservableCollection<string> Tags
+        {
+            get { return _tags; }
+            set
+            {
+                _tags = value;
+                _tags.CollectionChanged += Tags_CollectionChanged;
+                OnPropertyChanged();
+            }
+        }
+
+        private void Tags_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            OnPropertyChanged("Tags");
+        }
+    }
+
     public partial class FolderStructDialog : UserControl, INotifyPropertyChanged
     {
         private MainWindow mainWindow;
-        private ObservableCollection<ObservableCollection<string>> _folderStructure = new ObservableCollection<ObservableCollection<string>>(); //struktura pro uložení fotek
+        private ObservableCollection<FolderLevel> _folderStructure;//struktura pro uložení fotek
         private List<ButtonGroupStruct> _buttons = new List<ButtonGroupStruct>();
         private Point _buttonGridSize = new Point();
         private int _selectedFolderIndex = -1; //index vybrané složky
@@ -22,10 +68,38 @@ namespace PhotoApp.Dialogs
 
         private static int _folderLimit = 7;
 
-        public ObservableCollection<ObservableCollection<string>> FolderStructure
+        public ObservableCollection<FolderLevel> FolderStructure
         {
             get { return _folderStructure; }
-            set { _folderStructure = value; OnPropertyChanged(); }
+            set
+            {
+                _folderStructure = value;
+                _folderStructure.CollectionChanged += FolderStructure_CollectionChanged;
+                OnPropertyChanged();
+            }
+        }
+
+        private void FolderStructure_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            ObservableCollection<FolderLevel> folders = sender as ObservableCollection<FolderLevel>;
+            int index = e.OldStartingIndex == -1 ? e.NewStartingIndex : e.OldStartingIndex;
+            short change = 0;
+            Console.WriteLine("změna");
+            if (e.Action == NotifyCollectionChangedAction.Remove)
+            {
+                change = -1;
+            }else if(e.Action == NotifyCollectionChangedAction.Add)
+            {
+                change = 1;
+            }
+            foreach (FolderLevel folder in folders)
+            {
+                if (folder.Index > index)
+                {
+                    folder.Index += change;
+                }
+            }
+            OnPropertyChanged("FolderStructure");
         }
 
         public int SelectedFolderIndex
@@ -44,7 +118,7 @@ namespace PhotoApp.Dialogs
             set { _selectedTagIndex = value; OnPropertyChanged(); }
         }
 
-        public ObservableCollection<string> SelectedFolder
+        public FolderLevel SelectedFolder
         {
             get
             {
@@ -87,6 +161,7 @@ namespace PhotoApp.Dialogs
         }
         public FolderStructDialog(MainWindow window, List<ButtonGroupStruct> buttons, List<List<string>> initStructure = null)
         {
+            FolderStructure = new ObservableCollection<FolderLevel>();
             DataContext = this;
             InitializeComponent();
             mainWindow = window;
@@ -95,7 +170,8 @@ namespace PhotoApp.Dialogs
                                        buttons.Max(x => x.gridPosition.Y) + 1);
             Buttons = buttons;
 
-            initStructure.ForEach(x => FolderStructure.Add(new ObservableCollection<string>(x)));
+            int i = 0;
+            initStructure.ForEach(x => FolderStructure.Add(new FolderLevel(i++, x)));
             if (FolderStructure.Count == 0)
             {
                 //vytvoreni korene treeView
@@ -111,13 +187,13 @@ namespace PhotoApp.Dialogs
             tbError.Text = ""; //reset chybové hlášky
             string insertValue = ((Button)sender).Tag.ToString();
 
-            if (TagAdd(insertValue, FolderStructure[SelectedFolderIndex].ToList(), tbError))
+            if (TagAdd(insertValue, FolderStructure[SelectedFolderIndex].Tags.ToList(), tbError))
             {
-                FolderStructure[SelectedFolderIndex].Add(insertValue);
+                FolderStructure[SelectedFolderIndex].Tags.Add(insertValue);
                 SelectedTagIndex++;
             }
 
-            if (FolderStructure[SelectedFolderIndex].Count() > 0)
+            if (FolderStructure[SelectedFolderIndex].Tags.Count() > 0)
             {
                 ShowControls();
             }
@@ -176,7 +252,7 @@ namespace PhotoApp.Dialogs
         //vytvoření nové složky
         private void NewFolderLevel()
         {
-            FolderStructure.Add(new ObservableCollection<string>());
+            FolderStructure.Add(new FolderLevel(FolderStructure.Count));
             SelectedFolderIndex++;
             SelectedTagIndex = -1;
             btnDeleteFolder.Visibility = Visibility.Collapsed;
@@ -200,7 +276,7 @@ namespace PhotoApp.Dialogs
             {
                 TagStruct tag = (TagStruct)((ComboBox)sender).SelectedItem;
                 int oldIndex = SelectedTagIndex;
-                FolderStructure[SelectedFolderIndex][SelectedTagIndex] = tag.VisibleText;
+                FolderStructure[SelectedFolderIndex].Tags[SelectedTagIndex] = tag.VisibleText;
                 SelectedTagIndex = oldIndex;
             }
         }
@@ -211,11 +287,11 @@ namespace PhotoApp.Dialogs
             tbControlsError.Visibility = Visibility.Hidden;
             if (e.AddedItems.Count > 0 && e.RemovedItems.Count > 0 && Tags.GetTag(visibleText: e.RemovedItems[0].ToString()).Code == Properties.TagCodes.CustomText) //kontrola parametru CustomText
             {
-                string tag = FolderStructure[SelectedFolderIndex].First(x => x == e.RemovedItems[0].ToString());
+                string tag = FolderStructure[SelectedFolderIndex].Tags.First(x => x == e.RemovedItems[0].ToString());
                 string text = Tags.GetTagParameter(tag);
                 if (!Tags.IsValidCustomText(text))
                 {
-                    SelectedTagIndex = FolderStructure[SelectedFolderIndex].IndexOf(tag);
+                    SelectedTagIndex = FolderStructure[SelectedFolderIndex].Tags.IndexOf(tag);
                     ShowCustomTextError();
                 }
             }
@@ -227,10 +303,10 @@ namespace PhotoApp.Dialogs
         {
             int oldIndex = SelectedTagIndex;
 
-            if (FolderStructure[SelectedFolderIndex].Count > 0)
+            if (FolderStructure[SelectedFolderIndex].Tags.Count > 0)
             {
-                FolderStructure[SelectedFolderIndex].RemoveAt(SelectedTagIndex);
-                if (oldIndex >= FolderStructure[SelectedFolderIndex].Count)
+                FolderStructure[SelectedFolderIndex].Tags.RemoveAt(SelectedTagIndex);
+                if (oldIndex >= FolderStructure[SelectedFolderIndex].Tags.Count)
                 {
                     SelectedTagIndex = oldIndex - 1;
                 }
@@ -262,7 +338,7 @@ namespace PhotoApp.Dialogs
         private void tbCustomText_TextChanged(object sender, TextChangedEventArgs e)
         {
             int oldIndex = SelectedTagIndex;
-            string tag = FolderStructure[SelectedFolderIndex][SelectedTagIndex];
+            string tag = FolderStructure[SelectedFolderIndex].Tags[SelectedTagIndex];
             int i = tag.IndexOf("(");
             if (i != -1)
             {
@@ -270,7 +346,7 @@ namespace PhotoApp.Dialogs
             }
             tag += $"({tbCustomText.Text})";
 
-            FolderStructure[SelectedFolderIndex][SelectedTagIndex] = tag;
+            FolderStructure[SelectedFolderIndex].Tags[SelectedTagIndex] = tag;
             SelectedTagIndex = oldIndex;
             tbCustomText.Focus();
 
@@ -303,7 +379,7 @@ namespace PhotoApp.Dialogs
         {
             cbGroupSelect.Visibility = tbCustomText.Visibility = btnDeleteTag.Visibility = Visibility.Collapsed;
 
-            if (FolderStructure.Count() > 0 && FolderStructure[SelectedFolderIndex].Count() > 0)
+            if (SelectedFolderIndex > -1 && FolderStructure.Count() > 0 && FolderStructure[SelectedFolderIndex].Tags.Count() > 0)
             {
                 btnDeleteFolder.Visibility = Visibility.Visible;
 
@@ -311,12 +387,13 @@ namespace PhotoApp.Dialogs
                 {
                     btnDeleteTag.Visibility = Visibility.Visible;
 
-                    string tagText = FolderStructure[SelectedFolderIndex][SelectedTagIndex];
+                    string tagText = FolderStructure[SelectedFolderIndex].Tags[SelectedTagIndex];
                     TagStruct tag = Tags.GetTag(visibleText: tagText);
-                    List<TagStruct> tagGroup = Tags.GetTagGroup(tag.Group);
 
-                    if (tagGroup.Count > 0)
+                    if (tag.Group != string.Empty)
                     {
+                        List<TagStruct> tagGroup = Tags.GetTagGroup(tag.Group);
+
                         cbGroupSelect.ItemsSource = tagGroup;
                         cbGroupSelect.SelectedIndex = tagGroup.IndexOf(tag);
                         cbGroupSelect.Visibility = Visibility.Visible;
@@ -350,7 +427,7 @@ namespace PhotoApp.Dialogs
                 return;
             }
             List<List<string>> result = new List<List<string>>();
-            FolderStructure.ToList().ForEach(x => result.Add(x.ToList()));
+            FolderStructure.ToList().ForEach(x => result.Add(x.Tags.ToList()));
             mainWindow.DialogClose(this, result);
         }
 
@@ -358,7 +435,7 @@ namespace PhotoApp.Dialogs
         {
             OnPropertyChanged("SelectedFolder");
             ShowControls();
-            if (FolderStructure.Count > 0 && SelectedFolderIndex != FolderStructure.Count() - 1 && FolderStructure.Last().Count == 0)
+            if (FolderStructure.Count > 0 && SelectedFolderIndex != FolderStructure.Count() - 1 && FolderStructure.Last().Tags.Count == 0)
             {
                 FolderStructure.Remove(FolderStructure.Last());
             }
