@@ -87,7 +87,8 @@ namespace PhotoApp.Dialogs
             if (e.Action == NotifyCollectionChangedAction.Remove)
             {
                 change = -1;
-            }else if(e.Action == NotifyCollectionChangedAction.Add)
+            }
+            else if (e.Action == NotifyCollectionChangedAction.Add)
             {
                 change = 1;
             }
@@ -186,6 +187,7 @@ namespace PhotoApp.Dialogs
             tbError.Text = ""; //reset chybové hlášky
             string insertValue = ((Button)sender).Tag.ToString();
 
+            if (SelectedFolderIndex == -1) { SelectedFolderIndex = FolderStructure.Count() - 1; }
             if (TagAdd(insertValue, FolderStructure[SelectedFolderIndex].Tags.ToList(), tbError))
             {
                 FolderStructure[SelectedFolderIndex].Tags.Add(insertValue);
