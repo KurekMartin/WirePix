@@ -23,8 +23,9 @@
         <converters:ListToStringConverter x:Key="ListToString"/>
         <converters:ArrayToProgress x:Key="ArrToProgress"/>
         <converters:LastBackupConverter x:Key="LastBckp"/>
-        <converters:IndexToMargin x:Key="IndexToMarginConverter"/>
+        <converters:ListIndexToMargin x:Key="IndexToMarginConverter"/>
         <converters:TagToValue x:Key="TagToValueConverter"/>
+        <converters:MarginFromListCount x:Key="ListCountToMarginConverter"/>
         <CollectionViewSource x:Key="folderStructure" Source="{Binding Path=Settings.Paths.FolderTags}"/>
     </Window.Resources>
     <materialDesign:DialogHost x:Name="dhDialog" Identifier="RootDialog">
@@ -213,7 +214,13 @@
                                     </StackPanel>
                                     <StackPanel Orientation="Vertical" Margin="10,5" x:Name="spDestExample">
                                         <!--<TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}" Text="Struktura uložení: " FontWeight="Bold"/>-->
-                                        <ItemsControl x:Name="icFolder" ItemsSource="{Binding Settings.Paths.FolderTags}" d:ItemsSource="{d:SampleData ItemCount=3}">
+                                        <StackPanel Orientation="Horizontal">
+                                            <materialDesign:PackIcon Kind="Folder"/>
+                                            <TextBlock Text="{Binding Settings.Paths.Root}" d:Text="root"
+                                                       Style="{StaticResource MaterialDesignBody2TextBlock}"
+                                                       Margin="5,0"/>
+                                        </StackPanel>
+                                        <ItemsControl ItemsSource="{Binding Settings.Paths.FolderTags}" d:ItemsSource="{d:SampleData ItemCount=3}">
                                             <ItemsControl.ItemsPanel>
                                                 <ItemsPanelTemplate>
                                                     <StackPanel Margin="10,0"/>
@@ -235,8 +242,8 @@
                                                             <ItemsControl.ItemTemplate>
                                                                 <DataTemplate>
                                                                     <TextBlock Text="{Binding ., Converter={StaticResource TagToValueConverter}}"
-                                                                       Style="{StaticResource MaterialDesignBody2TextBlock}"
-                                                                       VerticalAlignment="Center"/>
+                                                                               Style="{StaticResource MaterialDesignBody2TextBlock}"
+                                                                               VerticalAlignment="Center"/>
                                                                 </DataTemplate>
                                                             </ItemsControl.ItemTemplate>
                                                         </ItemsControl>
@@ -244,6 +251,26 @@
                                                 </DataTemplate>
                                             </ItemsControl.ItemTemplate>
                                         </ItemsControl>
+                                        <StackPanel Margin="{Binding Converter={StaticResource ListCountToMarginConverter},
+                                                                     ConverterParameter={StaticResource folderStructure}}"
+                                                    Orientation="Horizontal">
+                                            <materialDesign:PackIcon Kind="ImageOutline"/>
+                                            <ItemsControl ItemsSource="{Binding Settings.Paths.FileTags}" d:ItemsSource="{d:SampleData ItemCount=3}">
+                                                <ItemsControl.ItemsPanel>
+                                                    <ItemsPanelTemplate>
+                                                        <StackPanel Orientation="Horizontal"
+                                                                    Margin="5,0"/>
+                                                    </ItemsPanelTemplate>
+                                                </ItemsControl.ItemsPanel>
+                                                <ItemsControl.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <TextBlock Text="{Binding ., Converter={StaticResource TagToValueConverter}}"
+                                                                   Style="{StaticResource MaterialDesignBody2TextBlock}"
+                                                                   VerticalAlignment="Center"/>
+                                                    </DataTemplate>
+                                                </ItemsControl.ItemTemplate>
+                                            </ItemsControl>
+                                        </StackPanel>
                                         <d:StackPanel>
                                             <StackPanel Orientation="Horizontal" Margin="0,0,0,0">
                                                 <materialDesign:PackIcon Kind="Folder"/>
@@ -259,8 +286,8 @@
                                                 <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}" FontWeight="SemiBold" Margin="3,0" Text="filename.xxx"/>
                                             </StackPanel>
                                         </d:StackPanel>
-                                        <TextBlock x:Name="tbRootDir" Text="{Binding Settings.Paths.Root,UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource MaterialDesignBody2TextBlock}"/>
-                                        <TextBlock x:Name="tbStructure" FontWeight="DemiBold" Style="{StaticResource MaterialDesignBody2TextBlock}"/>
+                                        <d:TextBlock x:Name="tbRootDir" Text="{Binding Settings.Paths.Root,UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource MaterialDesignBody2TextBlock}"/>
+                                        <d:TextBlock x:Name="tbStructure" FontWeight="DemiBold" Style="{StaticResource MaterialDesignBody2TextBlock}"/>
                                     </StackPanel>
                                 </StackPanel>
                             </StackPanel>
