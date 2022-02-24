@@ -138,6 +138,8 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Converters\IndexToMargin.cs" />
+    <Compile Include="Converters\MarginFromListCount.cs" />
+    <Compile Include="Converters\ListIndexToMargin.cs" />
     <Compile Include="Converters\TagToValue.cs" />
     <Compile Include="Converters\TimeSpanToString.cs" />
     <Compile Include="Converters\ArrayToProgress.cs" />
