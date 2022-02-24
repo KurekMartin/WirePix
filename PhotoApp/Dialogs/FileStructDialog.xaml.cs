@@ -53,8 +53,8 @@ namespace PhotoApp.Dialogs
             InitializeComponent();
             mainWindow = window;
 
-            ButtonGridSize = new Point(buttons.Max(x => x.gridPosition.X)+1,
-                                       buttons.Max(x => x.gridPosition.Y)+1);
+            ButtonGridSize = new Point(buttons.Max(x => x.gridPosition.X) + 1,
+                                       buttons.Max(x => x.gridPosition.Y) + 1);
             Buttons = buttons;
 
             FileStructure = new ObservableCollection<string>(initStructure);
@@ -125,10 +125,11 @@ namespace PhotoApp.Dialogs
 
                     string tagText = FileStructure[SelectedIndex];
                     TagStruct tag = Tags.GetTag(visibleText: tagText);
-                    List<TagStruct> tagGroup = Tags.GetTagGroup(tag.Group);
 
-                    if (tagGroup.Count > 0)
+                    if (tag.Group != string.Empty)
                     {
+                        List<TagStruct> tagGroup = Tags.GetTagGroup(tag.Group);
+
                         cbGroupSelect.ItemsSource = tagGroup;
                         cbGroupSelect.SelectedIndex = tagGroup.IndexOf(tag);
                         cbGroupSelect.Visibility = Visibility.Visible;
@@ -212,7 +213,7 @@ namespace PhotoApp.Dialogs
         {
             int oldIndex = SelectedIndex;
 
-            if (FileStructure.Count > 0)
+            if (FileStructure.Count > 0 && SelectedIndex > -1)
             {
                 FileStructure.RemoveAt(SelectedIndex);
                 if (oldIndex >= FileStructure.Count)
