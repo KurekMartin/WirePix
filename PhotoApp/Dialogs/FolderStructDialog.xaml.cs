@@ -84,7 +84,6 @@ namespace PhotoApp.Dialogs
             ObservableCollection<FolderLevel> folders = sender as ObservableCollection<FolderLevel>;
             int index = e.OldStartingIndex == -1 ? e.NewStartingIndex : e.OldStartingIndex;
             short change = 0;
-            Console.WriteLine("změna");
             if (e.Action == NotifyCollectionChangedAction.Remove)
             {
                 change = -1;
