@@ -146,7 +146,7 @@
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal" 
-                                                Margin="{Binding Index, Converter={StaticResource IndexToMarginConverter}}"                                                >
+                                                Margin="{Binding Index, Converter={StaticResource IndexToMarginConverter}}">
                                         <materialDesign:PackIcon Kind="FolderOutline"/>
                                         <ItemsControl ItemsSource="{Binding Tags}">
                                             <ItemsControl.ItemsPanel>
