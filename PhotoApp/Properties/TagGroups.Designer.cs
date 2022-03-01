@@ -79,6 +79,15 @@ namespace PhotoApp.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Sep.
+        /// </summary>
+        internal static string Separator {
+            get {
+                return ResourceManager.GetString("Separator", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Year.
         /// </summary>
         internal static string Year {
