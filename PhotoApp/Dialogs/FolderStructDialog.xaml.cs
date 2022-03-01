@@ -195,19 +195,22 @@ namespace PhotoApp.Dialogs
 
             if (SelectedFolderIndex == -1) { SelectedFolderIndex = FolderStructure.Count() - 1; }
 
-            if (tagCode == Properties.TagCodes.NewFolder)
+            if (tagCode == Properties.TagCodes.NewFolder) //přidání nové složky
             {
-                if (FolderStructure.Count() >= _folderLimit)
+                if (SelectedFolder.Tags.Count() > 0)
                 {
-                    tbError.Text = $"Můžete použít maximálně {_folderLimit} složek";
-                }
-                else if (!tbCustomText.IsVisible || (tbCustomText.IsVisible && Tags.IsValidCustomText(tbCustomText.Text)))
-                {
-                    NewFolderLevel();
-                }
-                else
-                {
-                    ShowCustomTextError();
+                    if (FolderStructure.Count() >= _folderLimit)
+                    {
+                        tbError.Text = $"Můžete použít maximálně {_folderLimit} složek";
+                    }
+                    else if (!tbCustomText.IsVisible || (tbCustomText.IsVisible && Tags.IsValidCustomText(tbCustomText.Text)))
+                    {
+                        NewFolderLevel();
+                    }
+                    else
+                    {
+                        ShowCustomTextError();
+                    }
                 }
             }
             else if (BaseStructDialog.TagAdd(tagCode, FolderStructure[SelectedFolderIndex].Tags.ToList(), tbError))
@@ -221,7 +224,7 @@ namespace PhotoApp.Dialogs
         //vytvoření nové složky
         private void NewFolderLevel()
         {
-            FolderStructure.Insert(SelectedFolderIndex+1,new FolderLevel(SelectedFolderIndex+1));
+            FolderStructure.Insert(SelectedFolderIndex + 1, new FolderLevel(SelectedFolderIndex + 1));
             SelectedFolderIndex++;
             SelectedTagIndex = -1;
             btnDeleteFolder.Visibility = Visibility.Collapsed;
