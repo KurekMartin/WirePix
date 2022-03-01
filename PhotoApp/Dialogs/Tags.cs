@@ -15,10 +15,10 @@ namespace PhotoApp
     {
         public TagStruct(string code, string visibleText, string buttonLabel, string group = "")
         {
-            this.Code = code;
-            this.VisibleText = visibleText;
-            this.ButtonLabel = buttonLabel;
-            this.Group = group;
+            Code = code;
+            VisibleText = visibleText;
+            ButtonLabel = buttonLabel;
+            Group = group;
         }
         public string Code { get; }
         public string VisibleText { get; }
@@ -40,8 +40,8 @@ namespace PhotoApp
         public ButtonStruct(string code)
         {
             TagStruct nameString = Tags.GetTag(code: code);
-            this.btnText = nameString.ButtonLabel;
-            insertValue = nameString.VisibleText;
+            btnText = nameString.ButtonLabel;
+            insertValue = nameString.Code;
         }
         public string btnText { get; }
         public string insertValue { get; }
@@ -71,22 +71,22 @@ namespace PhotoApp
         private static readonly List<TagStruct> tagList = new List<TagStruct>()
         {
             //            code                              visible text        button label
-            new TagStruct(Properties.TagCodes.YearLong,   "{YearLong}",       "Rok",                       Properties.TagGroups.Year),
-            new TagStruct(Properties.TagCodes.Year,       "{Year}",           "Rok krátce (YY)",           Properties.TagGroups.Year),
-            new TagStruct(Properties.TagCodes.Month,      "{Month}",          "Měsíc",                     Properties.TagGroups.Month),
-            new TagStruct(Properties.TagCodes.MonthShort, "{MonthShort}",     "Měsíc krátce (název)",      Properties.TagGroups.Month),
-            new TagStruct(Properties.TagCodes.MonthLong,  "{MonthLong}",      "Měsíc dlouze (název)",      Properties.TagGroups.Month),
-            new TagStruct(Properties.TagCodes.Day,        "{Day}",            "Den",                       Properties.TagGroups.Day),
-            new TagStruct(Properties.TagCodes.DayShort,   "{DayShort}",       "Den krátce (název)",        Properties.TagGroups.Day),
-            new TagStruct(Properties.TagCodes.DayLong,    "{DayLong}",        "Den dlouze (název)",        Properties.TagGroups.Day),
-            new TagStruct(Properties.TagCodes.DeviceName, "{DeviceName}",     "Název"),
-            new TagStruct(Properties.TagCodes.DeviceManuf,"{DeviceMan}",      "Výrobce"),
-            new TagStruct(Properties.TagCodes.SequenceNum,"{SequenceNum}",    "Číslo"),
-            new TagStruct(Properties.TagCodes.CustomText, "{CustomText}",     "Text"),
-            new TagStruct(Properties.TagCodes.FileName,   "{FileName}",       "Název souboru"),
+            new TagStruct(Properties.TagCodes.YearLong,   "Rok dlouze",       "Rok",                       Properties.TagGroups.Year),
+            new TagStruct(Properties.TagCodes.Year,       "Rok krátce",       "Rok krátce (YY)",           Properties.TagGroups.Year),
+            new TagStruct(Properties.TagCodes.Month,      "Měsíc",            "Měsíc",                     Properties.TagGroups.Month),
+            new TagStruct(Properties.TagCodes.MonthShort, "Měsíc krátce",     "Měsíc krátce (název)",      Properties.TagGroups.Month),
+            new TagStruct(Properties.TagCodes.MonthLong,  "Měsíc dlouze",     "Měsíc dlouze (název)",      Properties.TagGroups.Month),
+            new TagStruct(Properties.TagCodes.Day,        "Den",              "Den",                       Properties.TagGroups.Day),
+            new TagStruct(Properties.TagCodes.DayShort,   "Den krátce",       "Den krátce (název)",        Properties.TagGroups.Day),
+            new TagStruct(Properties.TagCodes.DayLong,    "Den dlouze",       "Den dlouze (název)",        Properties.TagGroups.Day),
+            new TagStruct(Properties.TagCodes.DeviceName, "Název zařízení",   "Název"),
+            new TagStruct(Properties.TagCodes.DeviceManuf,"Výrobce zařízení", "Výrobce"),
+            new TagStruct(Properties.TagCodes.SequenceNum,"Číslo souboru",    "Číslo"),
+            new TagStruct(Properties.TagCodes.CustomText, "Text",             "Text"),
+            new TagStruct(Properties.TagCodes.FileName,   "Název souboru",    "Název souboru"),
             new TagStruct(Properties.TagCodes.NewFolder,  "\\",               "Nová složka"),
-            new TagStruct(Properties.TagCodes.Hyphen,     "-",                "-"),
-            new TagStruct(Properties.TagCodes.Underscore, "_",                "_")
+            new TagStruct(Properties.TagCodes.Hyphen,     "-",                "-",                         Properties.TagGroups.Separator),
+            new TagStruct(Properties.TagCodes.Underscore, "_",                "_",                         Properties.TagGroups.Separator)
         };
         private static readonly List<string> dateTags = new List<string>(){
             Properties.TagCodes.Year,
@@ -102,14 +102,14 @@ namespace PhotoApp
         {
             if (code != null)
             {
+                if (code.Contains('('))
+                {
+                    code = RemoveParameter(code); //v případě tagu s parametrem {tag}(param) odstraní parametr
+                }
                 return tagList.First(x => x.Code == code);
             }
             else if (visibleText != null)
-            {
-                if (visibleText.Contains('('))
-                {
-                    visibleText = Regex.Match(visibleText, @"\{.*?\}").ToString(); //v případě tagu s parametrem {tag}(param) odstraní parametr
-                }
+            { 
                 return tagList.First(x => x.VisibleText == visibleText);
             }
             else if (label != null)
@@ -126,23 +126,24 @@ namespace PhotoApp
 
         public static List<TagStruct> GetTagGroup(string code)
         {
-            return tagList.Where(x=>x.Group==code).ToList();
+            return tagList.Where(x => x.Group == code).ToList();
         }
 
-        public static string GetTagParameter(string visibleText)
+        public static string GetParameter(string visibleText)
         {
             return Regex.Match(visibleText, @"(?<=\().+?(?=\))").ToString();
         }
 
-        public static List<TagStruct> GetTagListGroup(string matchCodePart)
+        public static string RemoveParameter(string tag)
         {
-            return tagList.FindAll(x => x.Code.Contains(matchCodePart));
+            return String.Join("",tag.TakeWhile(c => c != '('));
         }
 
+
         //získání hodnot pro zobrazení náhledu výsledného názvu
-        public static string GetSampleValueByTag(string visibleText, MediaFileInfo fileInfo = null, Device device = null, string filePath = null)
+        public static string GetSampleValueByTag(string tagCode, MediaFileInfo fileInfo = null, Device device = null, string filePath = null)
         {
-            TagStruct tag = GetTag(visibleText: visibleText);
+            TagStruct tag = GetTag(code: tagCode);
             if (tag != null)
             {
                 string codeTag = tag.Code;
@@ -244,7 +245,7 @@ namespace PhotoApp
                 }
                 else if (codeTag == Properties.TagCodes.CustomText)
                 {
-                    return Regex.Match(visibleText, @"(?<=\().*?(?=\))").ToString(); //vrátí parametr v ()
+                    return GetParameter(tagCode); //vrátí parametr v ()
                 }
                 else { return tag.VisibleText; }
             }
@@ -304,7 +305,7 @@ namespace PhotoApp
         internal static string TagsToValues(List<List<string>> folderTags, Device device, MediaFileInfo file, string tmpFile)
         {
             List<string> folders = new List<string>();
-            folderTags.ForEach(x=>folders.Add(TagsToValues(x, device, file, tmpFile)));
+            folderTags.ForEach(x => folders.Add(TagsToValues(x, device, file, tmpFile)));
             return string.Join("\\", folders);
         }
 
