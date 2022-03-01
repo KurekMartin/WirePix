@@ -12,23 +12,6 @@
         <converters:IndexToMargin x:Key="IndexToMarginConverter"/>
         <converters:TagCodeToLabel x:Key="CodeToLabelConverter"/>
         <CollectionViewSource x:Key="folderStructure" Source="{Binding Path=FolderStructure}" />
-
-        <Style x:Key="SelectedFolder" TargetType="StackPanel">
-            <Style.Triggers>
-                <DataTrigger Value="True">
-                    <DataTrigger.Binding>
-                        <MultiBinding>
-                            <MultiBinding.Converter>
-                                <converters:EqualityConverter/>
-                            </MultiBinding.Converter>
-                            <Binding Path="Index"/>
-                            <Binding Path="SelectedFolderIndex" RelativeSource="{RelativeSource Mode=FindAncestor,AncestorType=UserControl}"/>
-                        </MultiBinding>
-                    </DataTrigger.Binding>
-                    <Setter Property="Background" Value="{StaticResource PrimaryHueLightBrush}"/>
-                </DataTrigger>
-            </Style.Triggers>
-        </Style>
     </UserControl.Resources>
 
     <materialDesign:Card>
@@ -163,8 +146,7 @@
                                  MinWidth="150">
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
-                                    <StackPanel Orientation="Horizontal"
-                                                Style="{DynamicResource SelectedFolder}">
+                                    <StackPanel Orientation="Horizontal">
                                         <materialDesign:PackIcon Kind="FolderOutline"
                                                                  Margin="{Binding Index, Converter={StaticResource IndexToMarginConverter}}"/>
                                         <ItemsControl ItemsSource="{Binding Tags}">
@@ -185,6 +167,18 @@
                                     </StackPanel>
                                 </DataTemplate>
                             </ListBox.ItemTemplate>
+                            <ListBox.ItemContainerStyle>
+                                <Style TargetType="ListBoxItem" BasedOn="{StaticResource MaterialDesignListBoxItem}">
+                                    <Style.Triggers>
+                                        <Trigger Property="IsSelected" Value="True">
+                                            <Setter Property="Background" Value="{StaticResource PrimaryHueLightBrush}"/>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                    <Style.Resources>
+                                        <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="Transparent"/>
+                                    </Style.Resources>
+                                </Style>
+                            </ListBox.ItemContainerStyle>
                         </ListBox>
                     </Grid>
                     <TextBlock x:Name="tbError" Text="" Margin="15,5,15,0" Foreground="#DDC90000" Style="{StaticResource MaterialDesignBody2TextBlock}"/>
