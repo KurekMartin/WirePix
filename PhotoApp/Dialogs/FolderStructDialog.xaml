@@ -10,7 +10,25 @@
     <UserControl.Resources>
         <converters:TagToValue x:Key="TagToValueConverter"/>
         <converters:IndexToMargin x:Key="IndexToMarginConverter"/>
+        <converters:TagCodeToLabel x:Key="CodeToLabelConverter"/>
         <CollectionViewSource x:Key="folderStructure" Source="{Binding Path=FolderStructure}" />
+
+        <Style x:Key="SelectedFolder" TargetType="StackPanel">
+            <Style.Triggers>
+                <DataTrigger Value="True">
+                    <DataTrigger.Binding>
+                        <MultiBinding>
+                            <MultiBinding.Converter>
+                                <converters:EqualityConverter/>
+                            </MultiBinding.Converter>
+                            <Binding Path="Index"/>
+                            <Binding Path="SelectedFolderIndex" RelativeSource="{RelativeSource Mode=FindAncestor,AncestorType=UserControl}"/>
+                        </MultiBinding>
+                    </DataTrigger.Binding>
+                    <Setter Property="Background" Value="{StaticResource PrimaryHueLightBrush}"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
     </UserControl.Resources>
 
     <materialDesign:Card>
@@ -33,7 +51,7 @@
                                  VerticalAlignment="Center">
                                 <ListBox.ItemTemplate>
                                     <DataTemplate>
-                                        <TextBlock Text="{Binding .}"
+                                        <TextBlock Text="{Binding .,Converter={StaticResource CodeToLabelConverter}}"
                                                Margin="5,0"/>
                                     </DataTemplate>
                                 </ListBox.ItemTemplate>
@@ -145,9 +163,10 @@
                                  MinWidth="150">
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
-                                    <StackPanel Orientation="Horizontal" 
-                                                Margin="{Binding Index, Converter={StaticResource IndexToMarginConverter}}">
-                                        <materialDesign:PackIcon Kind="FolderOutline"/>
+                                    <StackPanel Orientation="Horizontal"
+                                                Style="{DynamicResource SelectedFolder}">
+                                        <materialDesign:PackIcon Kind="FolderOutline"
+                                                                 Margin="{Binding Index, Converter={StaticResource IndexToMarginConverter}}"/>
                                         <ItemsControl ItemsSource="{Binding Tags}">
                                             <ItemsControl.ItemsPanel>
                                                 <ItemsPanelTemplate>
