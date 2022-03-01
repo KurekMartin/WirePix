@@ -61,36 +61,6 @@ namespace PhotoApp.Dialogs
             ShowControls();
         }
 
-        private bool TagAdd(string insertValue, List<string> tags, TextBlock error)
-        {
-            if (insertValue.StartsWith("{"))
-            {
-                //omezeni maximalniho poctu tagu
-                if (tags.Count(x => x.StartsWith("{")) > 6)
-                {
-                    error.Text = "Lze použít maximálně 6 tagů";
-                    return false;
-                }
-            }
-            else
-            {
-                if (tags.Count() == 0) //tagy, které neobsahují {} (např. - _)
-                {
-                    error.Text = $"Nelze použít {Tags.GetTag(visibleText: insertValue).VisibleText} na začátku názvu.";
-                    return false;
-                }
-
-                TagStruct lastTag = Tags.GetTag(visibleText: tags.Last());
-                if (lastTag == Tags.GetTag(code: Properties.TagCodes.Hyphen) ||
-                    lastTag == Tags.GetTag(code: Properties.TagCodes.Underscore))
-                {
-                    error.Text = $"Nelze použít {insertValue} po {lastTag.VisibleText}.";
-                    return false;
-                }
-            }
-            return true;
-        }
-
 
         //přidání tagu po kliknutí na tlačítko
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -98,9 +68,9 @@ namespace PhotoApp.Dialogs
             tbError.Text = ""; //reset chybové hlášky
             string insertValue = ((Button)sender).Tag.ToString();
 
-            if (TagAdd(insertValue, FileStructure.ToList(), tbError))
+            if (BaseStructDialog.TagAdd(insertValue, FileStructure.ToList(), tbError))
             {
-                FileStructure.Add(insertValue);
+                FileStructure.Insert(SelectedIndex+1, insertValue);
                 SelectedIndex++;
             }
 
@@ -124,7 +94,7 @@ namespace PhotoApp.Dialogs
                     btnDeleteTag.Visibility = Visibility.Visible;
 
                     string tagText = FileStructure[SelectedIndex];
-                    TagStruct tag = Tags.GetTag(visibleText: tagText);
+                    TagStruct tag = Tags.GetTag(code: tagText);
 
                     if (tag.Group != string.Empty)
                     {
@@ -137,7 +107,7 @@ namespace PhotoApp.Dialogs
                     else if (tag.Code == Properties.TagCodes.CustomText)
                     {
                         tbCustomText.Visibility = Visibility.Visible;
-                        tbCustomText.Text = Tags.GetTagParameter(tagText);
+                        tbCustomText.Text = Tags.GetParameter(tagText);
                     }
                 }
             }
@@ -154,10 +124,10 @@ namespace PhotoApp.Dialogs
         private void TagSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             tbControlsError.Visibility = Visibility.Hidden;
-            if (e.AddedItems.Count > 0 && e.RemovedItems.Count > 0 && Tags.GetTag(visibleText: e.RemovedItems[0].ToString()).Code == Properties.TagCodes.CustomText) //kontrola parametru CustomText
+            if (e.AddedItems.Count > 0 && e.RemovedItems.Count > 0 && Tags.GetTag(code: e.RemovedItems[0].ToString()).Code == Properties.TagCodes.CustomText) //kontrola parametru CustomText
             {
                 string tag = FileStructure.First(x => x == e.RemovedItems[0].ToString());
-                string text = Tags.GetTagParameter(tag);
+                string text = Tags.GetParameter(tag);
                 if (!Tags.IsValidCustomText(text))
                 {
                     SelectedIndex = FileStructure.IndexOf(tag);
@@ -203,7 +173,7 @@ namespace PhotoApp.Dialogs
             {
                 TagStruct tag = (TagStruct)((ComboBox)sender).SelectedItem;
                 int oldIndex = SelectedIndex;
-                FileStructure[SelectedIndex] = tag.VisibleText;
+                FileStructure[SelectedIndex] = tag.Code;
                 SelectedIndex = oldIndex;
             }
         }

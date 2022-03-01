@@ -92,9 +92,10 @@ namespace PhotoApp.Dialogs
             {
                 change = 1;
             }
+            int i = 0;
             foreach (FolderLevel folder in folders)
             {
-                if (folder.Index > index)
+                if (i++ > index)
                 {
                     folder.Index += change;
                 }
@@ -137,6 +138,7 @@ namespace PhotoApp.Dialogs
                 OnPropertyChanged();
             }
         }
+
         public List<ButtonGroupStruct> Buttons
         {
             get { return _buttons; }
@@ -177,6 +179,10 @@ namespace PhotoApp.Dialogs
                 //vytvoreni korene treeView
                 NewFolderLevel();
             }
+            else
+            {
+                SelectedFolderIndex = 0;
+            }
             ShowControls();
         }
 
@@ -185,75 +191,37 @@ namespace PhotoApp.Dialogs
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             tbError.Text = ""; //reset chybové hlášky
-            string insertValue = ((Button)sender).Tag.ToString();
+            string tagCode = ((Button)sender).Tag.ToString();
 
             if (SelectedFolderIndex == -1) { SelectedFolderIndex = FolderStructure.Count() - 1; }
-            if (TagAdd(insertValue, FolderStructure[SelectedFolderIndex].Tags.ToList(), tbError))
-            {
-                FolderStructure[SelectedFolderIndex].Tags.Add(insertValue);
-                SelectedTagIndex++;
-            }
 
-            if (FolderStructure[SelectedFolderIndex].Tags.Count() > 0)
+            if (tagCode == Properties.TagCodes.NewFolder)
             {
+                if (FolderStructure.Count() >= _folderLimit)
+                {
+                    tbError.Text = $"Můžete použít maximálně {_folderLimit} složek";
+                }
+                else if (!tbCustomText.IsVisible || (tbCustomText.IsVisible && Tags.IsValidCustomText(tbCustomText.Text)))
+                {
+                    NewFolderLevel();
+                }
+                else
+                {
+                    ShowCustomTextError();
+                }
+            }
+            else if (BaseStructDialog.TagAdd(tagCode, FolderStructure[SelectedFolderIndex].Tags.ToList(), tbError))
+            {
+                FolderStructure[SelectedFolderIndex].Tags.Insert(SelectedTagIndex + 1, tagCode);
+                SelectedTagIndex++;
                 ShowControls();
             }
-
-        }
-
-        private bool TagAdd(string insertValue, List<string> tags, TextBlock error)
-        {
-            if (insertValue.StartsWith("{"))
-            {
-                //omezeni maximalniho poctu tagu
-                if (tags.Count(x => x.StartsWith("{")) > 6)
-                {
-                    error.Text = "Lze použít maximálně 6 značek";
-                    return false;
-                }
-            }
-            else
-            {
-                if (tags.Count() == 0) //tagy, které neobsahují {} (např. - _)
-                {
-                    error.Text = $"Nelze použít {Tags.GetTag(visibleText: insertValue).VisibleText} na začátku názvu.";
-                    return false;
-                }
-                else if (insertValue == Tags.GetTag(code: Properties.TagCodes.NewFolder).VisibleText)
-                {
-                    if (FolderStructure.Count() >= _folderLimit)
-                    {
-                        error.Text = $"Můžete použít maximálně {_folderLimit} složek";
-                        return false;
-                    }
-                    else if (!tbCustomText.IsVisible || (tbCustomText.IsVisible && Tags.IsValidCustomText(tbCustomText.Text)))
-                    {
-                        NewFolderLevel();
-                        return false;
-                    }
-                    else
-                    {
-                        ShowCustomTextError();
-                        return false;
-                    }
-
-                }
-
-                TagStruct lastTag = Tags.GetTag(visibleText: tags.Last());
-                if (lastTag == Tags.GetTag(code: Properties.TagCodes.Hyphen) ||
-                    lastTag == Tags.GetTag(code: Properties.TagCodes.Underscore))
-                {
-                    error.Text = $"Nelze použít {insertValue} po {lastTag.VisibleText}.";
-                    return false;
-                }
-            }
-            return true;
         }
 
         //vytvoření nové složky
         private void NewFolderLevel()
         {
-            FolderStructure.Add(new FolderLevel(FolderStructure.Count));
+            FolderStructure.Insert(SelectedFolderIndex+1,new FolderLevel(SelectedFolderIndex+1));
             SelectedFolderIndex++;
             SelectedTagIndex = -1;
             btnDeleteFolder.Visibility = Visibility.Collapsed;
@@ -277,7 +245,7 @@ namespace PhotoApp.Dialogs
             {
                 TagStruct tag = (TagStruct)((ComboBox)sender).SelectedItem;
                 int oldIndex = SelectedTagIndex;
-                FolderStructure[SelectedFolderIndex].Tags[SelectedTagIndex] = tag.VisibleText;
+                FolderStructure[SelectedFolderIndex].Tags[SelectedTagIndex] = tag.Code;
                 SelectedTagIndex = oldIndex;
             }
         }
@@ -286,10 +254,10 @@ namespace PhotoApp.Dialogs
         private void TagSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             tbControlsError.Visibility = Visibility.Hidden;
-            if (e.AddedItems.Count > 0 && e.RemovedItems.Count > 0 && Tags.GetTag(visibleText: e.RemovedItems[0].ToString()).Code == Properties.TagCodes.CustomText) //kontrola parametru CustomText
+            if (e.AddedItems.Count > 0 && e.RemovedItems.Count > 0 && Tags.GetTag(code: e.RemovedItems[0].ToString()).Code == Properties.TagCodes.CustomText) //kontrola parametru CustomText
             {
                 string tag = FolderStructure[SelectedFolderIndex].Tags.First(x => x == e.RemovedItems[0].ToString());
-                string text = Tags.GetTagParameter(tag);
+                string text = Tags.GetParameter(tag);
                 if (!Tags.IsValidCustomText(text))
                 {
                     SelectedTagIndex = FolderStructure[SelectedFolderIndex].Tags.IndexOf(tag);
@@ -389,7 +357,7 @@ namespace PhotoApp.Dialogs
                     btnDeleteTag.Visibility = Visibility.Visible;
 
                     string tagText = FolderStructure[SelectedFolderIndex].Tags[SelectedTagIndex];
-                    TagStruct tag = Tags.GetTag(visibleText: tagText);
+                    TagStruct tag = Tags.GetTag(code: tagText);
 
                     if (tag.Group != string.Empty)
                     {
@@ -402,7 +370,7 @@ namespace PhotoApp.Dialogs
                     else if (tag.Code == Properties.TagCodes.CustomText)
                     {
                         tbCustomText.Visibility = Visibility.Visible;
-                        tbCustomText.Text = Tags.GetTagParameter(tagText);
+                        tbCustomText.Text = Tags.GetParameter(tagText);
                         tbCustomText.Focus();
                     }
                 }
