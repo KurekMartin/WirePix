@@ -754,7 +754,7 @@ namespace PhotoApp
         {
             if (Settings.ThumbnailSettings.Value == 0)
             {
-                SetErrorMessage(tbBackupError, "Hodnota nemůže být 0");
+                SetErrorMessage(tbThumbnailError, "Hodnota nemůže být 0");
             }
         }
 
