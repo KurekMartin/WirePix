@@ -119,7 +119,7 @@ namespace PhotoApp
             return new TagStruct();
         }
 
-        public static bool IsValidCustomText(string text)
+        public static bool IsValidFileName(string text)
         {
             return text != string.Empty && text.IndexOfAny(Path.GetInvalidFileNameChars()) < 0;
         }
