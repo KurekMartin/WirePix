@@ -171,7 +171,7 @@
                                 <Style TargetType="ListBoxItem" BasedOn="{StaticResource MaterialDesignListBoxItem}">
                                     <Style.Triggers>
                                         <Trigger Property="IsSelected" Value="True">
-                                            <Setter Property="Background" Value="{StaticResource PrimaryHueLightBrush}"/>
+                                            <Setter Property="Background" Value="{StaticResource PrimaryHueMidBrush}"/>
                                         </Trigger>
                                     </Style.Triggers>
                                     <Style.Resources>
