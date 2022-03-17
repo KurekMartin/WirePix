@@ -58,6 +58,7 @@ namespace PhotoApp.Dialogs
             Buttons = buttons;
 
             FileStructure = new ObservableCollection<string>(initStructure);
+            if (FileStructure.Count > 0) { SelectedIndex = 0; }
             ShowControls();
         }
 
@@ -70,7 +71,7 @@ namespace PhotoApp.Dialogs
 
             if (BaseStructDialog.TagAdd(insertValue, FileStructure.ToList(), tbError))
             {
-                FileStructure.Insert(SelectedIndex+1, insertValue);
+                FileStructure.Insert(SelectedIndex + 1, insertValue);
                 SelectedIndex++;
             }
 
@@ -233,7 +234,11 @@ namespace PhotoApp.Dialogs
                 ShowCustomTextError();
                 return;
             }
-            mainWindow.DialogClose(this, FileStructure.ToList());
+            mainWindow.DialogClose(this, FileStructure.ToList(), MainWindow.RESULT_OK);
+        }
+        private void btnCancel_Click(object sender, RoutedEventArgs e)
+        {
+            mainWindow.DialogClose(this, resultCode: MainWindow.RESULT_CANCEL);
         }
     }
 }

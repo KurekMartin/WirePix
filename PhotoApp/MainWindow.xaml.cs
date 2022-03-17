@@ -52,7 +52,8 @@ namespace PhotoApp
 
         //dialog error
         public static int RESULT_ERROR = -1;
-        public static int RESULT_OK = 0;
+        public static int RESULT_CANCEL = 0;
+        public static int RESULT_OK = 1;
 
         private static int REQUEST_PROFILE_DELETE = 10;
 
@@ -494,36 +495,37 @@ namespace PhotoApp
         }
 
         //zavreni dialogu a ziskani vracenych hodnot
-        public void DialogClose(object sender, object result, int requestCode = -1)
+        public void DialogClose(object sender, object result = null, int resultCode = -1)
         {
-            if (sender.GetType() == typeof(FolderStructDialog))
+            if(resultCode == RESULT_OK)
             {
-                Settings.Paths.FolderTags = (List<List<string>>)result;
-                _ = Settings.Paths.FolderTags[0].Count;
-            }
-            else if (sender.GetType() == typeof(FileStructDialog))
-            {
-                Settings.Paths.FileTags = (List<string>)result;
-            }
-            else if (sender.GetType() == typeof(SaveDialog))
-            {
-                SaveOptions options = (SaveOptions)result;
-                Settings.Save(options);
-                GetProfiles(options.FileName); // načte nový profil
-
-            }
-            else if (sender.GetType() == typeof(YesNoDialog))
-            {
-                if (requestCode == REQUEST_PROFILE_DELETE)
+                if (sender.GetType() == typeof(FolderStructDialog))
                 {
-                    Settings.Delete(cbProfiles.SelectedItem.ToString());
-                    GetProfiles();
-                    OnPropertyChanged("Profiles");
+                    Settings.Paths.FolderTags = (List<List<string>>)result;
+                    _ = Settings.Paths.FolderTags[0].Count;
+                }
+                else if (sender.GetType() == typeof(FileStructDialog))
+                {
+                    Settings.Paths.FileTags = (List<string>)result;
+                }
+                else if (sender.GetType() == typeof(SaveDialog))
+                {
+                    SaveOptions options = (SaveOptions)result;
+                    Settings.Save(options);
+                    GetProfiles(options.FileName); // načte nový profil
+
+                }
+                else if (sender.GetType() == typeof(YesNoDialog))
+                {
+                    if (resultCode == REQUEST_PROFILE_DELETE)
+                    {
+                        Settings.Delete(cbProfiles.SelectedItem.ToString());
+                        GetProfiles();
+                        OnPropertyChanged("Profiles");
+                    }
                 }
             }
             DialogHost.CloseDialogCommand.Execute(null, null);
-
-            //tbStructure.Text = Tags.TagsToBlock(Settings.Paths.FolderTags, Settings.Paths.FileTags, DeviceList.SelectedDevice);
         }
 
         //vytvoreni a zobrazeni dialogu pro nazev souboru
@@ -706,27 +708,11 @@ namespace PhotoApp
             {
                 Settings.Load(cb.SelectedItem.ToString());
                 OnPropertyChanged("Settings");
-                //tbStructure.Text = Tags.TagsToBlock(Settings.Paths.FolderTags, Settings.Paths.FileTags, DeviceList.SelectedDevice);
-                //UpdateDestExample();
 
                 RemoveAllErrors();
                 CheckSettings();
             }
         }
-
-        //private void UpdateDestExample()
-        //{
-        //    spDestExample.Children.Clear();
-
-        //    Style textStyle = (Style)FindResource("MaterialDesignBody2TextBlock");
-
-        //    if (Settings.Paths.Root.Length > 0)
-        //    {
-        //        spDestExample.Children.Add(CreateIconPanel(Settings.Paths.Root, PackIconKind.Folder, 0, textStyle));
-        //    }
-
-        //    //spDestExample.Children.Add(Tags.TagsToStackPanel(Settings.Paths.FolderTags, Settings.Paths.FileTags, textStyle, DeviceList.SelectedDevice));
-        //}
 
         public static StackPanel CreateIconPanel(string text, PackIconKind iconKind, int level, Style textStyle)
         {

@@ -182,6 +182,7 @@ namespace PhotoApp.Dialogs
             else
             {
                 SelectedFolderIndex = 0;
+                if(SelectedFolder.Tags.Count > 0) { SelectedTagIndex = 0; }
             }
             ShowControls();
         }
@@ -389,6 +390,16 @@ namespace PhotoApp.Dialogs
             }
         }
 
+        private void FolderSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            OnPropertyChanged("SelectedFolder");
+            ShowControls();
+            if (FolderStructure.Count > 0 && SelectedFolderIndex != FolderStructure.Count() - 1 && FolderStructure.Last().Tags.Count == 0)
+            {
+                FolderStructure.Remove(FolderStructure.Last());
+            }
+        }
+
         //ukončení formuláře
         private void btnDone_Click(object sender, RoutedEventArgs e)
         {
@@ -400,17 +411,12 @@ namespace PhotoApp.Dialogs
             }
             List<List<string>> result = new List<List<string>>();
             FolderStructure.ToList().ForEach(x => result.Add(x.Tags.ToList()));
-            mainWindow.DialogClose(this, result);
+            mainWindow.DialogClose(this, result, MainWindow.RESULT_OK);
         }
 
-        private void FolderSelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void btnCancel_Click(object sender, RoutedEventArgs e)
         {
-            OnPropertyChanged("SelectedFolder");
-            ShowControls();
-            if (FolderStructure.Count > 0 && SelectedFolderIndex != FolderStructure.Count() - 1 && FolderStructure.Last().Tags.Count == 0)
-            {
-                FolderStructure.Remove(FolderStructure.Last());
-            }
+            mainWindow.DialogClose(this, resultCode: MainWindow.RESULT_CANCEL);
         }
     }
 }
