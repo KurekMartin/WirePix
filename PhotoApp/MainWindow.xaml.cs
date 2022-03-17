@@ -499,6 +499,7 @@ namespace PhotoApp
             if (sender.GetType() == typeof(FolderStructDialog))
             {
                 Settings.Paths.FolderTags = (List<List<string>>)result;
+                _ = Settings.Paths.FolderTags[0].Count;
             }
             else if (sender.GetType() == typeof(FileStructDialog))
             {

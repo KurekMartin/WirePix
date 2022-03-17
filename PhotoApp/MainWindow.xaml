@@ -221,6 +221,16 @@
                                             <TextBlock Text="{Binding Settings.Paths.Root}" d:Text="root"
                                                        Style="{StaticResource MaterialDesignBody2TextBlock}"
                                                        Margin="5,0"/>
+                                            <StackPanel.Style>
+                                                <Style TargetType="StackPanel">
+                                                    <Setter Property="Visibility" Value="Visible"/>
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding Settings.Paths.Root}" Value="">
+                                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </StackPanel.Style>
                                         </StackPanel>
                                         <ItemsControl ItemsSource="{Binding Settings.Paths.FolderTags}" d:ItemsSource="{d:SampleData ItemCount=3}">
                                             <ItemsControl.ItemsPanel>
@@ -252,6 +262,16 @@
                                                     </StackPanel>
                                                 </DataTemplate>
                                             </ItemsControl.ItemTemplate>
+                                            <ItemsControl.Style>
+                                                <Style TargetType="ItemsControl">
+                                                    <Setter Property="Visibility" Value="Visible"/>
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding Settings.Paths.FolderTags[0].Count}" Value="0">
+                                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </ItemsControl.Style>
                                         </ItemsControl>
                                         <StackPanel Margin="10,0">
                                             <StackPanel Margin="{Binding  Settings.Paths.FolderTags.Count,Converter={StaticResource IndexToMarginConverter}}"
@@ -272,6 +292,16 @@
                                                         </DataTemplate>
                                                     </ItemsControl.ItemTemplate>
                                                 </ItemsControl>
+                                                <StackPanel.Style>
+                                                    <Style TargetType="StackPanel">
+                                                        <Setter Property="Visibility" Value="Visible"/>
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding Settings.Paths.FileTags.Count}" Value="0">
+                                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </StackPanel.Style>
                                             </StackPanel>
                                         </StackPanel>
                                     </StackPanel>
