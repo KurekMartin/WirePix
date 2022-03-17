@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace PhotoApp.Dialogs
@@ -29,6 +31,34 @@ namespace PhotoApp.Dialogs
                 }
             }
             return true;
+        }
+        public static bool ValidCustomText(TextBox textBox)
+        {
+            if (textBox.Visibility != Visibility.Visible)
+            {
+                return true;
+            }
+            else
+            {
+                return Tags.IsValidFileName(textBox.Text);
+            }
+        }
+        public static void ShowCustomTextError(TextBox customText,TextBlock errorBlock)
+        {
+            string text = customText.Text;
+            if (text.Length == 0)
+            {
+                errorBlock.Text = $"Chybí hodnota pro {Tags.GetTag(code: Properties.TagCodes.CustomText).VisibleText}.\n" +
+                    $"Doplňte tuto hodnotu nebo tag odstraňte";
+                errorBlock.Visibility = Visibility.Visible;
+            }
+            else if (text.IndexOfAny(Path.GetInvalidFileNameChars()) >= 0)
+            {
+                List<char> invalidChars = text.Where(x => Path.GetInvalidFileNameChars().Contains(x)).ToList();
+                errorBlock.Text = $"Text obsahuje neplatné znaky: {string.Join("", invalidChars)}";
+                errorBlock.Visibility = Visibility.Visible;
+            }
+            customText.Focus();
         }
     }
 }

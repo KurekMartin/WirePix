@@ -10,6 +10,7 @@ using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using static PhotoApp.Dialogs.BaseStructDialog;
 
 namespace PhotoApp.Dialogs
 {
@@ -108,8 +109,13 @@ namespace PhotoApp.Dialogs
             get { return _selectedFolderIndex; }
             set
             {
-                _selectedFolderIndex = value;
-                OnPropertyChanged();
+                if (_selectedFolderIndex != value)
+                {
+                    _selectedFolderIndex = value;
+                    OnPropertyChanged();
+                    OnPropertyChanged("SelectedFolder");
+                    if (SelectedFolder != null && SelectedFolder.Tags.Count > 0) { SelectedTagIndex = 0; }
+                }
             }
         }
 
@@ -182,7 +188,7 @@ namespace PhotoApp.Dialogs
             else
             {
                 SelectedFolderIndex = 0;
-                if(SelectedFolder.Tags.Count > 0) { SelectedTagIndex = 0; }
+                if (SelectedFolder.Tags.Count > 0) { SelectedTagIndex = 0; }
             }
             ShowControls();
         }
@@ -196,30 +202,35 @@ namespace PhotoApp.Dialogs
 
             if (SelectedFolderIndex == -1) { SelectedFolderIndex = FolderStructure.Count() - 1; }
 
-            if (tagCode == Properties.TagCodes.NewFolder) //přidání nové složky
+            if (ValidCustomText(tbCustomText))
             {
-                if (SelectedFolder.Tags.Count() > 0)
+                if (tagCode == Properties.TagCodes.NewFolder) //přidání nové složky
                 {
-                    if (FolderStructure.Count() >= _folderLimit)
+                    if (SelectedFolder.Tags.Count() > 0)
                     {
-                        tbError.Text = $"Můžete použít maximálně {_folderLimit} složek";
-                    }
-                    else if (!tbCustomText.IsVisible || (tbCustomText.IsVisible && Tags.IsValidCustomText(tbCustomText.Text)))
-                    {
-                        NewFolderLevel();
-                    }
-                    else
-                    {
-                        ShowCustomTextError();
+                        if (FolderStructure.Count() >= _folderLimit)
+                        {
+                            tbError.Text = $"Můžete použít maximálně {_folderLimit} složek";
+                        }
+                        else
+                        {
+                            NewFolderLevel();
+                        }
                     }
                 }
+                else if (TagAdd(tagCode, FolderStructure[SelectedFolderIndex].Tags.ToList(), tbError))
+                {
+                    FolderStructure[SelectedFolderIndex].Tags.Insert(SelectedTagIndex + 1, tagCode);
+                    SelectedTagIndex++;
+                    ShowControls();
+                }
             }
-            else if (BaseStructDialog.TagAdd(tagCode, FolderStructure[SelectedFolderIndex].Tags.ToList(), tbError))
+            else
             {
-                FolderStructure[SelectedFolderIndex].Tags.Insert(SelectedTagIndex + 1, tagCode);
-                SelectedTagIndex++;
-                ShowControls();
+                ShowCustomTextError(tbCustomText, tbControlsError);
             }
+
+
         }
 
         //vytvoření nové složky
@@ -262,10 +273,10 @@ namespace PhotoApp.Dialogs
             {
                 string tag = FolderStructure[SelectedFolderIndex].Tags.First(x => x == e.RemovedItems[0].ToString());
                 string text = Tags.GetParameter(tag);
-                if (!Tags.IsValidCustomText(text))
+                if (!Tags.IsValidFileName(text))
                 {
                     SelectedTagIndex = FolderStructure[SelectedFolderIndex].Tags.IndexOf(tag);
-                    ShowCustomTextError();
+                    ShowCustomTextError(tbCustomText, tbControlsError);
                 }
             }
             ShowControls();
@@ -325,27 +336,9 @@ namespace PhotoApp.Dialogs
 
             if (tbCustomText.Text.IndexOfAny(Path.GetInvalidFileNameChars()) >= 0)
             {
-                ShowCustomTextError();
+                ShowCustomTextError(tbCustomText, tbControlsError);
             }
             else { tbError.Text = ""; }
-        }
-
-        private void ShowCustomTextError()
-        {
-            string text = tbCustomText.Text;
-            if (text.Length == 0)
-            {
-                tbControlsError.Text = $"Chybí hodnota pro {Tags.GetTag(code: Properties.TagCodes.CustomText).VisibleText}.\n" +
-                    $"Doplňte tuto hodnotu nebo tag odstraňte";
-                tbControlsError.Visibility = Visibility.Visible;
-            }
-            else if (text.IndexOfAny(Path.GetInvalidFileNameChars()) >= 0)
-            {
-                List<char> invalidChars = text.Where(x => Path.GetInvalidFileNameChars().Contains(x)).ToList();
-                tbControlsError.Text = $"Text obsahuje neplatné znaky: {string.Join("", invalidChars)}";
-                tbControlsError.Visibility = Visibility.Visible;
-            }
-            tbCustomText.Focus();
         }
 
         private void ShowControls()
@@ -392,26 +385,36 @@ namespace PhotoApp.Dialogs
 
         private void FolderSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            OnPropertyChanged("SelectedFolder");
-            ShowControls();
-            if (FolderStructure.Count > 0 && SelectedFolderIndex != FolderStructure.Count() - 1 && FolderStructure.Last().Tags.Count == 0)
+            if (tbCustomText.Visibility != Visibility.Visible)
             {
-                FolderStructure.Remove(FolderStructure.Last());
+                OnPropertyChanged("SelectedFolder");
+                ShowControls();
+                if (FolderStructure.Count > 0 && SelectedFolderIndex != FolderStructure.Count() - 1 && FolderStructure.Last().Tags.Count == 0)
+                {
+                    FolderStructure.Remove(FolderStructure.Last());
+                }
             }
+            else if (e.RemovedItems.Count > 0 && !Tags.IsValidFileName(tbCustomText.Text))
+            {
+                SelectedFolderIndex = ((FolderLevel)e.RemovedItems[0]).Index;
+                ShowCustomTextError(tbCustomText, tbControlsError);
+            }
+
         }
 
         //ukončení formuláře
         private void btnDone_Click(object sender, RoutedEventArgs e)
         {
-            if (tbCustomText.Visibility == Visibility.Visible && !Tags.IsValidCustomText(tbCustomText.Text))
+            if (ValidCustomText(tbCustomText))
             {
-                tbCustomText.Focus();
-                ShowCustomTextError();
-                return;
+                List<List<string>> result = new List<List<string>>();
+                FolderStructure.ToList().ForEach(x => result.Add(x.Tags.ToList()));
+                mainWindow.DialogClose(this, result, MainWindow.RESULT_OK);
             }
-            List<List<string>> result = new List<List<string>>();
-            FolderStructure.ToList().ForEach(x => result.Add(x.Tags.ToList()));
-            mainWindow.DialogClose(this, result, MainWindow.RESULT_OK);
+            else
+            {
+                ShowCustomTextError(tbCustomText, tbControlsError);
+            }
         }
 
         private void btnCancel_Click(object sender, RoutedEventArgs e)

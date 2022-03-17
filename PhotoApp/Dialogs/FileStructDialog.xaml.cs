@@ -7,6 +7,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.IO;
+using static PhotoApp.Dialogs.BaseStructDialog;
 
 namespace PhotoApp.Dialogs
 {
@@ -69,7 +70,7 @@ namespace PhotoApp.Dialogs
             tbError.Text = ""; //reset chybové hlášky
             string insertValue = ((Button)sender).Tag.ToString();
 
-            if (BaseStructDialog.TagAdd(insertValue, FileStructure.ToList(), tbError))
+            if (TagAdd(insertValue, FileStructure.ToList(), tbError))
             {
                 FileStructure.Insert(SelectedIndex + 1, insertValue);
                 SelectedIndex++;
@@ -129,32 +130,13 @@ namespace PhotoApp.Dialogs
             {
                 string tag = FileStructure.First(x => x == e.RemovedItems[0].ToString());
                 string text = Tags.GetParameter(tag);
-                if (!Tags.IsValidCustomText(text))
+                if (!Tags.IsValidFileName(text))
                 {
                     SelectedIndex = FileStructure.IndexOf(tag);
-                    tbCustomText.Focus();
-                    ShowCustomTextError();
+                    ShowCustomTextError(tbCustomText, tbControlsError);
                 }
             }
             ShowControls();
-        }
-
-        private void ShowCustomTextError()
-        {
-            string text = tbCustomText.Text;
-            if (text.Length == 0)
-            {
-                tbControlsError.Text = $"Chybí hodnota pro {Tags.GetTag(code: Properties.TagCodes.CustomText).VisibleText}.\n" +
-                    $"Doplňte tuto hodnotu nebo tag odstraňte";
-                tbControlsError.Visibility = Visibility.Visible;
-            }
-            else if (text.IndexOfAny(Path.GetInvalidFileNameChars()) >= 0)
-            {
-
-                List<char> invalidChars = text.Where(x => Path.GetInvalidFileNameChars().Contains(x)).ToList();
-                tbControlsError.Text = $"Text obsahuje neplatné znaky: {string.Join("", invalidChars)}";
-                tbControlsError.Visibility = Visibility.Visible;
-            }
         }
 
         //kontrola textBoxu - povolené jen písmena - _
@@ -220,7 +202,7 @@ namespace PhotoApp.Dialogs
 
             if (tbCustomText.Text.IndexOfAny(Path.GetInvalidFileNameChars()) >= 0)
             {
-                ShowCustomTextError();
+                ShowCustomTextError(tbCustomText, tbControlsError);
             }
             else { tbError.Text = ""; }
         }
@@ -228,13 +210,15 @@ namespace PhotoApp.Dialogs
         //ukončení formuláře
         private void btnDone_Click(object sender, RoutedEventArgs e)
         {
-            if (tbCustomText.Visibility == Visibility.Visible && !Tags.IsValidCustomText(tbCustomText.Text))
+            if (ValidCustomText(tbCustomText))
             {
-                tbCustomText.Focus();
-                ShowCustomTextError();
-                return;
+                mainWindow.DialogClose(this, FileStructure.ToList(), MainWindow.RESULT_OK);
             }
-            mainWindow.DialogClose(this, FileStructure.ToList(), MainWindow.RESULT_OK);
+            else
+            {
+                ShowCustomTextError(tbCustomText, tbControlsError);
+            }
+
         }
         private void btnCancel_Click(object sender, RoutedEventArgs e)
         {
