@@ -149,6 +149,12 @@
     <Compile Include="Converters\IntToDeviceStatusConverter.cs" />
     <Compile Include="Converters\LastBackupConverter.cs" />
     <Compile Include="Converters\ListToStringConverter.cs" />
+    <Compile Include="Dialogs\AppFeedbackDialog.xaml.cs">
+      <DependentUpon>AppFeedbackDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\AppSettingsDialog.xaml.cs">
+      <DependentUpon>AppSettingsDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Dialogs\BaseStructDialog.cs" />
     <Compile Include="Dialogs\AppInfoDialog.xaml.cs">
       <DependentUpon>AppInfoDialog.xaml</DependentUpon>
@@ -177,6 +183,11 @@
     <Compile Include="Models\Thumbnails.cs" />
     <Compile Include="Models\DownloadSettings.cs" />
     <Compile Include="Dialogs\Tags.cs" />
+    <Compile Include="Properties\Keys.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Keys.resx</DependentUpon>
+    </Compile>
     <Compile Include="Properties\TagGroups.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -185,6 +196,14 @@
     <Page Include="CircularProgress.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogs\AppFeedbackDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Dialogs\AppSettingsDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Dialogs\AppInfoDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -253,6 +272,10 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <EmbeddedResource Include="Properties\Keys.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Keys.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\TagCodes.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>TagCodes.Designer.cs</LastGenOutput>
