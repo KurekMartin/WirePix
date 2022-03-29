@@ -29,8 +29,8 @@ namespace PhotoApp.Dialogs
 
             try
             {
-                var github = new GitHubClient(new ProductHeaderValue("MartinKurek"));
-                var release = await github.Repository.Release.GetLatest("Bassman2", "MediaDevices"); //změnit
+                var github = new GitHubClient(new ProductHeaderValue("WirePix"));
+                var release = await github.Repository.Release.GetLatest("Bassman2", "MediaDevices"); //změnit "KurekMartin", "WirePix"
                 var latestVersion = Version.Parse(release.TagName);
                
                 if (latestVersion > currentVersion)
@@ -53,6 +53,16 @@ namespace PhotoApp.Dialogs
             
 
             //Console.WriteLine(release.TagName);
+
+        }
+
+        private void btnAutoUpdate_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void btnManualUpdate_Click(object sender, RoutedEventArgs e)
+        {
 
         }
     }
