@@ -932,9 +932,9 @@
                     "{9EF0B969-E518-4E46-987F-47570745A589}:_F168CDE34C7D44C7B88ECFB99B679460"
                     {
                     "Name" = "8:icon"
-                    "AlwaysCreate" = "11:FALSE"
+                    "AlwaysCreate" = "11:TRUE"
                     "Condition" = "8:"
-                    "Transitive" = "11:FALSE"
+                    "Transitive" = "11:TRUE"
                     "Property" = "8:_5C967E53EBAF470E97ED782278254C78"
                         "Folders"
                         {
@@ -954,9 +954,9 @@
                     "{9EF0B969-E518-4E46-987F-47570745A589}:_7D87A68C36CF4E9C99E39C0285AF2EE8"
                     {
                     "Name" = "8:App"
-                    "AlwaysCreate" = "11:FALSE"
+                    "AlwaysCreate" = "11:TRUE"
                     "Condition" = "8:"
-                    "Transitive" = "11:FALSE"
+                    "Transitive" = "11:TRUE"
                     "Property" = "8:_AABF5CAE23DB49F18D1E3CE4A49BDB69"
                         "Folders"
                         {
@@ -975,6 +975,72 @@
                 {
                 }
             }
+            "{1525181F-901A-416C-8A58-119130FE478E}:_C7877B62572F473A85F73E3972CD36F2"
+            {
+            "Name" = "8:#1915"
+            "AlwaysCreate" = "11:TRUE"
+            "Condition" = "8:"
+            "Transitive" = "11:TRUE"
+            "Property" = "8:AppDataFolder"
+                "Folders"
+                {
+                    "{9EF0B969-E518-4E46-987F-47570745A589}:_CCC2575B2B4B402199260F676B34BBEC"
+                    {
+                    "Name" = "8:WirePix"
+                    "AlwaysCreate" = "11:TRUE"
+                    "Condition" = "8:"
+                    "Transitive" = "11:TRUE"
+                    "Property" = "8:_2603732F474A4B6BA1C407C6A973EE26"
+                        "Folders"
+                        {
+                            "{9EF0B969-E518-4E46-987F-47570745A589}:_1503B6D2FF054C078538EC4025352CDA"
+                            {
+                            "Name" = "8:Logs"
+                            "AlwaysCreate" = "11:TRUE"
+                            "Condition" = "8:"
+                            "Transitive" = "11:TRUE"
+                            "Property" = "8:_355DEEE6241E497E9234AFC5BEDA5FE4"
+                                "Folders"
+                                {
+                                }
+                            }
+                            "{9EF0B969-E518-4E46-987F-47570745A589}:_1990FF10CBA041EBB1FC896E50888303"
+                            {
+                            "Name" = "8:Profiles"
+                            "AlwaysCreate" = "11:TRUE"
+                            "Condition" = "8:"
+                            "Transitive" = "11:TRUE"
+                            "Property" = "8:_D5C5E07245CA4A5FACF754CE68EC02D9"
+                                "Folders"
+                                {
+                                }
+                            }
+                            "{9EF0B969-E518-4E46-987F-47570745A589}:_AFC3601104454AE1AC0FF413075E453A"
+                            {
+                            "Name" = "8:Data"
+                            "AlwaysCreate" = "11:TRUE"
+                            "Condition" = "8:"
+                            "Transitive" = "11:TRUE"
+                            "Property" = "8:_B074114DAAED4E319E8AA9042FA5F159"
+                                "Folders"
+                                {
+                                }
+                            }
+                            "{9EF0B969-E518-4E46-987F-47570745A589}:_B8F5C2F14F9C4D3292A9969275567494"
+                            {
+                            "Name" = "8:Crash Reports"
+                            "AlwaysCreate" = "11:TRUE"
+                            "Condition" = "8:"
+                            "Transitive" = "11:TRUE"
+                            "Property" = "8:_DD60805E05234295A7F638C5F78B4742"
+                                "Folders"
+                                {
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
         "LaunchCondition"
         {
@@ -990,24 +1056,24 @@
         "Product"
         {
         "Name" = "8:Microsoft Visual Studio"
-        "ProductName" = "8:Photo Manager"
+        "ProductName" = "8:WirePix"
         "ProductCode" = "8:{E6CA893C-5021-4E5C-9C48-5960815DCAEA}"
-        "PackageCode" = "8:{10CD1016-438A-48E6-90F9-021D73DAC970}"
+        "PackageCode" = "8:{74A069BD-99D9-484E-9B69-E33EE2E5EF12}"
         "UpgradeCode" = "8:{353A19C6-4684-41C1-B2BE-7E6F047F0586}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
-        "InstallAllUsers" = "11:FALSE"
+        "InstallAllUsers" = "11:TRUE"
         "ProductVersion" = "8:1.0.988"
         "Manufacturer" = "8:Martin Kurek"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
-        "Title" = "8:Photo Manager Setup"
+        "Title" = "8:WirePix Setup"
         "Subject" = "8:"
         "ARPCONTACT" = "8:Martin Kurek"
         "Keywords" = "8:"
-        "ARPCOMMENTS" = "8:Aplikace pro správu fotografií"
+        "ARPCOMMENTS" = "8:Camera manager app"
         "ARPURLINFOABOUT" = "8:"
         "ARPPRODUCTICON" = "8:_72D7BCFDE34A43049B80ADA858F14054"
         "ARPIconIndex" = "3:0"
@@ -1087,7 +1153,7 @@
                                                                     "Condition" = "8:"
                                                                     "Transitive" = "11:TRUE"
                                                                     "ValueTypes" = "3:2"
-                                                                    "Value" = "8:%APPDATA%\\PhotoManager\\Crash Reports"
+                                                                    "Value" = "8:%APPDATA%\\WirePix\\Crash Reports"
                                                                     }
                                                                     "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_D32D9B689829458F8FC1B5AE1CA93D0A"
                                                                     {
@@ -1095,7 +1161,7 @@
                                                                     "Condition" = "8:"
                                                                     "Transitive" = "11:TRUE"
                                                                     "ValueTypes" = "3:3"
-                                                                    "Value" = "3:2"
+                                                                    "Value" = "3:1"
                                                                     }
                                                                     "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_D8FE5EB93E7B401FB94F365AA3158F4B"
                                                                     {
@@ -1103,7 +1169,7 @@
                                                                     "Condition" = "8:"
                                                                     "Transitive" = "11:TRUE"
                                                                     "ValueTypes" = "3:3"
-                                                                    "Value" = "3:3"
+                                                                    "Value" = "3:5"
                                                                     }
                                                                 }
                                                             }
@@ -1180,7 +1246,7 @@
         {
             "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_BCA46DFC7B8A442AA663F34C76E78082"
             {
-            "Name" = "8:Photo Manager"
+            "Name" = "8:WirePix"
             "Arguments" = "8:"
             "Description" = "8:"
             "ShowCmd" = "3:1"
@@ -1194,7 +1260,7 @@
             }
             "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_E52F8BC0929F4C6E9943093BBE374630"
             {
-            "Name" = "8:Photo Manager"
+            "Name" = "8:WirePix"
             "Arguments" = "8:"
             "Description" = "8:"
             "ShowCmd" = "3:1"
@@ -1607,7 +1673,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_70741A9CC78844C587E1C7277972C5DB"
             {
-            "SourcePath" = "8:..\\PhotoApp\\obj\\x64\\Release\\Photo Manager.exe"
+            "SourcePath" = "8:..\\PhotoApp\\obj\\x64\\Debug\\Photo Manager.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_14203058B299443EBC1FFAD01C983BFC"
