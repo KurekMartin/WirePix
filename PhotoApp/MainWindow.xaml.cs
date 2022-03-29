@@ -808,6 +808,18 @@ namespace PhotoApp
             var AppInfoDialog = new AppInfoDialog(this);
             await DialogHost.Show(AppInfoDialog, "RootDialog");
         }
+
+        private async void btnSettings_Click(object sender, RoutedEventArgs e)
+        {
+            var AppSettingsDialog = new AppSettingsDialog(this);
+            await DialogHost.Show(AppSettingsDialog, "RootDialog");
+        }
+
+        private async void btnFeedback_Click(object sender, RoutedEventArgs e)
+        {
+            var AppFeedbackDialog = new AppFeedbackDialog(this);
+            await DialogHost.Show(AppFeedbackDialog, "RootDialog");
+        }
     }
 }
 
