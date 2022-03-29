@@ -11,7 +11,7 @@ namespace PhotoApp
         dateRange
     }
 
-    public class Settings : BaseObserveObject
+    public class DownloadSettings : BaseObserveObject
     {
         public PathStruct Paths { get; set; } = new PathStruct();
         [XmlIgnore]
@@ -26,7 +26,7 @@ namespace PhotoApp
         [XmlIgnore]
         private static readonly string _profilesFolder = Application.Current.Resources["profilesFolder"].ToString();
 
-        public Settings()
+        public DownloadSettings()
         {
             Paths = new PathStruct();
             Date = new DateRange();
@@ -49,19 +49,19 @@ namespace PhotoApp
             if (!SaveOptions.FileStruct) { overrides.Add(typeof(PathStruct), "FileTags", attributes); }
             if (!SaveOptions.Backup)
             {
-                overrides.Add(typeof(Settings), "Backup", attributes);
+                overrides.Add(typeof(DownloadSettings), "Backup", attributes);
                 overrides.Add(typeof(PathStruct), "Backup", attributes);
             }
             if (!SaveOptions.Thumbnails)
             {
                 overrides.Add(typeof(PathStruct), "Thumbnail", attributes);
-                overrides.Add(typeof(Settings), "Thumbnail", attributes);
-                overrides.Add(typeof(Settings), "ThumbnailSettings", attributes);
+                overrides.Add(typeof(DownloadSettings), "Thumbnail", attributes);
+                overrides.Add(typeof(DownloadSettings), "ThumbnailSettings", attributes);
             }
-            if (!SaveOptions.FileCheck) { overrides.Add(typeof(Settings), "CheckFiles", attributes); }
-            if (!SaveOptions.DeleteFiles) { overrides.Add(typeof(Settings), "DeleteFiles", attributes); }
+            if (!SaveOptions.FileCheck) { overrides.Add(typeof(DownloadSettings), "CheckFiles", attributes); }
+            if (!SaveOptions.DeleteFiles) { overrides.Add(typeof(DownloadSettings), "DeleteFiles", attributes); }
 
-            XmlSerializer serializer = new XmlSerializer(typeof(Settings), overrides);
+            XmlSerializer serializer = new XmlSerializer(typeof(DownloadSettings), overrides);
             using (FileStream fs = File.Create(Path.Combine(_profilesFolder, $"{SaveOptions.FileName}.xml")))
             {
                 TextWriter writer = new StreamWriter(fs);
@@ -75,11 +75,11 @@ namespace PhotoApp
             var profile = Path.Combine(_profilesFolder, $"{profileName}.xml");
             if (File.Exists(profile))
             {
-                XmlSerializer serializer = new XmlSerializer(typeof(Settings));
+                XmlSerializer serializer = new XmlSerializer(typeof(DownloadSettings));
                 using (Stream stream = new FileStream(profile, FileMode.Open))
                 {
 
-                    Settings s = (Settings)serializer.Deserialize(stream);
+                    DownloadSettings s = (DownloadSettings)serializer.Deserialize(stream);
                     if (s.SaveOptions.Root) { Paths.Root = s.Paths.Root; }
                     if (s.SaveOptions.FolderStruct) { Paths.FolderTags = s.Paths.FolderTags; }
                     if (s.SaveOptions.FileStruct) { Paths.FileTags = s.Paths.FileTags; }

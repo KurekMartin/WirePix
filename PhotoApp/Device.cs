@@ -48,7 +48,7 @@ namespace PhotoApp
 
         public int FilesToCopyCount { get; private set; } = 0;
         private double sizeToProcess;
-        private Settings _lastSettings;
+        private DownloadSettings _lastSettings;
 
         private bool fileCheckDone = false;
 
@@ -258,7 +258,7 @@ namespace PhotoApp
         }
 
         //nalezeni souboru dle data
-        public void GetFilesByDate(BackgroundWorker worker, DoWorkEventArgs e, Settings settings)
+        public void GetFilesByDate(BackgroundWorker worker, DoWorkEventArgs e, DownloadSettings settings)
         {
             bool _checkDateRange;
             ProgressUpdateArgs progressArgs = new ProgressUpdateArgs
@@ -336,7 +336,7 @@ namespace PhotoApp
             }
 
             _device.Disconnect();
-            _lastSettings = new Settings();
+            _lastSettings = new DownloadSettings();
             _lastSettings.Date.Start = settings.Date.Start;
             _lastSettings.Date.End = settings.Date.End;
             fileCheckDone = true;
@@ -413,7 +413,7 @@ namespace PhotoApp
             return files;
         }
 
-        public async void CopyFiles(BackgroundWorker worker, DoWorkEventArgs e, Settings settings)
+        public async void CopyFiles(BackgroundWorker worker, DoWorkEventArgs e, DownloadSettings settings)
         {
             List<string> filesDone = new List<string>();
             object _lockFilesDone = new object();
@@ -669,7 +669,7 @@ namespace PhotoApp
 
         }
 
-        private void GenerateThumbnail(Settings settings, string filePath, string tmpFile, string origFile, string origHash, int attempt = 0, int wait = 2000)
+        private void GenerateThumbnail(DownloadSettings settings, string filePath, string tmpFile, string origFile, string origHash, int attempt = 0, int wait = 2000)
         {
 
             var st = new StackTrace();
@@ -790,7 +790,7 @@ namespace PhotoApp
             return format.ModuleFormat == MagickFormat.Dng || (format.MimeType != null && format.MimeType.Contains("image"));
         }
 
-        private bool SaveFiles(Settings settings, string fullName, string tmpFile, string origFile, byte[] origHash)
+        private bool SaveFiles(DownloadSettings settings, string fullName, string tmpFile, string origFile, byte[] origHash)
         {
             var st = new StackTrace();
             var sf = st.GetFrame(0);
