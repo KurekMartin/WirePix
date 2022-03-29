@@ -24,7 +24,7 @@ namespace PhotoApp
         private DownloadSelect _downloadSelect = DownloadSelect.lastBackup;
         public SaveOptions SaveOptions = new SaveOptions();
         [XmlIgnore]
-        private static readonly string _profilesFolder = Application.Current.Resources["profilesFolder"].ToString();
+        private static readonly string _profilesFolder = Application.Current.Resources[Properties.Keys.ProfilesFolder].ToString();
 
         public DownloadSettings()
         {

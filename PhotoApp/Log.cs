@@ -14,7 +14,7 @@ namespace PhotoApp
         private string _currentLog;
         private static string _timeFormat = "yyyy-MM-dd HH:mm:ss,fff";
         private static string _fileNameFormat = "yyyy-MM-dd HH-mm-ss";
-        private string _logFolder = Application.Current.Resources["logFolder"].ToString();
+        private string _logFolder = Application.Current.Resources[Properties.Keys.LogsFolder].ToString();
         public Log()
         {
             Directory.CreateDirectory(_logFolder);

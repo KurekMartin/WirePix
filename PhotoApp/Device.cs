@@ -437,7 +437,7 @@ namespace PhotoApp
             FilesDoneCount = 0;
             byte[] origHash = null;
             double sizeCopied = 0;
-            string tmpFolder = Application.Current.Resources["tmpFolder"].ToString();
+            string tmpFolder = Application.Current.Resources[Properties.Keys.TempFolder].ToString();
             string tmpFile = "";
             BlockingCollection<CopyItem> filesCollection = new BlockingCollection<CopyItem>();
 

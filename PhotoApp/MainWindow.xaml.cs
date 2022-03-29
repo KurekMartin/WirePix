@@ -37,8 +37,8 @@ namespace PhotoApp
 
     public partial class MainWindow : Window, INotifyPropertyChanged
     {
-        private readonly string logFolder = Application.Current.Resources["logFolder"].ToString();
-        private static readonly string tmpFolder = Application.Current.Resources["tmpFolder"].ToString();
+        private readonly string logFolder = Application.Current.Resources[Properties.Keys.LogsFolder].ToString();
+        private static readonly string tmpFolder = Application.Current.Resources[Properties.Keys.TempFolder].ToString();
 
         public DownloadSettings DownloadSettings { get; set; }
         public List<string> Profiles { get; set; }
@@ -129,7 +129,7 @@ namespace PhotoApp
 
         private void GetProfiles(string SelectProfile = "")
         {
-            var profilesPath = Application.Current.Resources["profilesFolder"].ToString();
+            var profilesPath = Application.Current.Resources[Properties.Keys.ProfilesFolder].ToString();
             string selectedProfile = SelectProfile;
             if (selectedProfile.Length == 0 && cbProfiles.SelectedItem != null)
             {

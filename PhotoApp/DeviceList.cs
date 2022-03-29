@@ -19,7 +19,7 @@ namespace PhotoApp
         [XmlIgnore]
         private Device _selectedDevice;
         [XmlIgnore]
-        private static readonly string _dataFile = Path.Combine(Application.Current.Resources["dataFolder"].ToString(), "Devices.xml");
+        private static readonly string _dataFile = Path.Combine(Application.Current.Resources[Properties.Keys.DataFolder].ToString(), "Devices.xml");
 
         public DeviceList()
         {
@@ -65,7 +65,7 @@ namespace PhotoApp
 
         public void Save()
         {
-            Directory.CreateDirectory(Application.Current.Resources["dataFolder"].ToString());
+            Directory.CreateDirectory(Application.Current.Resources[Properties.Keys.DataFolder].ToString());
             XmlSerializer serializer = new XmlSerializer(typeof(DeviceList));
             using (FileStream fs = File.Create(_dataFile))
             {

@@ -42,7 +42,7 @@ namespace PhotoApp.Dialogs
             {
                 tbError.Text = "Neplatný název souboru";
             }
-            else if (File.Exists(Path.Combine(Application.Current.Resources["profilesFolder"].ToString(), $"{tb.Text}.xml")))
+            else if (File.Exists(Path.Combine(Application.Current.Resources[Properties.Keys.ProfilesFolder].ToString(), $"{tb.Text}.xml")))
             {
                 tbError.Text = "Soubor již existuje.\nUložením tento soubor přepíšete.";
             }
