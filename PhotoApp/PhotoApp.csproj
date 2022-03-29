@@ -175,7 +175,7 @@
     <Compile Include="Models\DateRange.cs" />
     <Compile Include="Models\PathStruct.cs" />
     <Compile Include="Models\Thumbnails.cs" />
-    <Compile Include="Models\Settings.cs" />
+    <Compile Include="Models\DownloadSettings.cs" />
     <Compile Include="Dialogs\Tags.cs" />
     <Compile Include="Properties\TagGroups.Designer.cs">
       <AutoGen>True</AutoGen>
