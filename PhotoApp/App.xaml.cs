@@ -4,6 +4,7 @@ using System.Deployment.Application;
 using System.IO;
 using System.Reflection;
 using System.Windows;
+using System.Linq;
 
 namespace PhotoApp
 {
@@ -30,6 +31,12 @@ namespace PhotoApp
                 {
                     Directory.CreateDirectory(Current.Resources[key].ToString());
                 }
+            }
+
+            var files = Directory.GetFiles(Current.Resources[PhotoApp.Properties.Keys.TempFolder].ToString()).Where(x => x.EndsWith(".msi"));
+            foreach(var file in files)
+            {
+                File.Delete(file);
             }
 
             SetThemeMode(PhotoApp.Properties.Settings.Default.DarkMode);
