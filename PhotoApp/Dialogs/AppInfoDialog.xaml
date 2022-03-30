@@ -12,24 +12,31 @@
                 <TextBlock Style="{StaticResource MaterialDesignHeadline6TextBlock}" Text="O Aplikaci" Padding="5" TextAlignment="Center"/>
             </materialDesign:ColorZone>
             <StackPanel Orientation="Vertical" Margin="10" >
-                <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
+                <DockPanel Margin="0,0,0,5" HorizontalAlignment="Stretch">
                     <TextBlock VerticalAlignment="Center" Style="{StaticResource MaterialDesignBody2TextBlock}" Text="Verze aplikace: " FontWeight="Bold"/>
                     <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}" Text="{Binding Path=Version, Source={x:Static Application.Current}}" d:Text="1.0.0" VerticalAlignment="Center"/>
-                    <Button x:Name="btnCheckUpdate" Content="Zkontolovat aktualizace" Margin="10,0,0,0" Click="btnCheckUpdate_Click"
+                    <Button x:Name="btnCheckUpdate" Content="Zkontolovat aktualizace" Click="btnCheckUpdate_Click"
                             Style="{StaticResource MaterialDesignRaisedButton}"
                             materialDesign:ButtonProgressAssist.Value="-1"
                             materialDesign:ButtonProgressAssist.IsIndicatorVisible="False"
-                            materialDesign:ButtonProgressAssist.IsIndeterminate="True"/>
-                </StackPanel>
+                            materialDesign:ButtonProgressAssist.IsIndeterminate="True"
+                            HorizontalAlignment="Right" Margin="10,0,0,0"/>
+                </DockPanel>
                 
                 <TextBlock x:Name="tbVersionInfo" Style="{StaticResource MaterialDesignBody2TextBlock}" Visibility="Collapsed" d:Visibility="Visible" d:Text="Version Info"/>
                 
-                <StackPanel Orientation="Horizontal"
+                <StackPanel x:Name="spDownloadUpdate"
+                            Orientation="Horizontal"
                             HorizontalAlignment="Center"
-                            Margin="0,5">
+                            Margin="0,5"
+                            Visibility="Hidden"
+                            d:Visibility="Visible">
                     <Button x:Name="btnAutoUpdate" 
                             Click="btnAutoUpdate_Click"
-                            Margin="5,0">
+                            Margin="5,0"
+                            materialDesign:ButtonProgressAssist.Value="-1"
+                            materialDesign:ButtonProgressAssist.IsIndicatorVisible="False"
+                            materialDesign:ButtonProgressAssist.IsIndeterminate="True">
                         <StackPanel Orientation="Horizontal">
                             <materialDesign:PackIcon Kind="DownloadCircleOutline"
                                                  Height="Auto"
