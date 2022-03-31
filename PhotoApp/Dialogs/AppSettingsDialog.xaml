@@ -12,12 +12,27 @@
                 <TextBlock Style="{StaticResource MaterialDesignHeadline6TextBlock}" Text="Nastavení" Padding="5" TextAlignment="Center"/>
             </materialDesign:ColorZone>
             <StackPanel Orientation="Vertical" Margin="10" >
-                <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
-                    <TextBlock VerticalAlignment="Center" Style="{StaticResource MaterialDesignBody2TextBlock}" Text="Tmavý režim " FontWeight="Bold"/>
+                <DockPanel Margin="0,0,0,5">
+                    <TextBlock VerticalAlignment="Center" Style="{StaticResource MaterialDesignBody2TextBlock}" Text="Tmavý režim" FontWeight="Bold"/>
                     <CheckBox x:Name="cbDarkMode"
+                              Margin="5,0"
                               Style="{StaticResource MaterialDesignSwitchToggleButton}"
-                              VerticalAlignment="Center" Checked="cbDarkMode_Changed" Unchecked="cbDarkMode_Changed"/>
-                </StackPanel>                
+                              IsChecked="{Binding DarkMode, Mode=OneTime}"
+                              VerticalAlignment="Center" 
+                              HorizontalAlignment="Right"
+                              Checked="cbDarkMode_Changed" Unchecked="cbDarkMode_Changed"/>
+                </DockPanel>
+
+                <DockPanel Margin="0,0,0,5">
+                    <TextBlock VerticalAlignment="Center" Style="{StaticResource MaterialDesignBody2TextBlock}" Text="Kontrola nové verze po spuštění" FontWeight="Bold"/>
+                    <CheckBox x:Name="cbCheckNewVersion"
+                              Margin="5,0"
+                              Style="{StaticResource MaterialDesignSwitchToggleButton}"
+                              IsChecked="{Binding CheckUpdateOnStartup, Mode=OneTime}"
+                              VerticalAlignment="Center"
+                              HorizontalAlignment="Right"
+                              Checked="cbCheckNewVersion_Checked" Unchecked="cbCheckNewVersion_Checked"/>
+                </DockPanel>
             </StackPanel>
 
             <Button x:Name="btnOK" Content="OK" Margin="15,10" Grid.Row="1" Click="btnOK_Click"/>

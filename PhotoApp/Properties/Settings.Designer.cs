@@ -43,5 +43,17 @@ namespace PhotoApp.Properties {
                 this["DarkMode"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool CheckUpdateOnStartup {
+            get {
+                return ((bool)(this["CheckUpdateOnStartup"]));
+            }
+            set {
+                this["CheckUpdateOnStartup"] = value;
+            }
+        }
     }
 }
