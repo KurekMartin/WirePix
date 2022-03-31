@@ -38,7 +38,7 @@ namespace PhotoApp.Dialogs
                 var release = await github.Repository.Release.GetLatest("KurekMartin", "WirePix");
                 var latestVersion = Version.Parse(release.TagName.Replace("v", ""));
 
-                if (latestVersion < currentVersion)
+                if (latestVersion > currentVersion)
                 {
                     ucUpdate.VersionInfo = "Je dostupná novější verze programu";
                     ucUpdate.Release = release;
