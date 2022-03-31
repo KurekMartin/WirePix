@@ -170,7 +170,7 @@
     </Compile>
     <Compile Include="Converters\EnumCompare.cs" />
     <Compile Include="Converters\EnumToBoleanConverter.cs" />
-    <Compile Include="Dialogs\UpdateControl.xaml.cs">
+    <Compile Include="UIElements\UpdateControl.xaml.cs">
       <DependentUpon>UpdateControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Dialogs\YesNoDialog.xaml.cs">
@@ -228,7 +228,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Dialogs\UpdateControl.xaml">
+    <Page Include="UIElements\UpdateControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

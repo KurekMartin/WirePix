@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:PhotoApp.Dialogs"
+             xmlns:UI="clr-namespace:PhotoApp.UIElements"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" Width="Auto" Height="Auto">
     <materialDesign:Card>
@@ -22,7 +23,7 @@
                             materialDesign:ButtonProgressAssist.IsIndeterminate="True"
                             HorizontalAlignment="Right" Margin="10,0,0,0"/>
                 </DockPanel>
-                <local:UpdateControl x:Name="ucUpdate" DownloadingChanged="ucUpdate_DownloadingChanged"/>
+                <UI:UpdateControl x:Name="ucUpdate" DownloadingChanged="ucUpdate_DownloadingChanged"/>
             </StackPanel>
 
             <Button x:Name="btnOK" Content="OK" Margin="15,10" Grid.Row="1" Click="btnOK_Click"/>

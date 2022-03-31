@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace PhotoApp.Dialogs
+namespace PhotoApp.UIElements
 {
     public partial class UpdateControl : UserControl, INotifyPropertyChanged
     {
