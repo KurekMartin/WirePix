@@ -16,9 +16,6 @@ namespace PhotoApp.Dialogs
     public partial class AppInfoDialog : UserControl
     {
         private MainWindow mainWindow;
-        private Release newRelease;
-        private bool downloading = false;
-        private static readonly string _tmpFolder = System.Windows.Application.Current.Resources[Properties.Keys.TempFolder].ToString();
         public AppInfoDialog(MainWindow window)
         {
             InitializeComponent();
@@ -41,50 +38,26 @@ namespace PhotoApp.Dialogs
                 var release = await github.Repository.Release.GetLatest("KurekMartin", "WirePix");
                 var latestVersion = Version.Parse(release.TagName.Replace("v", ""));
 
-                if (latestVersion > currentVersion)
+                if (latestVersion < currentVersion)
                 {
-                    tbVersionInfo.Text = "Je dostupná novější verze programu";
-                    newRelease = release;
-                    spDownloadUpdate.Visibility = Visibility.Visible;
+                    ucUpdate.VersionInfo = "Je dostupná novější verze programu";
+                    ucUpdate.Release = release;
                 }
                 else
                 {
-                    tbVersionInfo.Text = "Máte nejnovější verzi programu";
-                    spDownloadUpdate.Visibility = Visibility.Hidden;
+                    ucUpdate.VersionInfo = "Máte nejnovější verzi programu";
                 }
             }
             catch
             {
-                tbVersionInfo.Text = "Nebylo možné získat informace o dostupnosti novější verze";
+                ucUpdate.VersionInfo = "Nebylo možné získat informace o dostupnosti novější verze";
             }
-            tbVersionInfo.Visibility = Visibility.Visible;
             MaterialDesignThemes.Wpf.ButtonProgressAssist.SetIsIndicatorVisible(btnCheckUpdate, false);
         }
 
-        private async void btnAutoUpdate_Click(object sender, RoutedEventArgs e)
+        private void ucUpdate_DownloadingChanged(object sender, EventArgs e)
         {
-            if (newRelease != null && !downloading)
-            {
-                downloading = true;
-                var asset = newRelease.Assets.FirstOrDefault(a => a.Name.EndsWith(".msi"));
-                string installerPath = Path.Combine(_tmpFolder, asset.Name);
-
-                WebClient webClient = new WebClient();
-                MaterialDesignThemes.Wpf.ButtonProgressAssist.SetIsIndicatorVisible(btnAutoUpdate, true);
-                btnOK.IsEnabled = btnCheckUpdate.IsEnabled = false; //disable buttons
-                await webClient.DownloadFileTaskAsync(new Uri(asset.BrowserDownloadUrl), installerPath);
-                downloading = false;
-                MaterialDesignThemes.Wpf.ButtonProgressAssist.SetIsIndicatorVisible(btnAutoUpdate, false);
-
-                Process.Start(installerPath);
-                System.Windows.Application.Current.Shutdown();
-            }
-
+            btnCheckUpdate.IsEnabled = btnOK.IsEnabled = !ucUpdate.Downloading;
         }
-
-    private void btnManualUpdate_Click(object sender, RoutedEventArgs e)
-    {
-        Process.Start(newRelease.HtmlUrl);
     }
-}
 }

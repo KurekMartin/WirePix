@@ -22,42 +22,7 @@
                             materialDesign:ButtonProgressAssist.IsIndeterminate="True"
                             HorizontalAlignment="Right" Margin="10,0,0,0"/>
                 </DockPanel>
-                
-                <TextBlock x:Name="tbVersionInfo" Style="{StaticResource MaterialDesignBody2TextBlock}" Visibility="Collapsed" d:Visibility="Visible" d:Text="Version Info"/>
-                
-                <StackPanel x:Name="spDownloadUpdate"
-                            Orientation="Horizontal"
-                            HorizontalAlignment="Center"
-                            Margin="0,5"
-                            Visibility="Hidden"
-                            d:Visibility="Visible">
-                    <Button x:Name="btnAutoUpdate" 
-                            Click="btnAutoUpdate_Click"
-                            Margin="5,0"
-                            materialDesign:ButtonProgressAssist.Value="-1"
-                            materialDesign:ButtonProgressAssist.IsIndicatorVisible="False"
-                            materialDesign:ButtonProgressAssist.IsIndeterminate="True">
-                        <StackPanel Orientation="Horizontal">
-                            <materialDesign:PackIcon Kind="DownloadCircleOutline"
-                                                 Height="Auto"
-                                                 Width="Auto"
-                                                 VerticalAlignment="Center"/>
-                            <TextBlock Text="Nainstalovat" Margin="5,0,0,0" TextAlignment="Center" VerticalAlignment="Center"/>
-                        </StackPanel>
-                    </Button>
-                    <Button x:Name="btnManualUpdate" 
-                            Click="btnManualUpdate_Click"
-                            Margin="5,0">
-                        <StackPanel Orientation="Horizontal">
-                            <materialDesign:PackIcon Kind="Web"
-                                                 Height="Auto"
-                                                 Width="Auto"
-                                                 VerticalAlignment="Center"/>
-                            <TextBlock Text="Stáhnout ručně" Margin="5,0,0,0" TextAlignment="Center" VerticalAlignment="Center"/>
-                        </StackPanel>
-                    </Button>
-                </StackPanel>
-                
+                <local:UpdateControl x:Name="ucUpdate" DownloadingChanged="ucUpdate_DownloadingChanged"/>
             </StackPanel>
 
             <Button x:Name="btnOK" Content="OK" Margin="15,10" Grid.Row="1" Click="btnOK_Click"/>
