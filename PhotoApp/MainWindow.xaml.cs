@@ -74,6 +74,12 @@ namespace PhotoApp
 
             InitializeComponent();
 
+            if (Properties.Settings.Default.CheckUpdateOnStartup)
+            {
+                CheckNewVersion();
+            }
+
+
             progressDialog = new ProgressDialog(this);
 
             spDeviceInfo.Visibility = Visibility.Hidden;
@@ -497,7 +503,7 @@ namespace PhotoApp
         //zavreni dialogu a ziskani vracenych hodnot
         public void DialogClose(object sender, object result = null, int resultCode = -1)
         {
-            if(resultCode == RESULT_OK)
+            if (resultCode == RESULT_OK)
             {
                 if (sender.GetType() == typeof(FolderStructDialog))
                 {
@@ -819,6 +825,30 @@ namespace PhotoApp
         {
             var AppFeedbackDialog = new AppFeedbackDialog(this);
             await DialogHost.Show(AppFeedbackDialog, "RootDialog");
+        }
+
+        private async void ShowUpdateDialog(Octokit.Release release)
+        {
+            var UpdateDialog = new UpdateDialog(this, release);
+            await DialogHost.Show(UpdateDialog, "RootDialog");
+        }
+
+        private async void CheckNewVersion()
+        {
+            var currentVersion = Version.Parse(((App)Application.Current).Version);
+            try
+            {
+                var github = new Octokit.GitHubClient(new Octokit.ProductHeaderValue("WirePix"));
+                var release = await github.Repository.Release.GetLatest("KurekMartin", "WirePix");
+                var latestVersion = Version.Parse(release.TagName.Replace("v", ""));
+
+                if (latestVersion > currentVersion)
+                {
+                    SnackBar.MessageQueue.Enqueue("Je dostupná novější verze aplikace", "ZOBRAZIT", () => ShowUpdateDialog(release));
+                }
+            }
+            catch (Exception ex) { }
+
         }
     }
 }
