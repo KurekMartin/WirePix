@@ -14,8 +14,8 @@ namespace PhotoApp.UIElements
 {
     public partial class UpdateControl : UserControl, INotifyPropertyChanged
     {
-        private string _versionInfo;
-        private string _error;
+        private string _versionInfo = "";
+        private string _error = "";
         private Release _release;
         public Release Release
         {
@@ -40,7 +40,14 @@ namespace PhotoApp.UIElements
         public string Error
         {
             get => _error;
-            set { _error = value; OnPropertyChanged(); }
+            set
+            {
+                if (value != null)
+                {
+                    _error = value;
+                    OnPropertyChanged();
+                }
+            }
         }
         public bool Downloading { get; private set; } = false;
         private static readonly string _tmpFolder = System.Windows.Application.Current.Resources[Properties.Keys.TempFolder].ToString();
@@ -75,6 +82,7 @@ namespace PhotoApp.UIElements
 
         private async void btnAutoUpdate_Click(object sender, RoutedEventArgs e)
         {
+            Error = "";
             if (_release != null)
             {
                 if (!Downloading)
@@ -90,7 +98,7 @@ namespace PhotoApp.UIElements
                     }
                     catch (WebException ex)
                     {
-                        if(ex.Status != WebExceptionStatus.RequestCanceled)
+                        if (ex.Status != WebExceptionStatus.RequestCanceled)
                         {
                             Error = ex.Message;
                         }

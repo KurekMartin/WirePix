@@ -8,10 +8,21 @@
              Height="Auto"
              Width="Auto">
     <StackPanel Orientation="Vertical">
-        <TextBlock x:Name="tbVersionInfo" Style="{StaticResource MaterialDesignBody2TextBlock}" 
+        <TextBlock x:Name="tbVersionInfo" 
                    d:Text="Version Info"
-                   Text="{Binding VersionInfo}"/>
-        
+                   Text="{Binding VersionInfo}">
+            <TextBlock.Style>
+                <Style TargetType="TextBlock" BasedOn="{StaticResource MaterialDesignBody2TextBlock}">
+                    <Setter Property="Visibility" Value="Visible"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding VersionInfo}" Value="">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </TextBlock.Style>
+        </TextBlock>
+
         <StackPanel x:Name="spDownloadUpdate"
                     Orientation="Horizontal"
                     HorizontalAlignment="Center"
@@ -50,9 +61,19 @@
             </Button>
         </StackPanel>
         <TextBlock x:Name="tbDownloadError"
-                   Style="{StaticResource MaterialDesignBody2TextBlock}"
                    Foreground="Red"
                    d:Text="Download error"
-                   Text="{Binding Error}"/>
+                   Text="{Binding Error}">
+            <TextBlock.Style>
+                <Style TargetType="TextBlock" BasedOn="{StaticResource MaterialDesignBody2TextBlock}">
+                    <Setter Property="Visibility" Value="Visible"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Error}" Value="">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </TextBlock.Style>
+        </TextBlock>
     </StackPanel>
 </UserControl>
