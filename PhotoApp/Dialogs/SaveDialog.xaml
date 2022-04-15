@@ -4,35 +4,36 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:PhotoApp.Dialogs"
+             xmlns:p ="clr-namespace:PhotoApp.Properties"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" Width="Auto" Height="Auto" MinHeight="300" MinWidth="300">
     <materialDesign:Card>
         <StackPanel Orientation="Vertical">
-            <materialDesign:ColorZone Mode="PrimaryMid">
-                <TextBlock Style="{StaticResource MaterialDesignHeadline6TextBlock}" Text="Uložit nastavení" Padding="5" TextAlignment="Center"/>
+            <materialDesign:ColorZone Mode="PrimaryMid" CornerRadius="5,5,0,0">
+                <TextBlock Style="{StaticResource MaterialDesignHeadline6TextBlock}" Text="{x:Static p:Resources.SettingsSave}" Padding="5" TextAlignment="Center"/>
             </materialDesign:ColorZone>
             <StackPanel Margin="10" Width="Auto" Height="Auto">
-                <TextBox x:Name="tbFileName" Text="{Binding FileName}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" materialDesign:HintAssist.Hint="Název profilu" MaxLength="30" TextChanged="tbFileName_TextChanged"/>
+                <TextBox x:Name="tbFileName" Text="{Binding FileName}" Style="{StaticResource MaterialDesignFloatingHintTextBox}" materialDesign:HintAssist.Hint="{x:Static p:Resources.ProfileName}" MaxLength="30" TextChanged="tbFileName_TextChanged"/>
                 <TextBlock x:Name="tbError" Foreground="Red"/>
                 <StackPanel Margin="5">
-                    <CheckBox Content="Úložiště" x:Name="cbStorage" Checked="cbStorage_Checked" Unchecked="cbStorage_Unchecked"/>
+                    <CheckBox Content="{x:Static p:Resources.SettingsMainFolder}" x:Name="cbStorage" Checked="cbStorage_Checked" Unchecked="cbStorage_Unchecked"/>
                     <StackPanel Margin="10,0">
-                        <CheckBox Content="Hlavní složka" x:Name="cbRoot" IsChecked="{Binding Root,Mode=TwoWay}" Unchecked="cbStorageItem_Changed" Checked="cbStorageItem_Changed"/>
-                        <CheckBox Content="Pojmenování složek" x:Name="cbFolderTags" IsChecked="{Binding FolderStruct,Mode=TwoWay}" Unchecked="cbStorageItem_Changed" Checked="cbStorageItem_Changed"/>
-                        <CheckBox Content="Název souboru" x:Name="cbFileTags" IsChecked="{Binding FileStruct,Mode=TwoWay}" Unchecked="cbStorageItem_Changed" Checked="cbStorageItem_Changed"/>
+                        <CheckBox Content="{x:Static p:Resources.SettingsMainFolder}" x:Name="cbRoot" IsChecked="{Binding Root,Mode=TwoWay}" Unchecked="cbStorageItem_Changed" Checked="cbStorageItem_Changed"/>
+                        <CheckBox Content="{x:Static p:Resources.SettingsFolderStructure}" x:Name="cbFolderTags" IsChecked="{Binding FolderStruct,Mode=TwoWay}" Unchecked="cbStorageItem_Changed" Checked="cbStorageItem_Changed"/>
+                        <CheckBox Content="{x:Static p:Resources.SettingsFilenameStructure}" x:Name="cbFileTags" IsChecked="{Binding FileStruct,Mode=TwoWay}" Unchecked="cbStorageItem_Changed" Checked="cbStorageItem_Changed"/>
                     </StackPanel>
-                    <CheckBox Content="Záloha" x:Name="cbBackup" IsChecked="{Binding Backup}"/>
-                    <CheckBox Content="Náhledy" x:Name="cbThumbnails" IsChecked="{Binding Thumbnails}"/>
-                    <CheckBox Content="Kontrola souborů" x:Name="cbCheckFiles" IsChecked="{Binding FileCheck}"/>
-                    <CheckBox Content="Smazat stažené soubory" x:Name="cbDeleteFiles" IsChecked="{Binding DeleteFiles}"/>
+                    <CheckBox Content="{x:Static p:Resources.SettingsBackup}" x:Name="cbBackup" IsChecked="{Binding Backup}"/>
+                    <CheckBox Content="{x:Static p:Resources.SettingsThumbnail}" x:Name="cbThumbnails" IsChecked="{Binding Thumbnails}"/>
+                    <CheckBox Content="{x:Static p:Resources.SettingsFileCheck}" x:Name="cbCheckFiles" IsChecked="{Binding FileCheck}"/>
+                    <CheckBox Content="{x:Static p:Resources.SettingsDeleteDownloaded}" x:Name="cbDeleteFiles" IsChecked="{Binding DeleteFiles}"/>
                 </StackPanel>
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="1*"/>
                         <ColumnDefinition Width="1*"/>
                     </Grid.ColumnDefinitions>
-                    <Button x:Name="btnSave" Grid.Column="0" Content="Uložit" Margin="10" Click="btnSave_Click"/>
-                    <Button Content="Zrušit" Grid.Column="1" Margin="10" Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"/>
+                    <Button x:Name="btnSave" Grid.Column="0" Content="{x:Static p:Resources.Save}" Margin="10" Click="btnSave_Click"/>
+                    <Button Content="{x:Static p:Resources.Cancel}" Grid.Column="1" Margin="10" Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"/>
                 </Grid>
             </StackPanel>
         </StackPanel>

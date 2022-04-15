@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:p ="clr-namespace:PhotoApp.Properties"
              xmlns:local="clr-namespace:PhotoApp" xmlns:system="clr-namespace:System;assembly=mscorlib"
              xmlns:converters="clr-namespace:PhotoApp.Converters"
              mc:Ignorable="d" d:DesignWidth="800" Height="184.448" Loaded="UserControl_Loaded">
@@ -18,7 +19,7 @@
                        Text="{Binding progressDialog.timeRemain,Converter={StaticResource TimeToString}}"/>
             <TextBlock x:Name="lblCurrentFile" Text="filename" Margin="0,3" VerticalAlignment="Center" Style="{StaticResource MaterialDesignSubtitle1TextBlock}"/>
             <ProgressBar x:Name="pbProgress" Margin="0,5" materialDesign:TransitionAssist.DisableTransitions="True" Height="15"  VerticalAlignment="Center"/>
-            <Button x:Name="btnCancel" Margin="0,10" IsEnabled="True"  Content="Zrušit" VerticalAlignment="Top" Click="btnCancel_Click"/>
+            <Button x:Name="btnCancel" Margin="0,10" IsEnabled="True"  Content="{x:Static p:Resources.Cancel}" VerticalAlignment="Top" Click="btnCancel_Click"/>
         </StackPanel>
     </Grid>
 </UserControl>

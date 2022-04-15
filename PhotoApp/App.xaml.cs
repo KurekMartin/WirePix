@@ -15,6 +15,8 @@ namespace PhotoApp
     {
         private void Application_Startup(object sender, StartupEventArgs e)
         {
+            System.Threading.Thread.CurrentThread.CurrentUICulture = new System.Globalization.CultureInfo("cs");
+            //System.Threading.Thread.CurrentThread.CurrentUICulture = new System.Globalization.CultureInfo("en");
             string appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
             string mainFolder = "WirePix";
             Resources.Add(PhotoApp.Properties.Keys.TempFolder, Path.Combine(Path.GetTempPath(), mainFolder));

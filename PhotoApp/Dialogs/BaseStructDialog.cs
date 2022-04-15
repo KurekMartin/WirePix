@@ -13,12 +13,12 @@ namespace PhotoApp.Dialogs
             TagStruct tag = Tags.GetTag(code: tagCode);
             if (tag.Group == Properties.TagGroups.Separator && tags.Count() == 0) //separator na začátku
             {
-                error.Text = $"Nelze použít {Tags.GetTag(code: tagCode).ButtonLabel} na začátku názvu.";
+                error.Text = string.Format(Properties.Resources.FirstTagError, Tags.GetTag(code: tagCode).ButtonLabel);
                 return false;
             }
             else if (tags.Count(x => tag.Group != Properties.TagGroups.Separator) > Properties.Settings.Default.MaxTags) //dosažen max počet tagů
             {
-                error.Text = $"Lze použít maximálně {Properties.Settings.Default.MaxTags} značek";
+                error.Text = string.Format(Properties.Resources.MaxTagError, Properties.Settings.Default.MaxTags);
                 return false;
             }
             else if (tag.Group == Properties.TagGroups.Separator) //dva separatory za sebou
@@ -26,7 +26,7 @@ namespace PhotoApp.Dialogs
                 TagStruct lastTag = Tags.GetTag(code: tags.Last());
                 if (lastTag.Group == Properties.TagGroups.Separator)
                 {
-                    error.Text = $"Nelze použít {tag.ButtonLabel} po {lastTag.ButtonLabel}.";
+                    error.Text = string.Format(Properties.Resources.TagPairError, tag.ButtonLabel, lastTag.ButtonLabel);
                     return false;
                 }
             }
@@ -48,14 +48,13 @@ namespace PhotoApp.Dialogs
             string text = customText.Text;
             if (text.Length == 0)
             {
-                errorBlock.Text = $"Chybí hodnota pro {Tags.GetTag(code: Properties.TagCodes.CustomText).VisibleText}.\n" +
-                    $"Doplňte tuto hodnotu nebo tag odstraňte";
+                errorBlock.Text = string.Format(Properties.Resources.TagCustomTextMissing, Tags.GetTag(code: Properties.TagCodes.CustomText).VisibleText);
                 errorBlock.Visibility = Visibility.Visible;
             }
             else if (text.IndexOfAny(Path.GetInvalidFileNameChars()) >= 0)
             {
                 List<char> invalidChars = text.Where(x => Path.GetInvalidFileNameChars().Contains(x)).ToList();
-                errorBlock.Text = $"Text obsahuje neplatné znaky: {string.Join("", invalidChars)}";
+                errorBlock.Text = string.Format(Properties.Resources.InvalidCharsError, string.Join("", invalidChars));
                 errorBlock.Visibility = Visibility.Visible;
             }
             customText.Focus();

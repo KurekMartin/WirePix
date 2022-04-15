@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PhotoApp"
         xmlns:converters="clr-namespace:PhotoApp.Converters"
+        xmlns:p ="clr-namespace:PhotoApp.Properties"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" x:Class="PhotoApp.MainWindow"
         mc:Ignorable="d"
         Title="WirePix"
@@ -14,7 +15,7 @@
         TextOptions.TextFormattingMode="Ideal" 
         TextOptions.TextRenderingMode="Auto"        
         Background="{DynamicResource MaterialDesignPaper}"
-        FontFamily="{DynamicResource MaterialDesignFont}" MinWidth="800" MinHeight="600" Height="698" Width="800" SizeToContent="Height" ResizeMode="CanMinimize" Closing="Window_Closing" WindowStartupLocation="CenterScreen" Icon="/icon.ico">
+        FontFamily="{DynamicResource MaterialDesignFont}" MinWidth="800" MinHeight="600" Height="717" Width="800" SizeToContent="Height" ResizeMode="CanMinimize" Closing="Window_Closing" WindowStartupLocation="CenterScreen" Icon="/icon.ico">
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVisConverter" />
         <converters:EnumToBoleanConverter x:Key="EnumToBool"/>
@@ -49,7 +50,7 @@
                                         Height="Auto"
                                         Width="Auto"
                                         />
-                                <TextBlock Text="O aplikaci" Margin="5,0,0,0" TextAlignment="Center" VerticalAlignment="Center"/>
+                                <TextBlock Text="{x:Static p:Resources.About}" Margin="5,0,0,0" TextAlignment="Center" VerticalAlignment="Center"/>
                             </StackPanel>
                         </Button>
                         <Button ToolTip="Nastavení"
@@ -63,10 +64,10 @@
                                         Height="Auto"
                                         Width="Auto"
                                         />
-                                <TextBlock Text="Nastavení" Margin="5,0,0,0" TextAlignment="Center" VerticalAlignment="Center"/>
+                                <TextBlock Text="{x:Static p:Resources.Settings}" Margin="5,0,0,0" TextAlignment="Center" VerticalAlignment="Center"/>
                             </StackPanel>
                         </Button>
-                        <Button ToolTip="Zpětná vazba"
+                        <Button
                             Width="Auto"
                             x:Name="btnFeedback" 
                             Click="btnFeedback_Click"
@@ -77,7 +78,7 @@
                                         Height="Auto"
                                         Width="Auto"
                                         />
-                                <TextBlock Text="Zpětná vazba" Margin="5,0,0,0" TextAlignment="Center" VerticalAlignment="Center"/>
+                                <TextBlock Text="{x:Static p:Resources.Feedback}" Margin="5,0,0,0" TextAlignment="Center" VerticalAlignment="Center"/>
                             </StackPanel>
                         </Button>
                     </StackPanel>
@@ -105,13 +106,14 @@
                                             </ListBox.ItemTemplate>
                                         </ListBox>
                                         <TextBlock x:Name="tbSelectDeviceError" Foreground="Red" TextWrapping="Wrap" Visibility="Collapsed"/>
-                                        <Button Content="Obnovit" Margin="0,5,0,0" VerticalAlignment="Top" Click="Refresh_Click" Height="Auto"/>
+                                        <Button Content="{x:Static p:Resources.Refresh}" Margin="0,5,0,0" VerticalAlignment="Top" Click="Refresh_Click" Height="Auto"/>
                                     </StackPanel>
 
                                     <StackPanel Orientation="Horizontal" x:Name="spDeviceInfo">
                                         <StackPanel x:Name="spBasicInfo" Margin="5,0" Height="Auto" VerticalAlignment="Top" >
                                             <StackPanel Orientation="Horizontal" Margin="0,3,0,9">
-                                                <TextBlock VerticalAlignment="Center" Style="{StaticResource MaterialDesignBody2TextBlock}" Text="Název zařízení: " FontWeight="Bold"/>
+                                                <TextBlock VerticalAlignment="Center" Style="{StaticResource MaterialDesignBody2TextBlock}" Text="{x:Static p:Resources.DeviceName}" FontWeight="Bold"/>
+                                                <TextBlock Text=":" VerticalAlignment="Center" Style="{StaticResource MaterialDesignBody2TextBlock}"/>
                                                 <!--<TextBox x:Name="lblDeviceName" Text="{Binding DeviceList.SelectedDevice.Name,UpdateSourceTrigger=PropertyChanged}"/>-->
                                                 <TextBox x:Name="lblDeviceName" 
                                                      Width="Auto" 
@@ -125,38 +127,45 @@
                                             </StackPanel>
                                             <TextBlock x:Name="tbDeviceNameError" Foreground="Red" Visibility="Collapsed" Text="" Margin="0,5,0,3"/>
                                             <StackPanel Orientation="Horizontal" Margin="0,3">
-                                                <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}" Text="Výrobce: " HorizontalAlignment="Left" VerticalAlignment="Top" FontWeight="Bold"/>
+                                                <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}" Text="{x:Static p:Resources.Manufacturer}" HorizontalAlignment="Left" VerticalAlignment="Top" FontWeight="Bold"/>
+                                                <TextBlock Text=":" VerticalAlignment="Center" Style="{StaticResource MaterialDesignBody2TextBlock}"/>
                                                 <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}" x:Name="lblManu" Text="{Binding DeviceList.SelectedDevice.Manufacturer}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
                                             </StackPanel>
                                             <StackPanel Orientation="Horizontal" Margin="0,3">
-                                                <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}" Text="Stav: " FontWeight="Bold"/>
+                                                <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}" Text="{x:Static p:Resources.DeviceState}" FontWeight="Bold"/>
+                                                <TextBlock Text=":" VerticalAlignment="Center" Style="{StaticResource MaterialDesignBody2TextBlock}"/>
                                                 <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}" x:Name="lblDeviceStatus" Text="{Binding DeviceList.SelectedDevice.Status,Converter={StaticResource IntToDeviceStatus},UpdateSourceTrigger=PropertyChanged}"/>
                                             </StackPanel>
                                             <StackPanel Orientation="Horizontal" Margin="0,3">
-                                                <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}" Text="Poslední záloha: " FontWeight="Bold"/>
+                                                <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}" Text="{x:Static p:Resources.LastBackup}" FontWeight="Bold"/>
+                                                <TextBlock Text=":" VerticalAlignment="Center" Style="{StaticResource MaterialDesignBody2TextBlock}"/>
                                                 <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}" x:Name="lblLastBackup" Text="{Binding DeviceList.SelectedDeviceInfo.LastBackup,Converter={StaticResource LastBckp}}"/>
                                             </StackPanel>
                                             <StackPanel Orientation="Horizontal" Margin="0,3">
-                                                <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}" Text="Umístění médií: " HorizontalAlignment="Left" VerticalAlignment="Top" FontWeight="Bold"/>
+                                                <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}" Text="{x:Static p:Resources.MediaPath}" HorizontalAlignment="Left" VerticalAlignment="Top" FontWeight="Bold"/>
+                                                <TextBlock Text=":" VerticalAlignment="Center" Style="{StaticResource MaterialDesignBody2TextBlock}"/>
                                                 <TextBlock x:Name="tbMediaDir" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Text="{Binding DeviceList.SelectedDevice.MediaDirectories,Converter={StaticResource ListToString}}"/>
                                             </StackPanel>
                                         </StackPanel>
                                         <Separator x:Name="sDivider" Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" Width="1" Margin="0,15"/>
                                         <StackPanel x:Name="spStorageInfo" Margin="5,0" Height="Auto" VerticalAlignment="Top">
                                             <StackPanel Orientation="Horizontal" Margin="0,3">
-                                                <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}" Text="Celkové úložiště: " HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold"/>
+                                                <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}" Text="{x:Static p:Resources.SpaceTotal}" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold"/>
+                                                <TextBlock Text=":" VerticalAlignment="Center" Style="{StaticResource MaterialDesignBody2TextBlock}"/>
                                                 <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}" x:Name="lblTotalSpace" Text="{Binding DeviceList.SelectedDevice.Space[0],StringFormat={}{0} GB}" HorizontalAlignment="Left" VerticalAlignment="Top"/>
                                             </StackPanel>
 
                                             <StackPanel Orientation="Vertical" x:Name="spSpace" Margin="15,0">
                                                 <StackPanel Orientation="Horizontal">
                                                     <Ellipse Fill="#FF1DDA26" Height="12" Width="12" VerticalAlignment="Center" Margin="3,0"/>
-                                                    <TextBlock Style="{StaticResource MaterialDesignCaptionTextBlock}" Text="Volné místo: " HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="11" FontWeight="Bold"/>
+                                                    <TextBlock Style="{StaticResource MaterialDesignCaptionTextBlock}" Text="{x:Static p:Resources.SpaceAvailable}" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="11" FontWeight="Bold"/>
+                                                    <TextBlock Text=":" VerticalAlignment="Center" Style="{StaticResource MaterialDesignCaptionTextBlock}" FontSize="11"/>
                                                     <TextBlock Style="{StaticResource MaterialDesignCaptionTextBlock}" x:Name="lblFreeSpace" Text="{Binding DeviceList.SelectedDevice.Space[1],StringFormat={}{0} GB}" VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="11"/>
                                                 </StackPanel>
                                                 <StackPanel Orientation="Horizontal">
                                                     <Ellipse Fill="#FFE63434" Height="12" Width="12" VerticalAlignment="Center" Margin="3,0"/>
-                                                    <TextBlock Style="{StaticResource MaterialDesignCaptionTextBlock}" Text="Obsazené místo: " HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="11" FontWeight="Bold"/>
+                                                    <TextBlock Style="{StaticResource MaterialDesignCaptionTextBlock}" Text="{x:Static p:Resources.SpaceUsed}" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="11" FontWeight="Bold"/>
+                                                    <TextBlock Text=":" VerticalAlignment="Center" Style="{StaticResource MaterialDesignCaptionTextBlock}" FontSize="11"/>
                                                     <TextBlock Style="{StaticResource MaterialDesignCaptionTextBlock}" x:Name="lblUsedSpace" Text="{Binding DeviceList.SelectedDevice.Space[2],StringFormat={}{0} GB}" VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="11"/>
                                                 </StackPanel>
                                                 <ProgressBar x:Name="pbSpace" materialDesign:TransitionAssist.DisableTransitions="True" HorizontalAlignment="Left" Height="6" Margin="0,5" VerticalAlignment="Top" Width="253" Value="{Binding DeviceList.SelectedDevice.Space,Converter={StaticResource ArrToProgress},Mode=OneWay}" Background="#FF1DDA26" Foreground="#FFE63434" BorderBrush="{x:Null}" BorderThickness="0"/>
@@ -164,8 +173,9 @@
 
                                             <StackPanel Orientation="Horizontal" Margin="0,3" Visibility="Collapsed">
                                                 <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}" 
-                                                       Text="Vyhledávání souborů: " 
+                                                       Text="{x:Static p:Resources.FileSearchState}"
                                                        FontWeight="Bold"/>
+                                                <TextBlock Text=":" VerticalAlignment="Center" Style="{StaticResource MaterialDesignBody2TextBlock}"/>
                                                 <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}" 
                                                        x:Name="lblFileSearchStatus" 
                                                        Text="{Binding DeviceList.SelectedDevice.FileSearchStatus,Converter={StaticResource IntToFileSearchStatus}}"/>
@@ -184,8 +194,8 @@
                             <materialDesign:Card Margin="0,0,5,0" Grid.Column="0" UniformCornerRadius="5">
                                 <StackPanel Orientation="Vertical" Margin="0,0,0,5">
                                     <materialDesign:ColorZone
-                                    Mode="PrimaryMid">
-                                        <TextBlock Style="{StaticResource MaterialDesignHeadline6TextBlock}" Text="Profil" Padding="5" FontSize="15" TextAlignment="Center"/>
+                                    Mode="PrimaryMid" CornerRadius="5,5,0,0">
+                                        <TextBlock Style="{StaticResource MaterialDesignHeadline6TextBlock}" Text="{x:Static p:Resources.CardProfile}" Padding="5" FontSize="15" TextAlignment="Center"/>
                                     </materialDesign:ColorZone>
 
                                     <Grid Margin="5">
@@ -208,37 +218,38 @@
 
                                     </Grid>
 
-                                    <Button x:Name="btnSave" Content="Uložit" Height="Auto" Margin="10,5" Visibility="Visible" Click="btnSave_Click"/>
-                                    <Button x:Name="btnSaveAs" Content="Uložit jako" Height="Auto" Margin="10,5" Visibility="Visible" Click="btnSaveAs_Click"/>
-                                    <Button x:Name="btnDelete" Content="Smazat profil" Height="Auto" Margin="10,5" Visibility="Visible" Click="btnDelete_Click"/>
+                                    <Button x:Name="btnSave" Content="{x:Static p:Resources.Save}" Height="Auto" Margin="10,5" Visibility="Visible" Click="btnSave_Click"/>
+                                    <Button x:Name="btnSaveAs" Content="{x:Static p:Resources.SaveAs}" Height="Auto" Margin="10,5" Visibility="Visible" Click="btnSaveAs_Click"/>
+                                    <Button x:Name="btnDelete" Content="{x:Static p:Resources.ProfileDelete}" Height="Auto" Margin="10,5" Visibility="Visible" Click="btnDelete_Click"/>
                                 </StackPanel>
                             </materialDesign:Card>
                             <materialDesign:Card Margin="5,0,0,0" Grid.Column="1" UniformCornerRadius="5">
                                 <StackPanel Orientation="Vertical">
                                     <materialDesign:ColorZone
-                                    Mode="PrimaryMid">
-                                        <TextBlock Style="{StaticResource MaterialDesignHeadline6TextBlock}" Text="Úložiště" Padding="5" FontSize="15" TextAlignment="Center"/>
+                                        Mode="PrimaryMid"
+                                        CornerRadius="5,5,0,0">
+                                        <TextBlock Style="{StaticResource MaterialDesignHeadline6TextBlock}" Text="{x:Static p:Resources.CardStorage}" Padding="5" FontSize="15" TextAlignment="Center"/>
                                     </materialDesign:ColorZone>
                                     <StackPanel Orientation="Horizontal" Margin="10,5">
                                         <StackPanel Orientation="Vertical">
                                             <Button x:Name="btnMainFolder" HorizontalAlignment="Left" Margin="0,5,0,0" Padding="15,5" VerticalAlignment="Top" Click="btnMainFolder_Click" Width="Auto" Height="Auto">
                                                 <StackPanel Orientation="Horizontal">
                                                     <materialDesign:PackIcon Kind="Folder"/>
-                                                    <TextBlock Text="Vybrat hlavní složku" Margin="5,0"/>
+                                                    <TextBlock Text="{x:Static p:Resources.SelectMainFolder}" Margin="5,0"/>
                                                 </StackPanel>
                                             </Button>
                                             <TextBlock x:Name="tbRootError" Foreground="Red" Visibility="Collapsed" Margin="0,0,0,3"/>
                                             <Button x:Name="btnFolderStruct" HorizontalAlignment="Left" Margin="0,10,0,0" Padding="15,5" VerticalAlignment="Top" Click="btnFolderStruct_Click" Width="Auto" Height="Auto">
                                                 <StackPanel Orientation="Horizontal">
                                                     <materialDesign:PackIcon Kind="FolderOutline"/>
-                                                    <TextBlock Text="Pojmenování složek" Margin="5,0"/>
+                                                    <TextBlock Text="{x:Static p:Resources.SelectFolderStructure}" Margin="5,0"/>
                                                 </StackPanel>
                                             </Button>
                                             <TextBlock x:Name="tbFolderStructError" Foreground="Red" Visibility="Collapsed" Margin="0,0,0,3"/>
                                             <Button x:Name="btnFileStruct" HorizontalAlignment="Left" Margin="0,10,0,0" Padding="15,5" VerticalAlignment="Top" Width="Auto" Height="Auto" Click="btnFileStruct_Click">
                                                 <StackPanel Orientation="Horizontal">
                                                     <materialDesign:PackIcon Kind="ImageOutline"/>
-                                                    <TextBlock Text="Název souboru" Margin="5,0"/>
+                                                    <TextBlock Text="{x:Static p:Resources.SelectFilename}" Margin="5,0"/>
                                                 </StackPanel>
                                             </Button>
                                             <TextBlock x:Name="tbFileStructError" Foreground="Red" Visibility="Collapsed" Margin="0,0,0,3"/>
@@ -347,13 +358,14 @@
                             </Grid.ColumnDefinitions>
                             <materialDesign:Card Margin="0,0,5,0" UniformCornerRadius="5" Grid.Column="0">
                                 <StackPanel Orientation="Vertical">
-                                    <materialDesign:ColorZone Mode="PrimaryMid">
-                                        <TextBlock Style="{StaticResource MaterialDesignHeadline6TextBlock}" Text="Ostatní" Padding="5" FontSize="15" TextAlignment="Center"/>
+                                    <materialDesign:ColorZone Mode="PrimaryMid"
+                                                              CornerRadius="5,5,0,0">
+                                        <TextBlock Style="{StaticResource MaterialDesignHeadline6TextBlock}" Text="{x:Static p:Resources.CardOtherSettings}" Padding="5" FontSize="15" TextAlignment="Center"/>
                                     </materialDesign:ColorZone>
-                                    <CheckBox Content="Záloha" x:Name="cbBackup" Margin="10,5" IsChecked="{Binding DownloadSettings.Backup, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
+                                    <CheckBox Content="{x:Static p:Resources.Backup}" x:Name="cbBackup" Margin="10,5" IsChecked="{Binding DownloadSettings.Backup, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
                                     <StackPanel Orientation="Vertical" Margin="10,0" x:Name="spBackup" Visibility="{Binding DownloadSettings.Backup, Converter={StaticResource BoolToVisConverter},UpdateSourceTrigger=PropertyChanged}">
                                         <StackPanel Orientation="Horizontal" Margin="10,0">
-                                            <Button x:Name="btnChooseBackupDest" Content="Vybrat umístění" HorizontalAlignment="Left"  Width="Auto" Height="Auto" Click="btnChooseBackupDest_Click"/>
+                                            <Button x:Name="btnChooseBackupDest" Content="{x:Static p:Resources.SelectDestination}" HorizontalAlignment="Left"  Width="Auto" Height="Auto" Click="btnChooseBackupDest_Click"/>
                                             <Grid HorizontalAlignment="Right" MaxWidth="240" Margin="5,0,0,0">
                                                 <TextBlock x:Name="tbBackupDest" Text="{Binding DownloadSettings.Paths.Backup,UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Right" Margin="5,0" Style="{StaticResource MaterialDesignBody2TextBlock}" VerticalAlignment="Center"
                                                        ToolTip="{Binding RelativeSource={RelativeSource Self}, Path=Text}"/>
@@ -364,10 +376,10 @@
                                         <Separator Margin="5,10" Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" Height="1"/>
                                     </StackPanel>
 
-                                    <CheckBox Content="Generovat náhledy" x:Name="cbThumbnails" Margin="10,0" IsChecked="{Binding DownloadSettings.Thumbnail,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
+                                    <CheckBox Content="{x:Static p:Resources.GenerateThumbnails}" x:Name="cbThumbnails" Margin="10,0" IsChecked="{Binding DownloadSettings.Thumbnail,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
                                     <StackPanel Margin="10,5" x:Name="spThumbnail" Visibility="{Binding DownloadSettings.Thumbnail, Converter={StaticResource BoolToVisConverter},UpdateSourceTrigger=PropertyChanged}">
                                         <StackPanel Orientation="Horizontal" Margin="10,0">
-                                            <Button x:Name="btnChooseThumbDest" Content="Vybrat umístění" Width="Auto" Height="Auto" Click="btnChooseThumbDest_Click"/>
+                                            <Button x:Name="btnChooseThumbDest" Content="{x:Static p:Resources.SelectDestination}" Width="Auto" Height="Auto" Click="btnChooseThumbDest_Click"/>
 
                                             <Grid HorizontalAlignment="Right" MaxWidth="240" Margin="5,0,0,0">
                                                 <TextBlock x:Name="tbThumbDest" Text="{Binding DownloadSettings.Paths.Thumbnail,UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Right" Margin="5,0" Style="{StaticResource MaterialDesignBody2TextBlock}" VerticalAlignment="Center"
@@ -376,13 +388,14 @@
                                         </StackPanel>
                                         <TextBlock x:Name="tbThumbnailDestError" Foreground="Red" Visibility="Collapsed" Margin="10,2"/>
                                         <StackPanel Orientation="Horizontal" Margin="5,10,5,5">
-                                            <TextBlock Text="Max velikost " Style="{StaticResource MaterialDesignBody2TextBlock}"/>
-                                            <RadioButton Content="Delší strana" x:Name="cbLongSide" IsChecked="{Binding DownloadSettings.ThumbnailSettings.Selected,Converter={StaticResource EnumToBool},ConverterParameter=longerSide}" Margin="0,0,5,0" GroupName="rgResize"/>
-                                            <RadioButton Content="Kratší strana" x:Name="cbShortSide" IsChecked="{Binding DownloadSettings.ThumbnailSettings.Selected,Converter={StaticResource EnumToBool},ConverterParameter=shorterSide}" Margin="5,0" GroupName="rgResize"/>
+                                            <TextBlock Text="{x:Static p:Resources.ThumbnailMaxSize}" Style="{StaticResource MaterialDesignBody2TextBlock}"/>
+                                            <RadioButton Content="{x:Static p:Resources.ThumbnailLongerSide}" x:Name="cbLongSide" IsChecked="{Binding DownloadSettings.ThumbnailSettings.Selected,Converter={StaticResource EnumToBool},ConverterParameter=longerSide}" Margin="5,0" GroupName="rgResize"/>
+                                            <RadioButton Content="{x:Static p:Resources.ThumbnailShorterSide}" x:Name="cbShortSide" IsChecked="{Binding DownloadSettings.ThumbnailSettings.Selected,Converter={StaticResource EnumToBool},ConverterParameter=shorterSide}" Margin="5,0" GroupName="rgResize"/>
                                         </StackPanel>
 
                                         <StackPanel Orientation="Horizontal" Margin="5,0,5,15">
-                                            <TextBlock Text="Hodnota: " VerticalAlignment="Center" Style="{StaticResource MaterialDesignBody2TextBlock}"/>
+                                            <TextBlock Text="{x:Static p:Resources.Value}" VerticalAlignment="Center" Style="{StaticResource MaterialDesignBody2TextBlock}"/>
+                                            <TextBlock Text=":" VerticalAlignment="Center" Style="{StaticResource MaterialDesignBody2TextBlock}"/>
                                             <TextBox x:Name="tbValue" Width="Auto" MinWidth="100" TextAlignment="Right"
                                                 Text="{Binding DownloadSettings.ThumbnailSettings.Value,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                                                 PreviewTextInput="tbValue_PreviewTextInput"
@@ -395,31 +408,32 @@
 
                             <materialDesign:Card Margin="5,0,0,0" UniformCornerRadius="5" Grid.Column="1">
                                 <StackPanel Orientation="Vertical">
-                                    <materialDesign:ColorZone Mode="PrimaryMid">
-                                        <TextBlock Style="{StaticResource MaterialDesignHeadline6TextBlock}" Text="Stažení" Padding="5" FontSize="15" TextAlignment="Center"/>
+                                    <materialDesign:ColorZone Mode="PrimaryMid"
+                                                              CornerRadius="5,5,0,0">
+                                        <TextBlock Style="{StaticResource MaterialDesignHeadline6TextBlock}" Text="{x:Static p:Resources.CardDownload}" Padding="5" FontSize="15" TextAlignment="Center"/>
                                     </materialDesign:ColorZone>
 
                                     <StackPanel Margin="10,5" Orientation="Vertical">
-                                        <CheckBox Content="Kontrola souborů" x:Name="cbCheckFiles" IsChecked="{Binding DownloadSettings.CheckFiles,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Margin="0,2"/>
-                                        <CheckBox Content="Smazat stažené soubory ze zařízení" x:Name="cbDeleteFiles" IsChecked="{Binding DownloadSettings.DeleteFiles,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Margin="0,2"/>
-                                        <RadioButton Content="Stažení nových souborů od poslední zálohy" x:Name="cbNewFiles" IsChecked="{Binding DownloadSettings.DownloadSelect,Converter={StaticResource EnumToBool},ConverterParameter=lastBackup}" Margin="0,2" GroupName="rbgDate" Checked="cbNewFiles_Checked"/>
-                                        <RadioButton Content="Stažení souborů dle data" x:Name="cbDateRange" Margin="0,2" GroupName="rbgDate" IsChecked="{Binding DownloadSettings.DownloadSelect,Converter={StaticResource EnumToBool},ConverterParameter=dateRange}" Checked="cbDateRange_Checked"/>
+                                        <CheckBox Content="{x:Static p:Resources.DownloadFileCheck}" x:Name="cbCheckFiles" IsChecked="{Binding DownloadSettings.CheckFiles,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Margin="0,2"/>
+                                        <CheckBox Content="{x:Static p:Resources.DownloadDeleteFile}" x:Name="cbDeleteFiles" IsChecked="{Binding DownloadSettings.DeleteFiles,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Margin="0,2"/>
+                                        <RadioButton Content="{x:Static p:Resources.DownloadNewFiles}" x:Name="cbNewFiles" IsChecked="{Binding DownloadSettings.DownloadSelect,Converter={StaticResource EnumToBool},ConverterParameter=lastBackup}" Margin="0,2" GroupName="rbgDate" Checked="cbNewFiles_Checked"/>
+                                        <RadioButton Content="{x:Static p:Resources.DownloadDateRange}" x:Name="cbDateRange" Margin="0,2" GroupName="rbgDate" IsChecked="{Binding DownloadSettings.DownloadSelect,Converter={StaticResource EnumToBool},ConverterParameter=dateRange}" Checked="cbDateRange_Checked"/>
                                     </StackPanel>
                                     <StackPanel Orientation="Vertical" Margin="30,0" x:Name="spDate" Visibility="{Binding ElementName=cbDateRange, Path=IsChecked,Converter={StaticResource BoolToVisConverter},UpdateSourceTrigger=PropertyChanged}" >
                                         <StackPanel Orientation="Horizontal">
-                                            <Label Content="Od" VerticalAlignment="Center"/>
+                                            <Label Content="{x:Static p:Resources.DateRangeFrom}" VerticalAlignment="Center"/>
                                             <DatePicker x:Name="dpDateFrom"  Width="100" HorizontalAlignment="Left" Margin="5,0" Padding="5,3" VerticalAlignment="Center" Height="Auto" HorizontalContentAlignment="Left" SelectedDate="{Binding DownloadSettings.Date.Start,Mode=TwoWay}" DisplayDateEnd="{Binding DownloadSettings.Date.End,Mode=TwoWay}" SelectedDateChanged="dpDate_SelectedDateChanged"/>
                                         </StackPanel>
                                         <StackPanel Orientation="Horizontal">
-                                            <Label Content="Do" VerticalAlignment="Center"/>
+                                            <Label Content="{x:Static p:Resources.DateRangeTo}" VerticalAlignment="Center"/>
                                             <DatePicker x:Name="dpDateTo" Width="100" HorizontalAlignment="Left" Margin="5,0" Padding="5,3" VerticalAlignment="Center" Height="Auto" HorizontalContentAlignment="Left" SelectedDate="{Binding DownloadSettings.Date.End,Mode=TwoWay}" DisplayDateStart="{Binding DownloadSettings.Date.Start,Mode=TwoWay}" SelectedDateChanged="dpDate_SelectedDateChanged"/>
                                         </StackPanel>
                                         <TextBlock x:Name="tbDateRangeError" Margin="0,3" Foreground="Red" Visibility="Collapsed"/>
                                     </StackPanel>
 
                                     <StackPanel Orientation="Horizontal" Margin="10,5">
-                                        <Button Content="Vyhledat soubory" VerticalAlignment="Center" Click="FindFiles_Click" Margin="5,0"/>
-                                        <Button x:Name="btnCopyFiles" Content="Kopírovat soubory" Margin="5,0" Width="Auto"  VerticalAlignment="Center" Click="CopyFiles_Click"/>
+                                        <Button Content="{x:Static p:Resources.FindFiles}" VerticalAlignment="Center" Click="FindFiles_Click" Margin="5,0"/>
+                                        <Button x:Name="btnCopyFiles" Content="{x:Static p:Resources.DownloadFiles}" Margin="5,0" Width="Auto"  VerticalAlignment="Center" Click="CopyFiles_Click"/>
                                     </StackPanel>
                                     <TextBlock x:Name="lblResult" HorizontalAlignment="Left" Margin="10" VerticalAlignment="Top" Height="Auto" Width="Auto" Style="{StaticResource MaterialDesignBody2TextBlock}"/>
                                     <Button x:Name="btnShowLog" Content="Zobrazit log" Margin="10,10" Visibility="Collapsed" Click="btnShowLog_Click"/>
@@ -427,21 +441,6 @@
                                 </StackPanel>
                             </materialDesign:Card>
                         </Grid>
-
-
-                        <StackPanel Grid.Row="3" VerticalAlignment="Top" Height="Auto" Margin="10" Visibility="Collapsed">
-                            <Separator/>
-                            <StackPanel Orientation="Horizontal">
-
-                                <Label Content="Folder structure: " Height="Auto" VerticalAlignment="Center" FontWeight="Bold"/>
-                                <TextBlock x:Name="tbFolderStruct" VerticalAlignment="Center" Height="Auto"/>
-                            </StackPanel>
-                            <StackPanel Orientation="Horizontal">
-
-                                <Label Content="File structure: " VerticalAlignment="Center" Height="Auto" FontWeight="Bold"/>
-                                <TextBlock x:Name="tbFileStructure" VerticalAlignment="Center" Height="Auto"/>
-                            </StackPanel>
-                        </StackPanel>
                     </Grid>
                 </ScrollViewer>
             </Grid>

@@ -4,16 +4,17 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:PhotoApp.Dialogs"
+             xmlns:p ="clr-namespace:PhotoApp.Properties"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" Width="Auto" Height="Auto">
     <materialDesign:Card>
         <StackPanel Orientation="Vertical">
-            <materialDesign:ColorZone Mode="PrimaryMid">
-                <TextBlock Style="{StaticResource MaterialDesignHeadline6TextBlock}" Text="Nastavení" Padding="5" TextAlignment="Center"/>
+            <materialDesign:ColorZone Mode="PrimaryMid" CornerRadius="5,5,0,0">
+                <TextBlock Style="{StaticResource MaterialDesignHeadline6TextBlock}" Text="{x:Static p:Resources.Settings}" Padding="5" TextAlignment="Center"/>
             </materialDesign:ColorZone>
             <StackPanel Orientation="Vertical" Margin="10" >
                 <DockPanel Margin="0,0,0,5">
-                    <TextBlock VerticalAlignment="Center" Style="{StaticResource MaterialDesignBody2TextBlock}" Text="Tmavý režim" FontWeight="Bold"/>
+                    <TextBlock VerticalAlignment="Center" Style="{StaticResource MaterialDesignBody2TextBlock}" Text="{x:Static p:Resources.DarkMode}" FontWeight="Bold"/>
                     <CheckBox x:Name="cbDarkMode"
                               Margin="5,0"
                               Style="{StaticResource MaterialDesignSwitchToggleButton}"
@@ -24,7 +25,7 @@
                 </DockPanel>
 
                 <DockPanel Margin="0,0,0,5">
-                    <TextBlock VerticalAlignment="Center" Style="{StaticResource MaterialDesignBody2TextBlock}" Text="Kontrola nové verze po spuštění" FontWeight="Bold"/>
+                    <TextBlock VerticalAlignment="Center" Style="{StaticResource MaterialDesignBody2TextBlock}" Text="{x:Static p:Resources.StartupUpdateCheck}" FontWeight="Bold"/>
                     <CheckBox x:Name="cbCheckNewVersion"
                               Margin="5,0"
                               Style="{StaticResource MaterialDesignSwitchToggleButton}"
@@ -35,7 +36,7 @@
                 </DockPanel>
             </StackPanel>
 
-            <Button x:Name="btnOK" Content="OK" Margin="15,10" Grid.Row="1" Click="btnOK_Click"/>
+            <Button x:Name="btnOK" Content="{x:Static p:Resources.OK}" Margin="15,10" Grid.Row="1" Click="btnOK_Click"/>
         </StackPanel>
     </materialDesign:Card>
 

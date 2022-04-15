@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:PhotoApp.Dialogs"
+             xmlns:p ="clr-namespace:PhotoApp.Properties"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:converters="clr-namespace:PhotoApp.Converters"
              mc:Ignorable="d">
@@ -16,8 +17,8 @@
 
     <materialDesign:Card>
         <StackPanel Orientation="Vertical">
-            <materialDesign:ColorZone Mode="PrimaryMid">
-                <TextBlock Style="{StaticResource MaterialDesignHeadline6TextBlock}" Text="Pojmenování složek" Padding="5" TextAlignment="Center"/>
+            <materialDesign:ColorZone Mode="PrimaryMid" CornerRadius="5,5,0,0">
+                <TextBlock Style="{StaticResource MaterialDesignHeadline6TextBlock}" Text="{x:Static p:Resources.FolderStructure}" Padding="5" TextAlignment="Center"/>
             </materialDesign:ColorZone>
 
             <StackPanel Margin="15,20">
@@ -25,7 +26,7 @@
                     <StackPanel>
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                             <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}"
-                                   Text="Značky" VerticalAlignment="Center"
+                                   Text="{x:Static p:Resources.Tags}" VerticalAlignment="Center"
                                    Padding="5,12"/>
                             <ListBox ItemsSource="{Binding SelectedFolder.Tags}" d:ItemsSource="{d:SampleData ItemCount=3}"
                                  Style="{StaticResource MaterialDesignChoiceChipPrimaryOutlineListBox}"
@@ -67,8 +68,8 @@
 
                 <StackPanel HorizontalAlignment="Center">
                     <StackPanel x:Name="spControls" Orientation="Horizontal" Grid.Column="0" Grid.Row="1" MinHeight="50">
-                        <Button x:Name="btnDeleteTag" Content="Smazat tag" Height="Auto" VerticalAlignment="Center" Margin="5,7" Click="btnDeleteTag_Click"/>
-                        <Button x:Name="btnDeleteFolder" Content="Smazat složku" Height="Auto" VerticalAlignment="Center" Margin="5,0" Click="btnDeleteFolder_Click"/>
+                        <Button x:Name="btnDeleteTag" Content="{x:Static p:Resources.TagDelete}" Height="Auto" VerticalAlignment="Center" Margin="5,7" Click="btnDeleteTag_Click"/>
+                        <Button x:Name="btnDeleteFolder" Content="{x:Static p:Resources.FolderDelete}" Height="Auto" VerticalAlignment="Center" Margin="5,0" Click="btnDeleteFolder_Click"/>
                         <ComboBox x:Name="cbGroupSelect" Width="Auto" Margin="20,0" VerticalAlignment="Center" SelectionChanged="ComboBox_SelectionChanged"
                                   d:ItemsSource="{d:SampleData}">
                             <ComboBox.ItemTemplate>
@@ -83,7 +84,7 @@
                                  MaxLength="15"
                                  MaxLines="1"
                                  VerticalAlignment="Center"
-                                 materialDesign:HintAssist.Hint="Custom text"
+                                 materialDesign:HintAssist.Hint="{x:Static p:Resources.TagCustomText}"
                                  PreviewTextInput="tbCustomText_PreviewTextInput"
                                  Style="{StaticResource MaterialDesignFloatingHintTextBox}" 
                                  TextChanged="tbCustomText_TextChanged"
@@ -184,12 +185,12 @@
                     <TextBlock x:Name="tbError" Text="" Margin="15,5,15,0" Foreground="#DDC90000" Style="{StaticResource MaterialDesignBody2TextBlock}"/>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                         <Button x:Name="btnCancel" 
-                                Content="Zrušit" 
+                                Content="{x:Static p:Resources.Cancel}" 
                                 Margin="15,5" 
                                 Click="btnCancel_Click" 
                                 MaxWidth="150"
                                 Style="{StaticResource MaterialDesignOutlinedButton}"/>
-                        <Button x:Name="btnDone" Content="Hotovo" Margin="15,5" Click="btnDone_Click" MaxWidth="150"/>
+                        <Button x:Name="btnDone" Content="{x:Static p:Resources.Done}" Margin="15,5" Click="btnDone_Click" MaxWidth="150"/>
                         
                     </StackPanel>
                     
