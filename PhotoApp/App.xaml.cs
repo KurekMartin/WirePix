@@ -5,18 +5,22 @@ using System.IO;
 using System.Reflection;
 using System.Windows;
 using System.Linq;
+using System.Globalization;
+using System.Text.RegularExpressions;
+using System.Collections.Generic;
+using System.Collections;
 
 namespace PhotoApp
 {
     /// <summary>
     /// Interakční logika pro App.xaml
     /// </summary>
-    public partial class App : System.Windows.Application
+    public partial class App : Application
     {
+        private static List<Tuple<string, string>> _availableLanguages = new List<Tuple<string, string>>();
         private void Application_Startup(object sender, StartupEventArgs e)
         {
-            System.Threading.Thread.CurrentThread.CurrentUICulture = new System.Globalization.CultureInfo("cs");
-            //System.Threading.Thread.CurrentThread.CurrentUICulture = new System.Globalization.CultureInfo("en");
+            SetLanguage();
             string appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
             string mainFolder = "WirePix";
             Resources.Add(PhotoApp.Properties.Keys.TempFolder, Path.Combine(Path.GetTempPath(), mainFolder));
@@ -36,7 +40,7 @@ namespace PhotoApp
             }
 
             var files = Directory.GetFiles(Current.Resources[PhotoApp.Properties.Keys.TempFolder].ToString()).Where(x => x.EndsWith(".msi"));
-            foreach(var file in files)
+            foreach (var file in files)
             {
                 File.Delete(file);
             }
@@ -78,6 +82,33 @@ namespace PhotoApp
                 PhotoApp.Properties.Settings.Default.DarkMode = darkMode;
                 PhotoApp.Properties.Settings.Default.Save();
             }
+        }
+
+        public static void SetLanguage()
+        {
+            if (PhotoApp.Properties.Settings.Default.Language != nameof(PhotoApp.Properties.Languages.system))
+            {
+                System.Threading.Thread.CurrentThread.CurrentUICulture = new CultureInfo(PhotoApp.Properties.Settings.Default.Language);
+            }
+            else
+            {
+                string language = CultureInfo.CurrentUICulture.Name.Split('-')[0];
+                System.Threading.Thread.CurrentThread.CurrentUICulture = new CultureInfo(language);
+            }
+            Console.WriteLine("CurrentCulture is {0}.", CultureInfo.CurrentUICulture.Name);
+        }
+
+        public static List<Tuple<string, string>> GetAvailableLanguages()
+        {
+            if (_availableLanguages.Count() == 0)
+            {
+                var res = PhotoApp.Properties.Languages.ResourceManager.GetResourceSet(CultureInfo.InvariantCulture, true, false);
+                foreach (DictionaryEntry language in res)
+                {
+                    _availableLanguages.Add(new Tuple<string, string>(language.Key.ToString(), language.Value.ToString()));
+                }
+            }
+            return _availableLanguages;
         }
     }
 }

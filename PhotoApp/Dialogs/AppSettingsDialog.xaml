@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:PhotoApp.Dialogs"
              xmlns:p ="clr-namespace:PhotoApp.Properties"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-             mc:Ignorable="d" Width="Auto" Height="Auto">
+             mc:Ignorable="d" Width="Auto" Height="Auto" Loaded="UserControl_Loaded">
     <materialDesign:Card>
         <StackPanel Orientation="Vertical">
             <materialDesign:ColorZone Mode="PrimaryMid" CornerRadius="5,5,0,0">
@@ -34,8 +34,38 @@
                               HorizontalAlignment="Right"
                               Checked="cbCheckNewVersion_Checked" Unchecked="cbCheckNewVersion_Checked"/>
                 </DockPanel>
+
+                <DockPanel Margin="0,0,0,5">
+                    <TextBlock  Text="{x:Static p:Resources.Language}"                                
+                                Style="{StaticResource MaterialDesignBody2TextBlock}"
+                                FontWeight="Bold"
+                                VerticalAlignment="Center"/>
+                    <ComboBox x:Name="cbLanguages"
+                              Margin="5,0"
+                              HorizontalAlignment="Right" SelectionChanged="cbLanguages_SelectionChanged"/>
+                </DockPanel>
             </StackPanel>
 
+            <DockPanel x:Name="dpInfo"
+                       Visibility="Collapsed"
+                       d:Visibility="Visible"
+                       Margin="10,0">
+                <TextBlock x:Name="tbInfo"
+                           Style="{StaticResource MaterialDesignBody2TextBlock}"
+                           VerticalAlignment="Center"
+                           d:Text="info"
+                           TextWrapping="WrapWithOverflow"
+                           Padding="0,0,20,0"
+                           Margin="0,0,0,0"/>
+                <Button x:Name="btnRestart"
+                        ToolTip="{x:Static p:Resources.RestartApp}"
+                        HorizontalAlignment="Right" VerticalAlignment="Center" Click="btnRestart_Click"
+                        Style="{StaticResource MaterialDesignFloatingActionButton}"
+                        Width="25" Height="25" Margin="0,0,0,0" Panel.ZIndex="1" DockPanel.Dock="Right">
+                    <materialDesign:PackIcon Kind="Restart" Width="15" Height="15"/>
+                </Button>
+            </DockPanel>
+            
             <Button x:Name="btnOK" Content="{x:Static p:Resources.OK}" Margin="15,10" Grid.Row="1" Click="btnOK_Click"/>
         </StackPanel>
     </materialDesign:Card>
