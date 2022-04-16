@@ -40,11 +40,11 @@ namespace PhotoApp.Dialogs
             TextBox tb = sender as TextBox;
             if (!ValidFileName(tb.Text))
             {
-                tbError.Text = "Neplatný název souboru";
+                tbError.Text = Properties.Resources.InvalidFilename;
             }
             else if (File.Exists(Path.Combine(Application.Current.Resources[Properties.Keys.ProfilesFolder].ToString(), $"{tb.Text}.xml")))
             {
-                tbError.Text = "Soubor již existuje.\nUložením tento soubor přepíšete.";
+                tbError.Text = Properties.Resources.FileExists_Overwrite;
             }
             else
             {

@@ -70,23 +70,23 @@ namespace PhotoApp
     {
         private static readonly List<TagStruct> tagList = new List<TagStruct>()
         {
-            //            code                              visible text        button label
-            new TagStruct(Properties.TagCodes.YearLong,   "Rok dlouze",       "Rok",                       Properties.TagGroups.Year),
-            new TagStruct(Properties.TagCodes.Year,       "Rok krátce",       "Rok krátce (YY)",           Properties.TagGroups.Year),
-            new TagStruct(Properties.TagCodes.Month,      "Měsíc",            "Měsíc",                     Properties.TagGroups.Month),
-            new TagStruct(Properties.TagCodes.MonthShort, "Měsíc krátce",     "Měsíc krátce (název)",      Properties.TagGroups.Month),
-            new TagStruct(Properties.TagCodes.MonthLong,  "Měsíc dlouze",     "Měsíc dlouze (název)",      Properties.TagGroups.Month),
-            new TagStruct(Properties.TagCodes.Day,        "Den",              "Den",                       Properties.TagGroups.Day),
-            new TagStruct(Properties.TagCodes.DayShort,   "Den krátce",       "Den krátce (název)",        Properties.TagGroups.Day),
-            new TagStruct(Properties.TagCodes.DayLong,    "Den dlouze",       "Den dlouze (název)",        Properties.TagGroups.Day),
-            new TagStruct(Properties.TagCodes.DeviceName, "Název zařízení",   "Název"),
-            new TagStruct(Properties.TagCodes.DeviceManuf,"Výrobce zařízení", "Výrobce"),
-            new TagStruct(Properties.TagCodes.SequenceNum,"Číslo souboru",    "Číslo"),
-            new TagStruct(Properties.TagCodes.CustomText, "Text",             "Text"),
-            new TagStruct(Properties.TagCodes.FileName,   "Název souboru",    "Název souboru"),
-            new TagStruct(Properties.TagCodes.NewFolder,  "\\",               "Nová složka"),
-            new TagStruct(Properties.TagCodes.Hyphen,     "-",                "-",                         Properties.TagGroups.Separator),
-            new TagStruct(Properties.TagCodes.Underscore, "_",                "_",                         Properties.TagGroups.Separator)
+            //            code                             visible text        button label
+            new TagStruct(Properties.TagCodes.YearLong,   Properties.Resources.Tag_YearLong_VisibleText,       Properties.Resources.Tag_YearLong_Button,            Properties.TagGroups.Year),
+            new TagStruct(Properties.TagCodes.Year,       Properties.Resources.Tag_YearShort_VisibleText,      Properties.Resources.Tag_YearShort_Button,           Properties.TagGroups.Year),
+            new TagStruct(Properties.TagCodes.Month,      Properties.Resources.Tag_Month_VisibleText,          Properties.Resources.Tag_Month_Button,               Properties.TagGroups.Month),
+            new TagStruct(Properties.TagCodes.MonthShort, Properties.Resources.Tag_MonthShort_VisibleText,     Properties.Resources.Tag_MonthShort_Button,          Properties.TagGroups.Month),
+            new TagStruct(Properties.TagCodes.MonthLong,  Properties.Resources.Tag_MonthLong_VisibleText,      Properties.Resources.Tag_MonthLong_Button,           Properties.TagGroups.Month),
+            new TagStruct(Properties.TagCodes.Day,        Properties.Resources.Tag_Day_VisibleText,            Properties.Resources.Tag_Day_Button,                 Properties.TagGroups.Day),
+            new TagStruct(Properties.TagCodes.DayShort,   Properties.Resources.Tag_DayShort_VisibleText,       Properties.Resources.Tag_DayShort_Button,            Properties.TagGroups.Day),
+            new TagStruct(Properties.TagCodes.DayLong,    Properties.Resources.Tag_DayLong_VisibleText,        Properties.Resources.Tag_DayLong_Button,             Properties.TagGroups.Day),
+            new TagStruct(Properties.TagCodes.DeviceName, Properties.Resources.Tag_DeviceName_VisibleText,     Properties.Resources.Tag_DeviceName_Button),
+            new TagStruct(Properties.TagCodes.DeviceManuf,Properties.Resources.Tag_DeviceManuf_VisibleText,    Properties.Resources.Tag_DeviceManuf_Button),
+            new TagStruct(Properties.TagCodes.SequenceNum,Properties.Resources.Tag_SequenceNum_VisibleText,    Properties.Resources.Tag_SequenceNum_Button),
+            new TagStruct(Properties.TagCodes.CustomText, Properties.Resources.Tag_CustomText_VisibleText,     Properties.Resources.Tag_CustomText_Button),
+            new TagStruct(Properties.TagCodes.FileName,   Properties.Resources.Tag_FileName_VisibleText,       Properties.Resources.Tag_FileName_Button),
+            new TagStruct(Properties.TagCodes.NewFolder,  "\\",                                                Properties.Resources.Tag_NewFolder_Button),
+            new TagStruct(Properties.TagCodes.Hyphen,     "-",                                                 "-",                                                 Properties.TagGroups.Separator),
+            new TagStruct(Properties.TagCodes.Underscore, "_",                                                 "_",                                                 Properties.TagGroups.Separator)
         };
         private static readonly List<string> dateTags = new List<string>(){
             Properties.TagCodes.Year,

@@ -11,7 +11,7 @@ namespace PhotoApp.Converters
             DateTime date = (DateTime)value;
             if (date == new DateTime())
             {
-                return "nikdy";
+                return Properties.Resources.LastBackup_Never;
             }
             else
             {

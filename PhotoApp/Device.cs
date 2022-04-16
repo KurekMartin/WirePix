@@ -304,7 +304,7 @@ namespace PhotoApp
                 }
                 if (_checkDateRange)
                 {
-                    progressArgs.taskName = "Filtrování souborů podle data";
+                    progressArgs.taskName = Properties.Resources.DeviceFileFilterDate;
                     worker.ReportProgress(0, progressArgs);
 
                     filesToCopy = allFiles.Where(f => ((DateTime)f.CreationTime) >= settings.Date.Start && ((DateTime)f.CreationTime) <= settings.Date.End);
@@ -361,7 +361,7 @@ namespace PhotoApp
                 if (worker.WorkerReportsProgress)
                 {
                     progressArgs.currentTask = path;
-                    progressArgs.progressText = $"Nalezeno {FilesTotal} souborů";
+                    progressArgs.progressText = string.Format(Properties.Resources.DeviceFilesFound, FilesTotal);
                     worker.ReportProgress(0, progressArgs);
                 }
 
@@ -375,7 +375,7 @@ namespace PhotoApp
                     FilesTotal += files.Count();
                     if (worker.WorkerReportsProgress)
                     {
-                        progressArgs.progressText = $"Nalezeno {FilesTotal} souborů";
+                        progressArgs.progressText = string.Format(Properties.Resources.DeviceFilesFound, FilesTotal);
                         worker.ReportProgress(0, progressArgs);
                     }
 
@@ -461,14 +461,14 @@ namespace PhotoApp
                 {
                     try
                     {
-                        progressArgs.taskName = "Kopíruji soubory";
+                        progressArgs.taskName = Properties.Resources.DeviceCopyingFiles;
                         progressArgs.indeterminateTask = false;
 
 
                         lock (_lockReport)
                         {
-                            progressArgs.progressText = $"Zpracováno {FilesDoneCount}/{FilesToCopyCount} souborů";
-                            progressArgs.currentTask = $"Stahuji {file.FullName}";
+                            progressArgs.progressText = string.Format(Properties.Resources.DeviceFilesDoneCount, FilesDoneCount, FilesToCopyCount);
+                            progressArgs.currentTask = String.Format(Properties.Resources.DeviceDownloadingFile, file.FullName);
                             worker.ReportProgress(FilesDoneCount * 100 / FilesToCopyCount, progressArgs);
                         }
 
@@ -580,7 +580,7 @@ namespace PhotoApp
                   {
                       lock (_lockReport)
                       {
-                          progressArgs.currentTask = $"Generuji náhled {item.origFile}";
+                          progressArgs.currentTask = string.Format(Properties.Resources.DeviceGeneratingThumbnail, item.origFile);
                           worker.ReportProgress(FilesDoneCount * 100 / FilesToCopyCount, progressArgs);
                       }
                       GenerateThumbnail(settings, item.fullDestPath, item.tmpFile, item.origFile, BitConverter.ToString(item.origHash).Replace("-", string.Empty).ToLowerInvariant());
@@ -589,7 +589,7 @@ namespace PhotoApp
 
                   lock (_lockReport)
                   {
-                      progressArgs.currentTask = $"Třídím soubor {item.origFile}";
+                      progressArgs.currentTask = string.Format(Properties.Resources.DeviceSortingFile, item.origFile);
                       worker.ReportProgress(FilesDoneCount * 100 / FilesToCopyCount, progressArgs);
                   }
                   bool successSave = SaveFiles(settings, item.fullDestPath, item.tmpFile, item.origFile, item.origHash);
@@ -619,7 +619,7 @@ namespace PhotoApp
                       sizeCopied += size;
                       double sizeRemain = sizeToProcess - sizeCopied;
                       FilesDoneCount++;
-                      progressArgs.progressText = $"Zpracováno {FilesDoneCount}/{FilesToCopyCount} souborů";
+                      progressArgs.progressText = string.Format(Properties.Resources.DeviceFilesDoneCount, FilesDoneCount, FilesToCopyCount);
                       TimeSpan timeRemain = TimeSpan.FromTicks((long)(timeTotal.Ticks / sizeCopied) * (long)sizeRemain);
                       progressArgs.timeRemain = timeRemain;
                       worker.ReportProgress(FilesDoneCount * 100 / FilesToCopyCount, progressArgs);
@@ -643,14 +643,13 @@ namespace PhotoApp
             int progressPercent = 0;
             ProgressUpdateArgs progressArgs = new ProgressUpdateArgs
             {
-                taskName = "Mažu stažené soubory ze zařízení",
-                progressText = $"Smazáno {doneCount}/{totalCount} souborů"
+                taskName = Properties.Resources.DeviceDeletingFilesTask,
+                progressText = string.Format(Properties.Resources.DeviceDeletingProgress, doneCount, totalCount)
             };
             worker.ReportProgress(progressPercent, progressArgs);
             foreach (string file in files)
             {
-
-                progressArgs.currentTask = $"Mažu soubor {file}";
+                progressArgs.currentTask = string.Format(Properties.Resources.DeviceDeletingFile, file);
                 worker.ReportProgress(progressPercent, progressArgs);
                 _device.DeleteFile(file);
                 Console.WriteLine($"file {file} deleted");
@@ -662,7 +661,7 @@ namespace PhotoApp
                 TimeSpan timeTotal = end - start;
                 TimeSpan timeRemain = TimeSpan.FromTicks((timeTotal.Ticks / doneCount) * (totalCount - doneCount));
 
-                progressArgs.progressText = $"Smazáno {doneCount}/{totalCount} souborů";
+                progressText = string.Format(Properties.Resources.DeviceDeletingProgress, doneCount, totalCount)
                 progressArgs.timeRemain = timeRemain;
                 worker.ReportProgress(progressPercent, progressArgs);
             }

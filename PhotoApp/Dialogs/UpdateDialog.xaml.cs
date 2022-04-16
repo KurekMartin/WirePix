@@ -27,7 +27,7 @@ namespace PhotoApp.Dialogs
             InitializeComponent();
             mainWindow = window;
             var version = Version.Parse(release.TagName.Replace("v", ""));
-            ucUpdate.VersionInfo = $"Je dostupná verze {version}";
+            ucUpdate.VersionInfo = $"{Properties.Resources.Update_NewVersionAvailable} ({version})";
             ucUpdate.Release = release;
         }
 

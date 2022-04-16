@@ -129,6 +129,9 @@
   <data name="Cancel" xml:space="preserve">
     <value>Zrušit</value>
   </data>
+  <data name="CannotBeZero" xml:space="preserve">
+    <value>Hodnota nemůže být 0</value>
+  </data>
   <data name="CardDownload" xml:space="preserve">
     <value>Stažení</value>
   </data>
@@ -156,11 +159,59 @@
   <data name="DateRangeTo" xml:space="preserve">
     <value>Do</value>
   </data>
+  <data name="DateRange_StartGreater" xml:space="preserve">
+    <value>Počáteční datum nemůže být větší než koncové</value>
+  </data>
+  <data name="DeleteProfilePrompt" xml:space="preserve">
+    <value>Přejete si smazat profil [{0}]?</value>
+  </data>
+  <data name="DeviceCopyingFiles" xml:space="preserve">
+    <value>Kopíruji soubory</value>
+  </data>
+  <data name="DeviceDeletingFile" xml:space="preserve">
+    <value>Mazání souboru {0}</value>
+  </data>
+  <data name="DeviceDeletingFilesTask" xml:space="preserve">
+    <value>Mazání stažených souborů ze zařízení</value>
+  </data>
+  <data name="DeviceDeletingProgress" xml:space="preserve">
+    <value>Smazáno {0}/{1} souborů</value>
+  </data>
+  <data name="DeviceDownloadingFile" xml:space="preserve">
+    <value>Stahuji {0}</value>
+  </data>
+  <data name="DeviceFileFilterDate" xml:space="preserve">
+    <value>Filtrování souborů podle data</value>
+  </data>
+  <data name="DeviceFilesDoneCount" xml:space="preserve">
+    <value>Zpracováno {0}/{1} souborů</value>
+  </data>
+  <data name="DeviceFilesFound" xml:space="preserve">
+    <value>Nalezeno {0} souborů</value>
+  </data>
+  <data name="DeviceGeneratingThumbnail" xml:space="preserve">
+    <value>Generuji náhled {0}</value>
+  </data>
   <data name="DeviceName" xml:space="preserve">
     <value>Název zařízení</value>
   </data>
+  <data name="DeviceNameEmpty" xml:space="preserve">
+    <value>Zadejte název zařízení</value>
+  </data>
+  <data name="DeviceSortingFile" xml:space="preserve">
+    <value>Třídím soubor {0}</value>
+  </data>
   <data name="DeviceState" xml:space="preserve">
     <value>Stav</value>
+  </data>
+  <data name="DeviceStatus_CannotConnect" xml:space="preserve">
+    <value>Nelze se připojit</value>
+  </data>
+  <data name="DeviceStatus_Ready" xml:space="preserve">
+    <value>Připraveno</value>
+  </data>
+  <data name="DeviceStatus_Unknown" xml:space="preserve">
+    <value>Neznámý</value>
   </data>
   <data name="Done" xml:space="preserve">
     <value>Hotovo</value>
@@ -180,6 +231,9 @@
   <data name="DownloadNewFiles" xml:space="preserve">
     <value>Stažení nových souborů od poslední zálohy</value>
   </data>
+  <data name="EmailCopied" xml:space="preserve">
+    <value>Email zkopírován do schránky</value>
+  </data>
   <data name="Error" xml:space="preserve">
     <value>Chyba</value>
   </data>
@@ -192,11 +246,38 @@
   <data name="FeedbackSend" xml:space="preserve">
     <value>Odeslat zpětnou vazbu</value>
   </data>
+  <data name="FileCheckError" xml:space="preserve">
+    <value>Při získávání souborů došlo k chybě. Prosím zkontrolujte, zda je zařízení připojené a akci zopakujte.</value>
+  </data>
+  <data name="FileExists_Overwrite" xml:space="preserve">
+    <value>Soubor již existuje.\nUložením tento soubor přepíšete.</value>
+  </data>
   <data name="FilenameStructure" xml:space="preserve">
     <value>Název souboru</value>
   </data>
+  <data name="FilesDownloadedTotal" xml:space="preserve">
+    <value>Staženo</value>
+  </data>
+  <data name="FilesDownloadErrorTotal" xml:space="preserve">
+    <value>Chyby</value>
+  </data>
   <data name="FileSearchState" xml:space="preserve">
     <value>Vyhledávání souborů</value>
+  </data>
+  <data name="FileSearchStatus_Ready" xml:space="preserve">
+    <value>Dokončeno</value>
+  </data>
+  <data name="FileSearchStatus_Searching" xml:space="preserve">
+    <value>Probíhá</value>
+  </data>
+  <data name="FileSearchStatus_Unknown" xml:space="preserve">
+    <value>Neznámý</value>
+  </data>
+  <data name="FilesFoundTotal" xml:space="preserve">
+    <value>Souborů celkem</value>
+  </data>
+  <data name="FilesToDownload" xml:space="preserve">
+    <value>Ke stažení</value>
   </data>
   <data name="FindFiles" xml:space="preserve">
     <value>Vyhledat soubory</value>
@@ -207,6 +288,9 @@
   <data name="FolderDelete" xml:space="preserve">
     <value>Smazat složku</value>
   </data>
+  <data name="FolderDoesNotExist" xml:space="preserve">
+    <value>Zvolená složka neexistuje</value>
+  </data>
   <data name="FolderStructure" xml:space="preserve">
     <value>Pojmenování složek</value>
   </data>
@@ -216,8 +300,14 @@
   <data name="InvalidCharsError" xml:space="preserve">
     <value>Text obsahuje neplatné znaky: {0}</value>
   </data>
+  <data name="InvalidFilename" xml:space="preserve">
+    <value>Neplatný název souboru</value>
+  </data>
   <data name="LastBackup" xml:space="preserve">
     <value>Poslední záloha</value>
+  </data>
+  <data name="LastBackup_Never" xml:space="preserve">
+    <value>Nikdy</value>
   </data>
   <data name="License" xml:space="preserve">
     <value>Licence</value>
@@ -234,6 +324,21 @@
   <data name="No" xml:space="preserve">
     <value>Ne</value>
   </data>
+  <data name="NoBackupFolder" xml:space="preserve">
+    <value>Zvlote složku pro zálohu</value>
+  </data>
+  <data name="NoDownloadFolder" xml:space="preserve">
+    <value>Zvolte složku pro uložení souborů</value>
+  </data>
+  <data name="NoFileStructure" xml:space="preserve">
+    <value>Zvlote strukturu pro název souboru</value>
+  </data>
+  <data name="NoFolderStructure" xml:space="preserve">
+    <value>Zvlote strukturu složek pro uložení</value>
+  </data>
+  <data name="NoThumbnailFolder" xml:space="preserve">
+    <value>Zvolte složku pro náhledy</value>
+  </data>
   <data name="OK" xml:space="preserve">
     <value>OK</value>
   </data>
@@ -246,6 +351,24 @@
   <data name="Refresh" xml:space="preserve">
     <value>Obnovit</value>
   </data>
+  <data name="RemainingTime_Calculating" xml:space="preserve">
+    <value>Počítám zbývající čas</value>
+  </data>
+  <data name="RemainingTime_Days" xml:space="preserve">
+    <value>d</value>
+  </data>
+  <data name="RemainingTime_Hours" xml:space="preserve">
+    <value>h</value>
+  </data>
+  <data name="RemainingTime_Minutes" xml:space="preserve">
+    <value>m</value>
+  </data>
+  <data name="RemainingTime_Remains" xml:space="preserve">
+    <value>Zbývá</value>
+  </data>
+  <data name="RemainingTime_Seconds" xml:space="preserve">
+    <value>s</value>
+  </data>
   <data name="Save" xml:space="preserve">
     <value>Uložit</value>
   </data>
@@ -254,6 +377,9 @@
   </data>
   <data name="SelectDestination" xml:space="preserve">
     <value>Vybrat umístění</value>
+  </data>
+  <data name="SelectDevice" xml:space="preserve">
+    <value>Zvolte zařízení</value>
   </data>
   <data name="SelectFilename" xml:space="preserve">
     <value>Název souboru</value>
@@ -294,6 +420,9 @@
   <data name="SettingsThumbnail" xml:space="preserve">
     <value>Generování náhledů</value>
   </data>
+  <data name="Show" xml:space="preserve">
+    <value>Zobrazit</value>
+  </data>
   <data name="ShowCrashFiles" xml:space="preserve">
     <value>Zobrazit soubory z pádu aplikace</value>
   </data>
@@ -327,6 +456,87 @@
   <data name="Tags" xml:space="preserve">
     <value>Značky</value>
   </data>
+  <data name="Tag_CustomText_Button" xml:space="preserve">
+    <value>Text</value>
+  </data>
+  <data name="Tag_CustomText_VisibleText" xml:space="preserve">
+    <value>Text</value>
+  </data>
+  <data name="Tag_DayLong_Button" xml:space="preserve">
+    <value>Den dlouze (název)</value>
+  </data>
+  <data name="Tag_DayLong_VisibleText" xml:space="preserve">
+    <value>Den dlouze</value>
+  </data>
+  <data name="Tag_DayShort_Button" xml:space="preserve">
+    <value>Den krátce (název)</value>
+  </data>
+  <data name="Tag_DayShort_VisibleText" xml:space="preserve">
+    <value>Den krátce</value>
+  </data>
+  <data name="Tag_Day_Button" xml:space="preserve">
+    <value>Den</value>
+  </data>
+  <data name="Tag_Day_VisibleText" xml:space="preserve">
+    <value>Den</value>
+  </data>
+  <data name="Tag_DeviceManuf_Button" xml:space="preserve">
+    <value>Výrobce</value>
+  </data>
+  <data name="Tag_DeviceManuf_VisibleText" xml:space="preserve">
+    <value>Výrobce zařízení</value>
+  </data>
+  <data name="Tag_DeviceName_Button" xml:space="preserve">
+    <value>Název</value>
+  </data>
+  <data name="Tag_DeviceName_VisibleText" xml:space="preserve">
+    <value>Název zařízení</value>
+  </data>
+  <data name="Tag_FileName_Button" xml:space="preserve">
+    <value>Název souboru</value>
+  </data>
+  <data name="Tag_FileName_VisibleText" xml:space="preserve">
+    <value>Název souboru</value>
+  </data>
+  <data name="Tag_MonthLong_Button" xml:space="preserve">
+    <value>Měsíc dlouze (název)</value>
+  </data>
+  <data name="Tag_MonthLong_VisibleText" xml:space="preserve">
+    <value>Měsíc dlouze</value>
+  </data>
+  <data name="Tag_MonthShort_Button" xml:space="preserve">
+    <value>Měsíc krátce (název)</value>
+  </data>
+  <data name="Tag_MonthShort_VisibleText" xml:space="preserve">
+    <value>Měsíc krátce</value>
+  </data>
+  <data name="Tag_Month_Button" xml:space="preserve">
+    <value>Měsíc</value>
+  </data>
+  <data name="Tag_Month_VisibleText" xml:space="preserve">
+    <value>Měsíc</value>
+  </data>
+  <data name="Tag_NewFolder_Button" xml:space="preserve">
+    <value>Nová složka</value>
+  </data>
+  <data name="Tag_SequenceNum_Button" xml:space="preserve">
+    <value>Číslo</value>
+  </data>
+  <data name="Tag_SequenceNum_VisibleText" xml:space="preserve">
+    <value>Číslo souboru</value>
+  </data>
+  <data name="Tag_YearLong_Button" xml:space="preserve">
+    <value>Rok</value>
+  </data>
+  <data name="Tag_YearLong_VisibleText" xml:space="preserve">
+    <value>Rok dlouze</value>
+  </data>
+  <data name="Tag_YearShort_Button" xml:space="preserve">
+    <value>Rok krátce (YY)</value>
+  </data>
+  <data name="Tag_YearShort_VisibleText" xml:space="preserve">
+    <value>Rok krátce</value>
+  </data>
   <data name="ThumbnailLongerSide" xml:space="preserve">
     <value>Delší strana</value>
   </data>
@@ -338,6 +548,21 @@
   </data>
   <data name="Update" xml:space="preserve">
     <value>Aktualizace</value>
+  </data>
+  <data name="UpdateDownload" xml:space="preserve">
+    <value>Stáhnout ručně</value>
+  </data>
+  <data name="UpdateInstall" xml:space="preserve">
+    <value>Nainstalovat</value>
+  </data>
+  <data name="Update_Error" xml:space="preserve">
+    <value>Nebylo možné získat informace o dostupnosti novější verze</value>
+  </data>
+  <data name="Update_NewVersionAvailable" xml:space="preserve">
+    <value>Je dostupná novější verze programu</value>
+  </data>
+  <data name="Update_NoNewVerison" xml:space="preserve">
+    <value>Máte nejnovější verzi programu</value>
   </data>
   <data name="Value" xml:space="preserve">
     <value>Hodnota</value>

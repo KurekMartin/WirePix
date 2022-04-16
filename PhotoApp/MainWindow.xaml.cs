@@ -237,20 +237,20 @@ namespace PhotoApp
 
             if (DeviceList.SelectedDeviceInfo.Name == null || DeviceList.SelectedDeviceInfo.Name.Length == 0)
             {
-                SetErrorMessage(tbDeviceNameError, "Zadejte název zařízení");
+                SetErrorMessage(tbDeviceNameError, Properties.Resources.DeviceNameEmpty);
                 correct = false;
             }
 
             if (DownloadSettings.Paths.Root == null || DownloadSettings.Paths.Root.Length == 0)
             {
                 BtnError(btnMainFolder);
-                SetErrorMessage(tbRootError, "Zvolte složku pro uložení fotografií");
+                SetErrorMessage(tbRootError, Properties.Resources.NoDownloadFolder);
                 correct = false;
             }
             else if (!Directory.Exists(DownloadSettings.Paths.Root))
             {
                 BtnError(btnMainFolder);
-                SetErrorMessage(tbRootError, "Zvolená složka neexistuje");
+                SetErrorMessage(tbRootError, Properties.Resources.FolderDoesNotExist);
                 correct = false;
             }
 
@@ -259,13 +259,13 @@ namespace PhotoApp
                 if (DownloadSettings.Paths.Backup == null || DownloadSettings.Paths.Backup.Length == 0)
                 {
                     BtnError(btnChooseBackupDest);
-                    SetErrorMessage(tbBackupError, "Zvlote složku pro zálohu");
+                    SetErrorMessage(tbBackupError, Properties.Resources.NoBackupFolder);
                     correct = false;
                 }
                 else if (!Directory.Exists(DownloadSettings.Paths.Backup))
                 {
                     BtnError(btnChooseBackupDest);
-                    SetErrorMessage(tbBackupError, "Zvolená složka neexistuje");
+                    SetErrorMessage(tbBackupError, Properties.Resources.FolderDoesNotExist);
                     correct = false;
                 }
             }
@@ -274,14 +274,14 @@ namespace PhotoApp
             if (DownloadSettings.Paths.FolderTags == null || DownloadSettings.Paths.FolderTags.Count == 0)
             {
                 BtnError(btnFolderStruct);
-                SetErrorMessage(tbFolderStructError, "Zvlote strukturu složek pro uložení");
+                SetErrorMessage(tbFolderStructError, Properties.Resources.NoFolderStructure);
                 correct = false;
             }
 
             if (DownloadSettings.Paths.FileTags == null || DownloadSettings.Paths.FileTags.Count == 0)
             {
                 BtnError(btnFileStruct);
-                SetErrorMessage(tbFileStructError, "Zvlote strukturu pro název souboru");
+                SetErrorMessage(tbFileStructError, Properties.Resources.NoFileStructure);
                 correct = false;
             }
 
@@ -290,26 +290,26 @@ namespace PhotoApp
                 if (DownloadSettings.Paths.Thumbnail == null || DownloadSettings.Paths.Thumbnail.Length == 0)
                 {
                     BtnError(btnChooseThumbDest);
-                    SetErrorMessage(tbThumbnailDestError, "Zvolte složku pro náhledy");
+                    SetErrorMessage(tbThumbnailDestError, Properties.Resources.NoThumbnailFolder);
                     correct = false;
                 }
                 else if (!Directory.Exists(DownloadSettings.Paths.Thumbnail))
                 {
                     BtnError(btnChooseThumbDest);
-                    SetErrorMessage(tbThumbnailDestError, "Zvolená složka neexistuje");
+                    SetErrorMessage(tbThumbnailDestError, Properties.Resources.FolderDoesNotExist);
                     correct = false;
                 }
 
                 if (DownloadSettings.ThumbnailSettings.Value == 0)
                 {
-                    SetErrorMessage(tbThumbnailError, "Hodnota nemůže být 0");
+                    SetErrorMessage(tbThumbnailError, Properties.Resources.CannotBeZero);
                     correct = false;
                 }
             }
 
             if ((bool)cbDateRange.IsChecked && DownloadSettings.Date.Start > DownloadSettings.Date.End)
             {
-                SetErrorMessage(tbDateRangeError, "Počáteční datum nemůže být větší než koncové");
+                SetErrorMessage(tbDateRangeError, Properties.Resources.DateRange_StartGreater);
                 correct = false;
             }
 
@@ -324,7 +324,7 @@ namespace PhotoApp
             {
                 ListBoxDevices.BorderBrush = errorBorder.BorderBrush;
                 ListBoxDevices.BorderThickness = errorBorder.BorderThickness;
-                SetErrorMessage(tbSelectDeviceError, "Zvolte zařízení");
+                SetErrorMessage(tbSelectDeviceError, Properties.Resources.SelectDevice);
                 correct = false;
             }
             return correct;
@@ -347,7 +347,7 @@ namespace PhotoApp
             if (showProgress)
             {
                 DialogHost.Show(progressDialog, "RootDialog");
-                progressDialog.btnCancel.Content = "Zrušit";
+                progressDialog.btnCancel.Content = Properties.Resources.Cancel;
             }
 
             if ((bool)cbNewFiles.IsChecked)
@@ -403,7 +403,7 @@ namespace PhotoApp
             WorkerResult result = (WorkerResult)e.Result;
             if (result.code == RESULT_ERROR)
             {
-                ErrorDialog("Při získávání souborů došlo k chybě. Prosím zkontrolujte, zda je zařízení připojené a akci zopakujte.");
+                ErrorDialog(Properties.Resources.FileCheckError);
                 ListConnectedDevices();
             }
             else if (result.code == RESULT_OK)
@@ -412,11 +412,11 @@ namespace PhotoApp
                 int downloaded = DeviceList.SelectedDevice.FilesDoneCount;
                 int toDownload = DeviceList.SelectedDevice.FilesToCopyCount;
                 int errors = DeviceList.SelectedDevice.Errors;
-                lblResult.Text = $"Souborů celkem: {total}\n";
+                lblResult.Text = $"{Properties.Resources.FilesFoundTotal}: {total}\n";
                 if (result.task == TaskType.CopyFiles)
                 {
-                    lblResult.Text += $"Staženo: {downloaded}/{toDownload}\n" +
-                                      $"Chyby: {errors}";
+                    lblResult.Text += $"{Properties.Resources.FilesDownloadedTotal}: {downloaded}/{toDownload}\n" +
+                                      $"{Properties.Resources.FilesDownloadErrorTotal}: {errors}";
                     if (DownloadSettings.DownloadSelect == DownloadSelect.lastBackup && downloaded == toDownload)
                     {
                         DeviceList.SelectedDeviceInfo.LastBackup = backupStart;
@@ -426,7 +426,7 @@ namespace PhotoApp
                 }
                 else if (result.task == TaskType.FindFiles)
                 {
-                    lblResult.Text += $"Ke stažení: {toDownload}";
+                    lblResult.Text += $"{Properties.Resources.FilesToDownload}: {toDownload}";
                 }
 
                 if (errors > 0)
@@ -648,7 +648,7 @@ namespace PhotoApp
 
             if (DownloadSettings.Date.Start > DownloadSettings.Date.End)
             {
-                SetErrorMessage(tbDateRangeError, "Počáteční datum nemůže být větší než koncové");
+                SetErrorMessage(tbDateRangeError, Properties.Resources.DateRange_StartGreater);
             }
             else if (tbDateRangeError != null)
             {
@@ -703,7 +703,7 @@ namespace PhotoApp
 
         private async void btnDelete_Click(object sender, RoutedEventArgs e)
         {
-            YesNoDialog ynDialog = new YesNoDialog(this, $"Přejete si smazat profil [{cbProfiles.SelectedItem}]?", REQUEST_PROFILE_DELETE);
+            YesNoDialog ynDialog = new YesNoDialog(this, string.Format(Properties.Resources.DeleteProfilePrompt, cbProfiles.SelectedItem), REQUEST_PROFILE_DELETE);
             await DialogHost.Show(ynDialog, "RootDialog");
         }
 
@@ -760,7 +760,7 @@ namespace PhotoApp
         {
             if (DownloadSettings.ThumbnailSettings.Value == 0)
             {
-                SetErrorMessage(tbThumbnailError, "Hodnota nemůže být 0");
+                SetErrorMessage(tbThumbnailError, Properties.Resources.CannotBeZero);
             }
         }
 
@@ -799,7 +799,7 @@ namespace PhotoApp
             TextBox tb = (TextBox)sender;
             if (DeviceList.SelectedIndex != -1 && tb.Text.Length == 0)
             {
-                SetErrorMessage(tbDeviceNameError, "Zadejte název zařízení");
+                SetErrorMessage(tbDeviceNameError, Properties.Resources.DeviceNameEmpty);
                 ListBoxDevices.IsEnabled = false;
             }
             else
@@ -844,7 +844,7 @@ namespace PhotoApp
 
                 if (latestVersion > currentVersion)
                 {
-                    SnackBar.MessageQueue.Enqueue("Je dostupná novější verze aplikace", "ZOBRAZIT", () => ShowUpdateDialog(release));
+                    SnackBar.MessageQueue.Enqueue(Properties.Resources.Update_NewVersionAvailable, Properties.Resources.Show.ToUpper(), () => ShowUpdateDialog(release));
                 }
             }
             catch (Exception ex) { }

@@ -97,6 +97,15 @@ namespace PhotoApp.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Value cannot be 0.
+        /// </summary>
+        public static string CannotBeZero {
+            get {
+                return ResourceManager.GetString("CannotBeZero", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Download.
         /// </summary>
         public static string CardDownload {
@@ -160,6 +169,15 @@ namespace PhotoApp.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The start date cannot be greater than the end date.
+        /// </summary>
+        public static string DateRange_StartGreater {
+            get {
+                return ResourceManager.GetString("DateRange_StartGreater", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to From.
         /// </summary>
         public static string DateRangeFrom {
@@ -178,6 +196,96 @@ namespace PhotoApp.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Do you want to delete profile [{0}]?.
+        /// </summary>
+        public static string DeleteProfilePrompt {
+            get {
+                return ResourceManager.GetString("DeleteProfilePrompt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Copying files.
+        /// </summary>
+        public static string DeviceCopyingFiles {
+            get {
+                return ResourceManager.GetString("DeviceCopyingFiles", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Deleting file {0}.
+        /// </summary>
+        public static string DeviceDeletingFile {
+            get {
+                return ResourceManager.GetString("DeviceDeletingFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Deleting downloaded files from device.
+        /// </summary>
+        public static string DeviceDeletingFilesTask {
+            get {
+                return ResourceManager.GetString("DeviceDeletingFilesTask", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Deleted {0}/{1} files.
+        /// </summary>
+        public static string DeviceDeletingProgress {
+            get {
+                return ResourceManager.GetString("DeviceDeletingProgress", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Downloading {0}.
+        /// </summary>
+        public static string DeviceDownloadingFile {
+            get {
+                return ResourceManager.GetString("DeviceDownloadingFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Filtering files by date.
+        /// </summary>
+        public static string DeviceFileFilterDate {
+            get {
+                return ResourceManager.GetString("DeviceFileFilterDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Processed {0}/{1} files.
+        /// </summary>
+        public static string DeviceFilesDoneCount {
+            get {
+                return ResourceManager.GetString("DeviceFilesDoneCount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Found {0} files.
+        /// </summary>
+        public static string DeviceFilesFound {
+            get {
+                return ResourceManager.GetString("DeviceFilesFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Generating thumbnail {0}.
+        /// </summary>
+        public static string DeviceGeneratingThumbnail {
+            get {
+                return ResourceManager.GetString("DeviceGeneratingThumbnail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Device name.
         /// </summary>
         public static string DeviceName {
@@ -187,11 +295,56 @@ namespace PhotoApp.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Enter a device name.
+        /// </summary>
+        public static string DeviceNameEmpty {
+            get {
+                return ResourceManager.GetString("DeviceNameEmpty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sorting file {0}.
+        /// </summary>
+        public static string DeviceSortingFile {
+            get {
+                return ResourceManager.GetString("DeviceSortingFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to State.
         /// </summary>
         public static string DeviceState {
             get {
                 return ResourceManager.GetString("DeviceState", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cannot connect.
+        /// </summary>
+        public static string DeviceStatus_CannotConnect {
+            get {
+                return ResourceManager.GetString("DeviceStatus_CannotConnect", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ready.
+        /// </summary>
+        public static string DeviceStatus_Ready {
+            get {
+                return ResourceManager.GetString("DeviceStatus_Ready", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unknown.
+        /// </summary>
+        public static string DeviceStatus_Unknown {
+            get {
+                return ResourceManager.GetString("DeviceStatus_Unknown", resourceCulture);
             }
         }
         
@@ -250,6 +403,15 @@ namespace PhotoApp.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Email copied to clipboard.
+        /// </summary>
+        public static string EmailCopied {
+            get {
+                return ResourceManager.GetString("EmailCopied", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Error.
         /// </summary>
         public static string Error {
@@ -286,6 +448,24 @@ namespace PhotoApp.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to An error occurred while getting files. Please check if the device is connected and retry the action..
+        /// </summary>
+        public static string FileCheckError {
+            get {
+                return ResourceManager.GetString("FileCheckError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The file already exists.\nSave to overwrite this file..
+        /// </summary>
+        public static string FileExists_Overwrite {
+            get {
+                return ResourceManager.GetString("FileExists_Overwrite", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Filename structure.
         /// </summary>
         public static string FilenameStructure {
@@ -295,11 +475,74 @@ namespace PhotoApp.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Downloaded.
+        /// </summary>
+        public static string FilesDownloadedTotal {
+            get {
+                return ResourceManager.GetString("FilesDownloadedTotal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Errors.
+        /// </summary>
+        public static string FilesDownloadErrorTotal {
+            get {
+                return ResourceManager.GetString("FilesDownloadErrorTotal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to File search.
         /// </summary>
         public static string FileSearchState {
             get {
                 return ResourceManager.GetString("FileSearchState", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Done.
+        /// </summary>
+        public static string FileSearchStatus_Ready {
+            get {
+                return ResourceManager.GetString("FileSearchStatus_Ready", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to In progress.
+        /// </summary>
+        public static string FileSearchStatus_Searching {
+            get {
+                return ResourceManager.GetString("FileSearchStatus_Searching", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unknown.
+        /// </summary>
+        public static string FileSearchStatus_Unknown {
+            get {
+                return ResourceManager.GetString("FileSearchStatus_Unknown", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Files total.
+        /// </summary>
+        public static string FilesFoundTotal {
+            get {
+                return ResourceManager.GetString("FilesFoundTotal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to To download.
+        /// </summary>
+        public static string FilesToDownload {
+            get {
+                return ResourceManager.GetString("FilesToDownload", resourceCulture);
             }
         }
         
@@ -331,6 +574,15 @@ namespace PhotoApp.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Selected folder does not exist.
+        /// </summary>
+        public static string FolderDoesNotExist {
+            get {
+                return ResourceManager.GetString("FolderDoesNotExist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Folder structure.
         /// </summary>
         public static string FolderStructure {
@@ -358,11 +610,29 @@ namespace PhotoApp.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Invalid filename.
+        /// </summary>
+        public static string InvalidFilename {
+            get {
+                return ResourceManager.GetString("InvalidFilename", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Last backup.
         /// </summary>
         public static string LastBackup {
             get {
                 return ResourceManager.GetString("LastBackup", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Never.
+        /// </summary>
+        public static string LastBackup_Never {
+            get {
+                return ResourceManager.GetString("LastBackup_Never", resourceCulture);
             }
         }
         
@@ -412,6 +682,51 @@ namespace PhotoApp.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Select a folder for backup.
+        /// </summary>
+        public static string NoBackupFolder {
+            get {
+                return ResourceManager.GetString("NoBackupFolder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select a folder to save files.
+        /// </summary>
+        public static string NoDownloadFolder {
+            get {
+                return ResourceManager.GetString("NoDownloadFolder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Choose a filename structure.
+        /// </summary>
+        public static string NoFileStructure {
+            get {
+                return ResourceManager.GetString("NoFileStructure", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Choose a folder structure.
+        /// </summary>
+        public static string NoFolderStructure {
+            get {
+                return ResourceManager.GetString("NoFolderStructure", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select folder for thumbnails.
+        /// </summary>
+        public static string NoThumbnailFolder {
+            get {
+                return ResourceManager.GetString("NoThumbnailFolder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to OK.
         /// </summary>
         public static string OK {
@@ -448,6 +763,60 @@ namespace PhotoApp.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Calculating remaining time.
+        /// </summary>
+        public static string RemainingTime_Calculating {
+            get {
+                return ResourceManager.GetString("RemainingTime_Calculating", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to d.
+        /// </summary>
+        public static string RemainingTime_Days {
+            get {
+                return ResourceManager.GetString("RemainingTime_Days", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to h.
+        /// </summary>
+        public static string RemainingTime_Hours {
+            get {
+                return ResourceManager.GetString("RemainingTime_Hours", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to m.
+        /// </summary>
+        public static string RemainingTime_Minutes {
+            get {
+                return ResourceManager.GetString("RemainingTime_Minutes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Remains.
+        /// </summary>
+        public static string RemainingTime_Remains {
+            get {
+                return ResourceManager.GetString("RemainingTime_Remains", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to s.
+        /// </summary>
+        public static string RemainingTime_Seconds {
+            get {
+                return ResourceManager.GetString("RemainingTime_Seconds", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Save.
         /// </summary>
         public static string Save {
@@ -471,6 +840,15 @@ namespace PhotoApp.Properties {
         public static string SelectDestination {
             get {
                 return ResourceManager.GetString("SelectDestination", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select a device.
+        /// </summary>
+        public static string SelectDevice {
+            get {
+                return ResourceManager.GetString("SelectDevice", resourceCulture);
             }
         }
         
@@ -592,6 +970,15 @@ namespace PhotoApp.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Show.
+        /// </summary>
+        public static string Show {
+            get {
+                return ResourceManager.GetString("Show", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Show files from crash.
         /// </summary>
         public static string ShowCrashFiles {
@@ -642,6 +1029,249 @@ namespace PhotoApp.Properties {
         public static string StartupUpdateCheck {
             get {
                 return ResourceManager.GetString("StartupUpdateCheck", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Text.
+        /// </summary>
+        public static string Tag_CustomText_Button {
+            get {
+                return ResourceManager.GetString("Tag_CustomText_Button", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Text.
+        /// </summary>
+        public static string Tag_CustomText_VisibleText {
+            get {
+                return ResourceManager.GetString("Tag_CustomText_VisibleText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Day.
+        /// </summary>
+        public static string Tag_Day_Button {
+            get {
+                return ResourceManager.GetString("Tag_Day_Button", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Day.
+        /// </summary>
+        public static string Tag_Day_VisibleText {
+            get {
+                return ResourceManager.GetString("Tag_Day_VisibleText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Day long (name).
+        /// </summary>
+        public static string Tag_DayLong_Button {
+            get {
+                return ResourceManager.GetString("Tag_DayLong_Button", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Day long.
+        /// </summary>
+        public static string Tag_DayLong_VisibleText {
+            get {
+                return ResourceManager.GetString("Tag_DayLong_VisibleText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Day short (name).
+        /// </summary>
+        public static string Tag_DayShort_Button {
+            get {
+                return ResourceManager.GetString("Tag_DayShort_Button", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Day short.
+        /// </summary>
+        public static string Tag_DayShort_VisibleText {
+            get {
+                return ResourceManager.GetString("Tag_DayShort_VisibleText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Manufacturer.
+        /// </summary>
+        public static string Tag_DeviceManuf_Button {
+            get {
+                return ResourceManager.GetString("Tag_DeviceManuf_Button", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Device manufacturer.
+        /// </summary>
+        public static string Tag_DeviceManuf_VisibleText {
+            get {
+                return ResourceManager.GetString("Tag_DeviceManuf_VisibleText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Name.
+        /// </summary>
+        public static string Tag_DeviceName_Button {
+            get {
+                return ResourceManager.GetString("Tag_DeviceName_Button", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Device name.
+        /// </summary>
+        public static string Tag_DeviceName_VisibleText {
+            get {
+                return ResourceManager.GetString("Tag_DeviceName_VisibleText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Filename.
+        /// </summary>
+        public static string Tag_FileName_Button {
+            get {
+                return ResourceManager.GetString("Tag_FileName_Button", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Filename.
+        /// </summary>
+        public static string Tag_FileName_VisibleText {
+            get {
+                return ResourceManager.GetString("Tag_FileName_VisibleText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Month.
+        /// </summary>
+        public static string Tag_Month_Button {
+            get {
+                return ResourceManager.GetString("Tag_Month_Button", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Month.
+        /// </summary>
+        public static string Tag_Month_VisibleText {
+            get {
+                return ResourceManager.GetString("Tag_Month_VisibleText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Month long (name).
+        /// </summary>
+        public static string Tag_MonthLong_Button {
+            get {
+                return ResourceManager.GetString("Tag_MonthLong_Button", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Month long.
+        /// </summary>
+        public static string Tag_MonthLong_VisibleText {
+            get {
+                return ResourceManager.GetString("Tag_MonthLong_VisibleText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Month short (name).
+        /// </summary>
+        public static string Tag_MonthShort_Button {
+            get {
+                return ResourceManager.GetString("Tag_MonthShort_Button", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Month short.
+        /// </summary>
+        public static string Tag_MonthShort_VisibleText {
+            get {
+                return ResourceManager.GetString("Tag_MonthShort_VisibleText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to New folder.
+        /// </summary>
+        public static string Tag_NewFolder_Button {
+            get {
+                return ResourceManager.GetString("Tag_NewFolder_Button", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Number.
+        /// </summary>
+        public static string Tag_SequenceNum_Button {
+            get {
+                return ResourceManager.GetString("Tag_SequenceNum_Button", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File number.
+        /// </summary>
+        public static string Tag_SequenceNum_VisibleText {
+            get {
+                return ResourceManager.GetString("Tag_SequenceNum_VisibleText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Year.
+        /// </summary>
+        public static string Tag_YearLong_Button {
+            get {
+                return ResourceManager.GetString("Tag_YearLong_Button", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Year long.
+        /// </summary>
+        public static string Tag_YearLong_VisibleText {
+            get {
+                return ResourceManager.GetString("Tag_YearLong_VisibleText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Year short (YY).
+        /// </summary>
+        public static string Tag_YearShort_Button {
+            get {
+                return ResourceManager.GetString("Tag_YearShort_Button", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Year short.
+        /// </summary>
+        public static string Tag_YearShort_VisibleText {
+            get {
+                return ResourceManager.GetString("Tag_YearShort_VisibleText", resourceCulture);
             }
         }
         
@@ -723,6 +1353,51 @@ namespace PhotoApp.Properties {
         public static string Update {
             get {
                 return ResourceManager.GetString("Update", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cannot get information about the availability of a newer version.
+        /// </summary>
+        public static string Update_Error {
+            get {
+                return ResourceManager.GetString("Update_Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A newer version is available.
+        /// </summary>
+        public static string Update_NewVersionAvailable {
+            get {
+                return ResourceManager.GetString("Update_NewVersionAvailable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You have the latest version.
+        /// </summary>
+        public static string Update_NoNewVerison {
+            get {
+                return ResourceManager.GetString("Update_NoNewVerison", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Download manually.
+        /// </summary>
+        public static string UpdateDownload {
+            get {
+                return ResourceManager.GetString("UpdateDownload", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Install.
+        /// </summary>
+        public static string UpdateInstall {
+            get {
+                return ResourceManager.GetString("UpdateInstall", resourceCulture);
             }
         }
         

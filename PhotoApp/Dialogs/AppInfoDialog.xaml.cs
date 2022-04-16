@@ -40,17 +40,17 @@ namespace PhotoApp.Dialogs
 
                 if (latestVersion > currentVersion)
                 {
-                    ucUpdate.VersionInfo = "Je dostupná novější verze programu";
+                    ucUpdate.VersionInfo = $"{Properties.Resources.Update_NewVersionAvailable} ({latestVersion})";
                     ucUpdate.Release = release;
                 }
                 else
                 {
-                    ucUpdate.VersionInfo = "Máte nejnovější verzi programu";
+                    ucUpdate.VersionInfo = Properties.Resources.Update_NoNewVerison;
                 }
             }
             catch
             {
-                ucUpdate.VersionInfo = "Nebylo možné získat informace o dostupnosti novější verze";
+                ucUpdate.VersionInfo = Properties.Resources.Update_Error;
             }
             MaterialDesignThemes.Wpf.ButtonProgressAssist.SetIsIndicatorVisible(btnCheckUpdate, false);
         }
@@ -73,7 +73,7 @@ namespace PhotoApp.Dialogs
         private void tbEmail_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             Clipboard.SetText(tbEmail.Text);
-            SnackBar.MessageQueue.Enqueue("Email zkopírován do schránky");
+            SnackBar.MessageQueue.Enqueue(Properties.Resources.EmailCopied);
         }
     }
 }

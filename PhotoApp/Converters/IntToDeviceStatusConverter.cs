@@ -9,15 +9,15 @@ namespace PhotoApp.Converters
         {
             if ((int)value == Device.DEVICE_CANNOT_CONNECT)
             {
-                return "Nelze se připojit";
+                return Properties.Resources.DeviceStatus_CannotConnect;
             }
             else if ((int)value == Device.DEVICE_READY)
             {
-                return "Připraveno";
+                return Properties.Resources.DeviceStatus_Ready;
             }
             else
             {
-                return "Neznámý";
+                return Properties.Resources.DeviceStatus_Unknown;
             }
 
         }

@@ -12,24 +12,24 @@ namespace PhotoApp.Converters
             string timeString = "";
             if (time.Ticks == 0)
             {
-                timeString = "Počítám zbývající čas";
+                timeString = Properties.Resources.RemainingTime_Calculating;
             }
             else
             {
-                timeString = "Zbývá ";
+                timeString = $"{Properties.Resources.RemainingTime_Remains} ";
                 if (time.Days > 0)
                 {
-                    timeString += time.Days + "d ";
+                    timeString += time.Days + $"{Properties.Resources.RemainingTime_Days} ";
                 }
                 if (time.Hours > 0)
                 {
-                    timeString += time.Hours + "h ";
+                    timeString += time.Hours + $"{Properties.Resources.RemainingTime_Hours} ";
                 }
                 if (time.Minutes > 0)
                 {
-                    timeString += time.Minutes + "m ";
+                    timeString += time.Minutes + $"{Properties.Resources.RemainingTime_Minutes} ";
                 }
-                timeString += time.Seconds + "s ";
+                timeString += time.Seconds + $"{Properties.Resources.RemainingTime_Seconds} ";
             }
             return timeString;
         }

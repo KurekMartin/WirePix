@@ -9,15 +9,15 @@ namespace PhotoApp.Converters
         {
             if ((int)value == Device.DEVICE_FILES_SEARCHING)
             {
-                return "Probíhá";
+                return Properties.Resources.FileSearchStatus_Searching;
             }
             else if ((int)value == Device.DEVICE_FILES_READY)
             {
-                return "Dokončeno";
+                return Properties.Resources.FileSearchStatus_Ready;
             }
             else
             {
-                return "Neznámý";
+                return Properties.Resources.FileSearchStatus_Unknown;
             }
 
         }
