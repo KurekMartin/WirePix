@@ -454,7 +454,7 @@ namespace PhotoApp
             List<ButtonGroupStruct> buttonGroups = new List<ButtonGroupStruct>()
             {
                 new ButtonGroupStruct(
-                    "Datum",
+                    Properties.Resources.TagGroup_Date,
                     new List<string>(){
                         Properties.TagCodes.YearLong,
                         Properties.TagCodes.Month,
@@ -462,26 +462,26 @@ namespace PhotoApp
                     new Point(0,0)),
 
                 new ButtonGroupStruct(
-                    "Vlastní",
+                    Properties.Resources.TagGroup_Custom,
                     new List<string>(){
                         Properties.TagCodes.CustomText},
                     new Point(1,0)),
 
                 new ButtonGroupStruct(
-                    "Zařízení",
+                    Properties.Resources.TagGroup_Device,
                     new List<string>(){
                         Properties.TagCodes.DeviceName,
                         Properties.TagCodes.DeviceManuf},
                     new Point(0,1)),
 
                 new ButtonGroupStruct(
-                    "Složka",
+                    Properties.Resources.TagGroup_Folder,
                     new List<string>(){
                         Properties.TagCodes.NewFolder},
                     new Point(0,2)),
 
                 new ButtonGroupStruct(
-                    "Oddělovač",
+                    Properties.Resources.TagGroup_Separator,
                     new List<string>(){
                         Properties.TagCodes.Hyphen,
                         Properties.TagCodes.Underscore},
@@ -542,7 +542,7 @@ namespace PhotoApp
             List<ButtonGroupStruct> buttonGroups = new List<ButtonGroupStruct>()
             {
                 new ButtonGroupStruct(
-                    "Datum",
+                    Properties.Resources.TagGroup_Date,
                     new List<string>(){
                         Properties.TagCodes.YearLong,
                         Properties.TagCodes.Month,
@@ -550,14 +550,14 @@ namespace PhotoApp
                     new Point(0,0)),
 
                 new ButtonGroupStruct(
-                    "Ostatní",
+                    Properties.Resources.TagGroup_Other,
                     new List<string>(){
                         Properties.TagCodes.CustomText,
                         Properties.TagCodes.FileName},
                     new Point(1,0)),
 
                 new ButtonGroupStruct(
-                    "Zařízení",
+                    Properties.Resources.TagGroup_Device,
                     new List<string>(){
                         Properties.TagCodes.DeviceName,
                         Properties.TagCodes.DeviceManuf},
@@ -570,7 +570,7 @@ namespace PhotoApp
                 //     new Point(0,2)),
 
                 new ButtonGroupStruct(
-                    "Oddělovač",
+                    Properties.Resources.TagGroup_Separator,
                     new List<string>(){
                         Properties.TagCodes.Hyphen,
                         Properties.TagCodes.Underscore},
@@ -848,7 +848,6 @@ namespace PhotoApp
                 }
             }
             catch (Exception ex) { }
-
         }
     }
 }

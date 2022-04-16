@@ -661,7 +661,7 @@ namespace PhotoApp
                 TimeSpan timeTotal = end - start;
                 TimeSpan timeRemain = TimeSpan.FromTicks((timeTotal.Ticks / doneCount) * (totalCount - doneCount));
 
-                progressText = string.Format(Properties.Resources.DeviceDeletingProgress, doneCount, totalCount)
+                progressArgs.progressText = string.Format(Properties.Resources.DeviceDeletingProgress, doneCount, totalCount);
                 progressArgs.timeRemain = timeRemain;
                 worker.ReportProgress(progressPercent, progressArgs);
             }

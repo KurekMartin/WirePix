@@ -619,6 +619,15 @@ namespace PhotoApp.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Language.
+        /// </summary>
+        public static string Language {
+            get {
+                return ResourceManager.GetString("Language", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Last backup.
         /// </summary>
         public static string LastBackup {
@@ -817,6 +826,15 @@ namespace PhotoApp.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Restart app.
+        /// </summary>
+        public static string RestartApp {
+            get {
+                return ResourceManager.GetString("RestartApp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Save.
         /// </summary>
         public static string Save {
@@ -930,6 +948,15 @@ namespace PhotoApp.Properties {
         public static string SettingsFolderStructure {
             get {
                 return ResourceManager.GetString("SettingsFolderStructure", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Some changes will take effect after restarting the application.
+        /// </summary>
+        public static string SettingsInfoRestart {
+            get {
+                return ResourceManager.GetString("SettingsInfoRestart", resourceCulture);
             }
         }
         
@@ -1299,6 +1326,60 @@ namespace PhotoApp.Properties {
         public static string TagDelete {
             get {
                 return ResourceManager.GetString("TagDelete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Custom.
+        /// </summary>
+        public static string TagGroup_Custom {
+            get {
+                return ResourceManager.GetString("TagGroup_Custom", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Date.
+        /// </summary>
+        public static string TagGroup_Date {
+            get {
+                return ResourceManager.GetString("TagGroup_Date", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Device.
+        /// </summary>
+        public static string TagGroup_Device {
+            get {
+                return ResourceManager.GetString("TagGroup_Device", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Folder.
+        /// </summary>
+        public static string TagGroup_Folder {
+            get {
+                return ResourceManager.GetString("TagGroup_Folder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Other.
+        /// </summary>
+        public static string TagGroup_Other {
+            get {
+                return ResourceManager.GetString("TagGroup_Other", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Separator.
+        /// </summary>
+        public static string TagGroup_Separator {
+            get {
+                return ResourceManager.GetString("TagGroup_Separator", resourceCulture);
             }
         }
         

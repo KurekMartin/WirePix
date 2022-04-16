@@ -303,6 +303,9 @@
   <data name="InvalidFilename" xml:space="preserve">
     <value>Neplatný název souboru</value>
   </data>
+  <data name="Language" xml:space="preserve">
+    <value>Jazyk</value>
+  </data>
   <data name="LastBackup" xml:space="preserve">
     <value>Poslední záloha</value>
   </data>
@@ -369,6 +372,9 @@
   <data name="RemainingTime_Seconds" xml:space="preserve">
     <value>s</value>
   </data>
+  <data name="RestartApp" xml:space="preserve">
+    <value>Restartovat aplikaci</value>
+  </data>
   <data name="Save" xml:space="preserve">
     <value>Uložit</value>
   </data>
@@ -407,6 +413,9 @@
   </data>
   <data name="SettingsFolderStructure" xml:space="preserve">
     <value>Pojmenování složek</value>
+  </data>
+  <data name="SettingsInfoRestart" xml:space="preserve">
+    <value>Některé změny se projeví po restartu aplikace</value>
   </data>
   <data name="SettingsMainFolder" xml:space="preserve">
     <value>Hlavní složka</value>
@@ -449,6 +458,24 @@
   </data>
   <data name="TagDelete" xml:space="preserve">
     <value>Smazat značku</value>
+  </data>
+  <data name="TagGroup_Custom" xml:space="preserve">
+    <value>Vlastní</value>
+  </data>
+  <data name="TagGroup_Date" xml:space="preserve">
+    <value>Datum</value>
+  </data>
+  <data name="TagGroup_Device" xml:space="preserve">
+    <value>Zařízení</value>
+  </data>
+  <data name="TagGroup_Folder" xml:space="preserve">
+    <value>Složka</value>
+  </data>
+  <data name="TagGroup_Other" xml:space="preserve">
+    <value>Ostatní</value>
+  </data>
+  <data name="TagGroup_Separator" xml:space="preserve">
+    <value>Oddělovač</value>
   </data>
   <data name="TagPairError" xml:space="preserve">
     <value>Nelze použít {0} po {1}.</value>

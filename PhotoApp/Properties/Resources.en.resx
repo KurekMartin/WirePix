@@ -303,6 +303,9 @@
   <data name="InvalidFilename" xml:space="preserve">
     <value>Invalid filename</value>
   </data>
+  <data name="Language" xml:space="preserve">
+    <value>Language</value>
+  </data>
   <data name="LastBackup" xml:space="preserve">
     <value>Last backup</value>
   </data>
@@ -369,6 +372,9 @@
   <data name="RemainingTime_Seconds" xml:space="preserve">
     <value>s</value>
   </data>
+  <data name="RestartApp" xml:space="preserve">
+    <value>Restart app</value>
+  </data>
   <data name="Save" xml:space="preserve">
     <value>Save</value>
   </data>
@@ -407,6 +413,9 @@
   </data>
   <data name="SettingsFolderStructure" xml:space="preserve">
     <value>Folder structure</value>
+  </data>
+  <data name="SettingsInfoRestart" xml:space="preserve">
+    <value>Some changes will take effect after restarting the application</value>
   </data>
   <data name="SettingsMainFolder" xml:space="preserve">
     <value>Main folder</value>
@@ -449,6 +458,24 @@
   </data>
   <data name="TagDelete" xml:space="preserve">
     <value>Delete tag</value>
+  </data>
+  <data name="TagGroup_Custom" xml:space="preserve">
+    <value>Custom</value>
+  </data>
+  <data name="TagGroup_Date" xml:space="preserve">
+    <value>Date</value>
+  </data>
+  <data name="TagGroup_Device" xml:space="preserve">
+    <value>Device</value>
+  </data>
+  <data name="TagGroup_Folder" xml:space="preserve">
+    <value>Folder</value>
+  </data>
+  <data name="TagGroup_Other" xml:space="preserve">
+    <value>Other</value>
+  </data>
+  <data name="TagGroup_Separator" xml:space="preserve">
+    <value>Separator</value>
   </data>
   <data name="TagPairError" xml:space="preserve">
     <value>Cannot use {0} after {1}.</value>
