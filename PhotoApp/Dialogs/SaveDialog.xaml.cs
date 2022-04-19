@@ -83,7 +83,7 @@ namespace PhotoApp.Dialogs
         {
             if (ValidFileName(saveResult.FileName))
             {
-                mainWindow.DialogClose(this, saveResult);
+                mainWindow.DialogClose(this, saveResult, MainWindow.RESULT_OK);
             }
         }
     }
