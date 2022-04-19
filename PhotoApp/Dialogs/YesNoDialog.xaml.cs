@@ -22,7 +22,7 @@ namespace PhotoApp.Dialogs
 
         private void btnYes_Click(object sender, RoutedEventArgs e)
         {
-            _mainWindow.DialogClose(this, RESULT_YES, _requestCode);
+            _mainWindow.DialogClose(this, RESULT_YES, MainWindow.RESULT_OK, _requestCode);
         }
     }
 }
