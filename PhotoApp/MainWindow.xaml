@@ -220,7 +220,7 @@
 
                                     <Button x:Name="btnSave" Content="{x:Static p:Resources.Save}" Height="Auto" Margin="10,5" Visibility="Visible" Click="btnSave_Click"/>
                                     <Button x:Name="btnSaveAs" Content="{x:Static p:Resources.SaveAs}" Height="Auto" Margin="10,5" Visibility="Visible" Click="btnSaveAs_Click"/>
-                                    <Button x:Name="btnDelete" Content="{x:Static p:Resources.ProfileDelete}" Height="Auto" Margin="10,5" Visibility="Visible" Click="btnDelete_Click"/>
+                                    <Button x:Name="btnDeleteProfile" Content="{x:Static p:Resources.ProfileDelete}" Height="Auto" Margin="10,5" Visibility="Visible" Click="btnDeleteProfile_Click"/>
                                 </StackPanel>
                             </materialDesign:Card>
                             <materialDesign:Card Margin="5,0,0,0" Grid.Column="1" UniformCornerRadius="5">

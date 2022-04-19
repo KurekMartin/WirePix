@@ -147,6 +147,15 @@ namespace PhotoApp
             OnPropertyChanged("Profiles");
 
             cbProfiles.SelectedIndex = Profiles.IndexOf(selectedProfile);
+
+            if (Profiles.Count > 0 && selectedProfile.Length > 0)
+            {
+                btnDeleteProfile.IsEnabled = true;
+            }
+            else
+            {
+                btnDeleteProfile.IsEnabled = false;
+            }
         }
 
         //vyhledani vsech souboru v adresari (hleda i v podadresarich)
@@ -396,7 +405,7 @@ namespace PhotoApp
             dhDialog.IsOpen = false;
             if (e.Cancelled)
             {
-                lblResult.Text = "Zrušeno";
+                lblResult.Text = Properties.Resources.ResultCanceled;
                 return;
             }
 
@@ -501,14 +510,13 @@ namespace PhotoApp
         }
 
         //zavreni dialogu a ziskani vracenych hodnot
-        public void DialogClose(object sender, object result = null, int resultCode = -1)
+        public void DialogClose(object sender, object result = null, int resultCode = -1, int requestCode = -1)
         {
             if (resultCode == RESULT_OK)
             {
                 if (sender.GetType() == typeof(FolderStructDialog))
                 {
                     DownloadSettings.Paths.FolderTags = (List<List<string>>)result;
-                    _ = DownloadSettings.Paths.FolderTags[0].Count;
                 }
                 else if (sender.GetType() == typeof(FileStructDialog))
                 {
@@ -523,7 +531,7 @@ namespace PhotoApp
                 }
                 else if (sender.GetType() == typeof(YesNoDialog))
                 {
-                    if (resultCode == REQUEST_PROFILE_DELETE)
+                    if ((int)result == YesNoDialog.RESULT_YES && requestCode == REQUEST_PROFILE_DELETE)
                     {
                         DownloadSettings.Delete(cbProfiles.SelectedItem.ToString());
                         GetProfiles();
@@ -701,7 +709,7 @@ namespace PhotoApp
             GetProfiles();
         }
 
-        private async void btnDelete_Click(object sender, RoutedEventArgs e)
+        private async void btnDeleteProfile_Click(object sender, RoutedEventArgs e)
         {
             YesNoDialog ynDialog = new YesNoDialog(this, string.Format(Properties.Resources.DeleteProfilePrompt, cbProfiles.SelectedItem), REQUEST_PROFILE_DELETE);
             await DialogHost.Show(ynDialog, "RootDialog");
@@ -712,11 +720,18 @@ namespace PhotoApp
             ComboBox cb = sender as ComboBox;
             if (cb.SelectedItem != null)
             {
+
                 DownloadSettings.Load(cb.SelectedItem.ToString());
                 OnPropertyChanged("DownloadSettings");
 
                 RemoveAllErrors();
                 CheckSettings();
+
+                btnDeleteProfile.IsEnabled = true;
+            }
+            else
+            {
+                btnDeleteProfile.IsEnabled = false;
             }
         }
 
@@ -831,6 +846,20 @@ namespace PhotoApp
         {
             var UpdateDialog = new UpdateDialog(this, release);
             await DialogHost.Show(UpdateDialog, "RootDialog");
+        }
+
+        public async void ShowLibraries(object sender = null)
+        {
+            DialogHost.CloseDialogCommand.Execute(null, null);
+
+            var LibrariesDialog = new UsedLibraries();
+            await DialogHost.Show(LibrariesDialog, "RootDialog");
+
+            if (sender != null)
+            {
+                await DialogHost.Show(sender, "RootDialog");
+            }
+
         }
 
         private async void CheckNewVersion()
