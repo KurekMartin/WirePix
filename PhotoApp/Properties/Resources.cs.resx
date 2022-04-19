@@ -312,6 +312,9 @@
   <data name="LastBackup_Never" xml:space="preserve">
     <value>Nikdy</value>
   </data>
+  <data name="LibrariesUsed" xml:space="preserve">
+    <value>Použité knihovny</value>
+  </data>
   <data name="License" xml:space="preserve">
     <value>Licence</value>
   </data>
@@ -374,6 +377,9 @@
   </data>
   <data name="RestartApp" xml:space="preserve">
     <value>Restartovat aplikaci</value>
+  </data>
+  <data name="ResultCanceled" xml:space="preserve">
+    <value>Zrušeno</value>
   </data>
   <data name="Save" xml:space="preserve">
     <value>Uložit</value>

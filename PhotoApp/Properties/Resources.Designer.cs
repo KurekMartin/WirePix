@@ -646,6 +646,15 @@ namespace PhotoApp.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Used libraries.
+        /// </summary>
+        public static string LibrariesUsed {
+            get {
+                return ResourceManager.GetString("LibrariesUsed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to License.
         /// </summary>
         public static string License {
@@ -831,6 +840,15 @@ namespace PhotoApp.Properties {
         public static string RestartApp {
             get {
                 return ResourceManager.GetString("RestartApp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Canceled.
+        /// </summary>
+        public static string ResultCanceled {
+            get {
+                return ResourceManager.GetString("ResultCanceled", resourceCulture);
             }
         }
         

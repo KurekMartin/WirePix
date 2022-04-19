@@ -312,6 +312,9 @@
   <data name="LastBackup_Never" xml:space="preserve">
     <value>Never</value>
   </data>
+  <data name="LibrariesUsed" xml:space="preserve">
+    <value>Used libraries</value>
+  </data>
   <data name="License" xml:space="preserve">
     <value>License</value>
   </data>
@@ -374,6 +377,9 @@
   </data>
   <data name="RestartApp" xml:space="preserve">
     <value>Restart app</value>
+  </data>
+  <data name="ResultCanceled" xml:space="preserve">
+    <value>Canceled</value>
   </data>
   <data name="Save" xml:space="preserve">
     <value>Save</value>
