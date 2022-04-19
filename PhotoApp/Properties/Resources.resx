@@ -433,7 +433,7 @@
     <value>Show</value>
   </data>
   <data name="ShowCrashFiles" xml:space="preserve">
-    <value>Show files from crash</value>
+    <value>Show crash files</value>
   </data>
   <data name="SourceCode" xml:space="preserve">
     <value>Source code</value>

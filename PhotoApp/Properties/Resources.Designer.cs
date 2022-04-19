@@ -1006,7 +1006,7 @@ namespace PhotoApp.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Show files from crash.
+        ///   Looks up a localized string similar to Show crash files.
         /// </summary>
         public static string ShowCrashFiles {
             get {
