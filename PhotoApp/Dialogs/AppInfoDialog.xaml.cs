@@ -75,5 +75,10 @@ namespace PhotoApp.Dialogs
             Clipboard.SetText(tbEmail.Text);
             SnackBar.MessageQueue.Enqueue(Properties.Resources.EmailCopied);
         }
+
+        private void btnLibraries_Click(object sender, RoutedEventArgs e)
+        {
+            mainWindow.ShowLibraries(this);
+        }
     }
 }

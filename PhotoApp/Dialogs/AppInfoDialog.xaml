@@ -11,7 +11,7 @@
     <materialDesign:Card>
         <Grid>
             <StackPanel Orientation="Vertical">
-            <materialDesign:ColorZone Mode="PrimaryMid">
+                <materialDesign:ColorZone Mode="PrimaryMid" CornerRadius="5,5,0,0">
                     <TextBlock Style="{StaticResource MaterialDesignHeadline6TextBlock}" Text="{x:Static p:Resources.About}" Padding="5" TextAlignment="Center"/>
             </materialDesign:ColorZone>
             <StackPanel Orientation="Vertical" Margin="10,10,10,5" >
@@ -61,7 +61,19 @@
                                 <TextBlock Text="{x:Static p:Resources.SourceCode}" Margin="5,0,0,0" TextAlignment="Center" VerticalAlignment="Center"/>
                         </StackPanel>
                     </Button>
-                </DockPanel>
+                        <Button x:Name="btnLibraries"
+                            Margin="5,0"
+                            Style="{StaticResource MaterialDesignFlatButton}" Click="btnLibraries_Click">
+                            <StackPanel Orientation="Horizontal">
+                                <materialDesign:PackIcon Kind="FileCodeOutline"
+                                                     Height="Auto"
+                                                     Width="Auto"
+                                                     VerticalAlignment="Center"/>
+                                <TextBlock Text="{x:Static p:Resources.LibrariesUsed}"
+                                           Margin="5,0,0,0" TextAlignment="Center" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+                    </DockPanel>
             </StackPanel>
 
                 <Button x:Name="btnOK" Content="{x:Static p:Resources.OK}" Margin="15,5,15,10" Grid.Row="1" Click="btnOK_Click"/>
