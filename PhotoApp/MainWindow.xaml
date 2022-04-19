@@ -420,14 +420,16 @@
                                         <RadioButton Content="{x:Static p:Resources.DownloadDateRange}" x:Name="cbDateRange" Margin="0,2" GroupName="rbgDate" IsChecked="{Binding DownloadSettings.DownloadSelect,Converter={StaticResource EnumToBool},ConverterParameter=dateRange}" Checked="cbDateRange_Checked"/>
                                     </StackPanel>
                                     <StackPanel Orientation="Vertical" Margin="30,0" x:Name="spDate" Visibility="{Binding ElementName=cbDateRange, Path=IsChecked,Converter={StaticResource BoolToVisConverter},UpdateSourceTrigger=PropertyChanged}" >
-                                        <StackPanel Orientation="Horizontal">
+                                        <DockPanel LastChildFill="False">
                                             <Label Content="{x:Static p:Resources.DateRangeFrom}" VerticalAlignment="Center"/>
-                                            <DatePicker x:Name="dpDateFrom"  Width="100" HorizontalAlignment="Left" Margin="5,0" Padding="5,3" VerticalAlignment="Center" Height="Auto" HorizontalContentAlignment="Left" SelectedDate="{Binding DownloadSettings.Date.Start,Mode=TwoWay}" DisplayDateEnd="{Binding DownloadSettings.Date.End,Mode=TwoWay}" SelectedDateChanged="dpDate_SelectedDateChanged"/>
-                                        </StackPanel>
-                                        <StackPanel Orientation="Horizontal">
+                                            <DatePicker x:Name="dpDateFrom"  MinWidth="100" Margin="5,0" Padding="5,3" VerticalAlignment="Center" Height="Auto" HorizontalContentAlignment="Left" SelectedDate="{Binding DownloadSettings.Date.Start,Mode=TwoWay}" DisplayDateEnd="{Binding DownloadSettings.Date.End,Mode=TwoWay}" SelectedDateChanged="dpDate_SelectedDateChanged"
+                                                        DockPanel.Dock="Right"/>
+                                        </DockPanel>
+                                        <DockPanel LastChildFill="False">
                                             <Label Content="{x:Static p:Resources.DateRangeTo}" VerticalAlignment="Center"/>
-                                            <DatePicker x:Name="dpDateTo" Width="100" HorizontalAlignment="Left" Margin="5,0" Padding="5,3" VerticalAlignment="Center" Height="Auto" HorizontalContentAlignment="Left" SelectedDate="{Binding DownloadSettings.Date.End,Mode=TwoWay}" DisplayDateStart="{Binding DownloadSettings.Date.Start,Mode=TwoWay}" SelectedDateChanged="dpDate_SelectedDateChanged"/>
-                                        </StackPanel>
+                                            <DatePicker x:Name="dpDateTo" MinWidth="100" Margin="5,0" Padding="5,3" VerticalAlignment="Center" Height="Auto" HorizontalContentAlignment="Left" SelectedDate="{Binding DownloadSettings.Date.End,Mode=TwoWay}" DisplayDateStart="{Binding DownloadSettings.Date.Start,Mode=TwoWay}" SelectedDateChanged="dpDate_SelectedDateChanged"
+                                                        DockPanel.Dock="Right"/>
+                                        </DockPanel>
                                         <TextBlock x:Name="tbDateRangeError" Margin="0,3" Foreground="Red" Visibility="Collapsed"/>
                                     </StackPanel>
 
