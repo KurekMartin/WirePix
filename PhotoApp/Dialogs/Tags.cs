@@ -70,7 +70,7 @@ namespace PhotoApp
     {
         private static readonly List<TagStruct> tagList = new List<TagStruct>()
         {
-            //            code                             visible text        button label
+            //            code                            visible text                                         button label                                         groups
             new TagStruct(Properties.TagCodes.YearLong,   Properties.Resources.Tag_YearLong_VisibleText,       Properties.Resources.Tag_YearLong_Button,            Properties.TagGroups.Year),
             new TagStruct(Properties.TagCodes.Year,       Properties.Resources.Tag_YearShort_VisibleText,      Properties.Resources.Tag_YearShort_Button,           Properties.TagGroups.Year),
             new TagStruct(Properties.TagCodes.Month,      Properties.Resources.Tag_Month_VisibleText,          Properties.Resources.Tag_Month_Button,               Properties.TagGroups.Month),
