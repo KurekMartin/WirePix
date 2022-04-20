@@ -323,11 +323,7 @@ namespace PhotoApp.Dialogs
         {
             int oldIndex = SelectedTagIndex;
             string tag = FolderStructure[SelectedFolderIndex].Tags[SelectedTagIndex];
-            int i = tag.IndexOf("(");
-            if (i != -1)
-            {
-                tag = tag.Substring(0, i);
-            }
+            tag = Tags.RemoveParameter(tag);
             tag += $"({tbCustomText.Text})";
 
             FolderStructure[SelectedFolderIndex].Tags[SelectedTagIndex] = tag;

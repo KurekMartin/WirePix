@@ -189,11 +189,8 @@ namespace PhotoApp.Dialogs
 
             int oldIndex = SelectedIndex;
             string tag = FileStructure[SelectedIndex];
-            int i = tag.IndexOf("(");
-            if (i != -1)
-            {
-                tag = tag.Substring(0, i);
-            }
+
+            tag = Tags.RemoveParameter(tag);
             tag += $"({tbCustomText.Text})";
 
             FileStructure[SelectedIndex] = tag;
