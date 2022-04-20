@@ -14,6 +14,15 @@
             </materialDesign:ColorZone>
             <StackPanel Orientation="Vertical" Margin="10">
                 <DockPanel Margin="0,0,0,5" HorizontalAlignment="Stretch">
+                    <TextBlock VerticalAlignment="Center" Style="{StaticResource MaterialDesignBody2TextBlock}" Text="MediaDevices" FontWeight="Bold"/>
+                    <Button x:Name="btnMediaDevices"
+                            Style="{StaticResource MaterialDesignFloatingActionMiniButton}"
+                            HorizontalAlignment="Right" Margin="10,0,0,0" Click="btnMediaDevices_Click">
+                        <materialDesign:PackIcon Kind="Github" Width="25" Height="25"/>
+                    </Button>
+                </DockPanel>
+                
+                <DockPanel Margin="0,0,0,5" HorizontalAlignment="Stretch">
                     <TextBlock VerticalAlignment="Center" Style="{StaticResource MaterialDesignBody2TextBlock}" Text="Magick.NET" FontWeight="Bold"/>
                     <Button x:Name="btnMagickNET"
                             Style="{StaticResource MaterialDesignFloatingActionMiniButton}"

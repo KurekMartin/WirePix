@@ -50,5 +50,10 @@ namespace PhotoApp.Dialogs
         {
             Process.Start("https://github.com/Jinjinov/Usb.Events");
         }
+
+        private void btnMediaDevices_Click(object sender, RoutedEventArgs e)
+        {
+            Process.Start("https://github.com/Bassman2/MediaDevices");
+        }
     }
 }
