@@ -90,9 +90,8 @@
     <Reference Include="MaterialDesignThemes.Wpf, Version=4.4.0.0, Culture=neutral, PublicKeyToken=df2a72020bd7962a, processorArchitecture=MSIL">
       <HintPath>..\packages\MaterialDesignThemes.4.4.0\lib\net452\MaterialDesignThemes.Wpf.dll</HintPath>
     </Reference>
-    <Reference Include="MediaDevices, Version=1.8.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\MediaDevices.1.9.0\netframework4.5\MediaDevices.dll</HintPath>
+    <Reference Include="MediaDevices, Version=1.9.1.0, Culture=neutral, PublicKeyToken=36ac35b4ea7a1f67, processorArchitecture=MSIL">
+      <HintPath>..\packages\MediaDevices.1.9.1\lib\net45\MediaDevices.dll</HintPath>
     </Reference>
     <Reference Include="MetadataExtractor, Version=2.7.2.0, Culture=neutral, PublicKeyToken=b66b5ccaf776c301, processorArchitecture=MSIL">
       <HintPath>..\packages\MetadataExtractor.2.7.2\lib\net45\MetadataExtractor.dll</HintPath>
