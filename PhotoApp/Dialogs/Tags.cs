@@ -284,20 +284,18 @@ namespace PhotoApp
             string values = "";
             foreach (string tag in tags)
             {
-                string str = Regex.Match(tag, @"\{.*?\}").ToString(); //ziskani tagu vcetne {}
-
-                if (str.Length > 2)
+                TagStruct tagStruct = GetTag(code: tag);
+                if (tagStruct.Group != Properties.TagGroups.Separator)
                 {
-                    TagStruct nameString = GetTag(visibleText: str);
-                    if (nameString.Code == Properties.TagCodes.CustomText)
+                    if (tag == Properties.TagCodes.CustomText)
                     {
                         values += Regex.Match(tag, @"(?<=\().*?(?=\))").ToString(); //ziskani hodnoty cutomText
                     }
-                    values += GetSampleValueByTag(nameString.VisibleText, fileInfo, device, filePath);
+                    values += GetSampleValueByTag(tag, fileInfo, device, filePath);
                 }
                 else
                 {
-                    values += tag;
+                    values += tagStruct.VisibleText;
                 }
             }
             return values;
