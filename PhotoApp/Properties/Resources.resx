@@ -247,10 +247,12 @@
     <value>Send feedback</value>
   </data>
   <data name="FileCheckError" xml:space="preserve">
-    <value>An error occurred while getting files. Please check if the device is connected and retry the action.</value>
+    <value>An error occurred while getting files. 
+Please check if the device is connected and retry the action.</value>
   </data>
   <data name="FileExists_Overwrite" xml:space="preserve">
-    <value>The file already exists.\nSave to overwrite this file.</value>
+    <value>The file already exists.
+Save to overwrite this file.</value>
   </data>
   <data name="FilenameStructure" xml:space="preserve">
     <value>Filename structure</value>
@@ -463,7 +465,8 @@
     <value>Custom text</value>
   </data>
   <data name="TagCustomTextMissing" xml:space="preserve">
-    <value>Missing value for {0}.\nFill the value or remove the tag.</value>
+    <value>Missing value for {0}.
+Fill the value or remove the tag.</value>
   </data>
   <data name="TagDelete" xml:space="preserve">
     <value>Delete tag</value>

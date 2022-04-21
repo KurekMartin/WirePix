@@ -448,7 +448,8 @@ namespace PhotoApp.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to An error occurred while getting files. Please check if the device is connected and retry the action..
+        ///   Looks up a localized string similar to An error occurred while getting files. 
+        ///Please check if the device is connected and retry the action..
         /// </summary>
         public static string FileCheckError {
             get {
@@ -457,7 +458,8 @@ namespace PhotoApp.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The file already exists.\nSave to overwrite this file..
+        ///   Looks up a localized string similar to The file already exists.
+        ///Save to overwrite this file..
         /// </summary>
         public static string FileExists_Overwrite {
             get {
@@ -1339,7 +1341,8 @@ namespace PhotoApp.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Missing value for {0}.\nFill the value or remove the tag..
+        ///   Looks up a localized string similar to Missing value for {0}.
+        ///Fill the value or remove the tag..
         /// </summary>
         public static string TagCustomTextMissing {
             get {

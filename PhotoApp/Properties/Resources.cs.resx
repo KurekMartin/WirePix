@@ -247,10 +247,12 @@
     <value>Odeslat zpětnou vazbu</value>
   </data>
   <data name="FileCheckError" xml:space="preserve">
-    <value>Při získávání souborů došlo k chybě. Prosím zkontrolujte, zda je zařízení připojené a akci zopakujte.</value>
+    <value>Při získávání souborů došlo k chybě. 
+Prosím zkontrolujte, zda je zařízení připojené a akci zopakujte.</value>
   </data>
   <data name="FileExists_Overwrite" xml:space="preserve">
-    <value>Soubor již existuje.\nUložením tento soubor přepíšete.</value>
+    <value>Soubor již existuje.
+Uložením tento soubor přepíšete.</value>
   </data>
   <data name="FilenameStructure" xml:space="preserve">
     <value>Název souboru</value>
@@ -463,7 +465,8 @@
     <value>Vlastní text</value>
   </data>
   <data name="TagCustomTextMissing" xml:space="preserve">
-    <value>Chybí hodnota pro {0}.\nDoplňte tuto hodnotu nebo tag odstraňte.</value>
+    <value>Chybí hodnota pro {0}.
+Doplňte tuto hodnotu nebo značku odstraňte.</value>
   </data>
   <data name="TagDelete" xml:space="preserve">
     <value>Smazat značku</value>
