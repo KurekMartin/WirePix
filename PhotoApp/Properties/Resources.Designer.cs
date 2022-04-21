@@ -493,6 +493,15 @@ namespace PhotoApp.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Searching for files.
+        /// </summary>
+        public static string FileSearch {
+            get {
+                return ResourceManager.GetString("FileSearch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to File search.
         /// </summary>
         public static string FileSearchState {

@@ -261,6 +261,9 @@
   <data name="FilesDownloadErrorTotal" xml:space="preserve">
     <value>Errors</value>
   </data>
+  <data name="FileSearch" xml:space="preserve">
+    <value>Searching for files</value>
+  </data>
   <data name="FileSearchState" xml:space="preserve">
     <value>File search</value>
   </data>

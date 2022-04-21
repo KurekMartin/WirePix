@@ -263,7 +263,7 @@ namespace PhotoApp
             bool _checkDateRange;
             ProgressUpdateArgs progressArgs = new ProgressUpdateArgs
             {
-                taskName = "Hledám soubory",
+                taskName = Properties.Resources.FileSearch,
                 indeterminateTask = true
             };
             worker.ReportProgress(0, progressArgs);
