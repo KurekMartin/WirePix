@@ -143,7 +143,7 @@
                                             </StackPanel>
                                             <StackPanel Orientation="Horizontal" Margin="0,3">
                                                 <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}" Text="{x:Static p:Resources.MediaPath}" HorizontalAlignment="Left" VerticalAlignment="Top" FontWeight="Bold"/>
-                                                <TextBlock Text=":" VerticalAlignment="Center" Style="{StaticResource MaterialDesignBody2TextBlock}"/>
+                                                <TextBlock Text=":" VerticalAlignment="Top" Style="{StaticResource MaterialDesignBody2TextBlock}"/>
                                                 <TextBlock x:Name="tbMediaDir" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Text="{Binding DeviceList.SelectedDevice.MediaDirectories,Converter={StaticResource ListToString}}"/>
                                             </StackPanel>
                                         </StackPanel>
