@@ -10,7 +10,7 @@ namespace PhotoApp.Converters
         {
             TimeSpan time = (TimeSpan)value;
             string timeString = "";
-            if (time.Ticks == 0)
+            if (time.Ticks == 0 || time.Ticks<0)
             {
                 timeString = Properties.Resources.RemainingTime_Calculating;
             }
