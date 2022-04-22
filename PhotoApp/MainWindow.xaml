@@ -39,7 +39,7 @@
                 </Grid.RowDefinitions>
                 <materialDesign:Card Margin="10,5" Padding="10" Grid.Row="0" UniformCornerRadius="5">
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
-                        <Button ToolTip="O aplikaci"
+                        <Button
                             Width="Auto"
                             x:Name="btnInfo" 
                             Click="btnInfoClick"
@@ -53,7 +53,7 @@
                                 <TextBlock Text="{x:Static p:Resources.About}" Margin="5,0,0,0" TextAlignment="Center" VerticalAlignment="Center"/>
                             </StackPanel>
                         </Button>
-                        <Button ToolTip="Nastavení"
+                        <Button 
                             Width="Auto"
                             x:Name="btnSettings" 
                             Click="btnSettings_Click"
@@ -111,64 +111,66 @@
 
                                     <StackPanel Orientation="Horizontal" x:Name="spDeviceInfo">
                                         <StackPanel x:Name="spBasicInfo" Margin="5,0" Height="Auto" VerticalAlignment="Top" >
-                                            <StackPanel Orientation="Horizontal" Margin="0,3,0,9">
+                                            <DockPanel Margin="0,3,0,9"
+                                                       LastChildFill="False">
                                                 <TextBlock VerticalAlignment="Center" Style="{StaticResource MaterialDesignBody2TextBlock}" Text="{x:Static p:Resources.DeviceName}" FontWeight="Bold"/>
-                                                <TextBlock Text=":" VerticalAlignment="Center" Style="{StaticResource MaterialDesignBody2TextBlock}"/>
-                                                <!--<TextBox x:Name="lblDeviceName" Text="{Binding DeviceList.SelectedDevice.Name,UpdateSourceTrigger=PropertyChanged}"/>-->
-                                                <TextBox x:Name="lblDeviceName" 
-                                                     Width="Auto" 
-                                                     MinWidth="100" 
-                                                     TextAlignment="Left"
-                                                     MaxLength="20"
-                                                     MaxLines="1"
-                                                     Text="{Binding DeviceList.SelectedDeviceInfo.Name,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" 
-                                                     TextChanged="lblDeviceName_TextChanged"
-                                                     />
-                                            </StackPanel>
+                                                <TextBox x:Name="lblDeviceName"
+                                                         Width="Auto" 
+                                                         MinWidth="100"
+                                                         TextAlignment="Left"
+                                                         MaxLength="20"
+                                                         MaxLines="1"
+                                                         Text="{Binding DeviceList.SelectedDeviceInfo.Name,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" 
+                                                         TextChanged="lblDeviceName_TextChanged"
+                                                         DockPanel.Dock="Right" Margin="5,0,0,0"/>
+                                            </DockPanel>
                                             <TextBlock x:Name="tbDeviceNameError" Foreground="Red" Visibility="Collapsed" Text="" Margin="0,5,0,3"/>
-                                            <StackPanel Orientation="Horizontal" Margin="0,3">
+                                            <DockPanel Margin="0,3" LastChildFill="False">
                                                 <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}" Text="{x:Static p:Resources.Manufacturer}" HorizontalAlignment="Left" VerticalAlignment="Top" FontWeight="Bold"/>
-                                                <TextBlock Text=":" VerticalAlignment="Center" Style="{StaticResource MaterialDesignBody2TextBlock}"/>
-                                                <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}" x:Name="lblManu" Text="{Binding DeviceList.SelectedDevice.Manufacturer}" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-                                            </StackPanel>
-                                            <StackPanel Orientation="Horizontal" Margin="0,3">
+                                                <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}" x:Name="lblManu" Text="{Binding DeviceList.SelectedDevice.Manufacturer}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5,0,0,0" DockPanel.Dock="Right"
+                                                           d:Text="manufacturer"/>
+                                            </DockPanel>
+                                            <DockPanel Margin="0,3" LastChildFill="False">
                                                 <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}" Text="{x:Static p:Resources.DeviceState}" FontWeight="Bold"/>
-                                                <TextBlock Text=":" VerticalAlignment="Center" Style="{StaticResource MaterialDesignBody2TextBlock}"/>
-                                                <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}" x:Name="lblDeviceStatus" Text="{Binding DeviceList.SelectedDevice.Status,Converter={StaticResource IntToDeviceStatus},UpdateSourceTrigger=PropertyChanged}"/>
-                                            </StackPanel>
-                                            <StackPanel Orientation="Horizontal" Margin="0,3">
+                                                <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}" x:Name="lblDeviceStatus" Text="{Binding DeviceList.SelectedDevice.Status,Converter={StaticResource IntToDeviceStatus},UpdateSourceTrigger=PropertyChanged}" Margin="5,0,0,0" DockPanel.Dock="Right"
+                                                           d:Text="device state"/>
+                                            </DockPanel>
+                                            <DockPanel Margin="0,3" LastChildFill="False">
                                                 <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}" Text="{x:Static p:Resources.LastBackup}" FontWeight="Bold"/>
-                                                <TextBlock Text=":" VerticalAlignment="Center" Style="{StaticResource MaterialDesignBody2TextBlock}"/>
-                                                <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}" x:Name="lblLastBackup" Text="{Binding DeviceList.SelectedDeviceInfo.LastBackup,Converter={StaticResource LastBckp}}"/>
-                                            </StackPanel>
-                                            <StackPanel Orientation="Horizontal" Margin="0,3">
+                                                <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}" x:Name="lblLastBackup" Text="{Binding DeviceList.SelectedDeviceInfo.LastBackup,Converter={StaticResource LastBckp}}" DockPanel.Dock="Right" Margin="5,0,0,0"
+                                                           d:Text="DD.MM.YYYY HH:MM:SS"/>
+                                            </DockPanel>
+                                            <DockPanel Margin="0,3" LastChildFill="False">
                                                 <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}" Text="{x:Static p:Resources.MediaPath}" HorizontalAlignment="Left" VerticalAlignment="Top" FontWeight="Bold"/>
-                                                <TextBlock Text=":" VerticalAlignment="Top" Style="{StaticResource MaterialDesignBody2TextBlock}"/>
-                                                <TextBlock x:Name="tbMediaDir" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Text="{Binding DeviceList.SelectedDevice.MediaDirectories,Converter={StaticResource ListToString}}"/>
-                                            </StackPanel>
+                                                <TextBlock x:Name="tbMediaDir" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Text="{Binding DeviceList.SelectedDevice.MediaDirectories,Converter={StaticResource ListToString}}" Margin="5,0,0,0" DockPanel.Dock="Right"
+                                                           d:Text="PATH/TO/DCIM"/>
+                                            </DockPanel>
                                         </StackPanel>
                                         <Separator x:Name="sDivider" Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" Width="1" Margin="0,15"/>
                                         <StackPanel x:Name="spStorageInfo" Margin="5,0" Height="Auto" VerticalAlignment="Top">
                                             <StackPanel Orientation="Horizontal" Margin="0,3">
                                                 <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}" Text="{x:Static p:Resources.SpaceTotal}" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold"/>
                                                 <TextBlock Text=":" VerticalAlignment="Center" Style="{StaticResource MaterialDesignBody2TextBlock}"/>
-                                                <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}" x:Name="lblTotalSpace" Text="{Binding DeviceList.SelectedDevice.Space[0],StringFormat={}{0} GB}" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                                                <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}" x:Name="lblTotalSpace" Text="{Binding DeviceList.SelectedDevice.Space[0],StringFormat={}{0} GB}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="2,0,0,0"/>
                                             </StackPanel>
 
                                             <StackPanel Orientation="Vertical" x:Name="spSpace" Margin="15,0">
-                                                <StackPanel Orientation="Horizontal">
-                                                    <Ellipse Fill="#FF1DDA26" Height="12" Width="12" VerticalAlignment="Center" Margin="3,0"/>
-                                                    <TextBlock Style="{StaticResource MaterialDesignCaptionTextBlock}" Text="{x:Static p:Resources.SpaceAvailable}" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="11" FontWeight="Bold"/>
-                                                    <TextBlock Text=":" VerticalAlignment="Center" Style="{StaticResource MaterialDesignCaptionTextBlock}" FontSize="11"/>
-                                                    <TextBlock Style="{StaticResource MaterialDesignCaptionTextBlock}" x:Name="lblFreeSpace" Text="{Binding DeviceList.SelectedDevice.Space[1],StringFormat={}{0} GB}" VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="11"/>
+                                                <StackPanel HorizontalAlignment="Left">
+                                                    <DockPanel LastChildFill="False">
+                                                        <Ellipse Fill="#FF1DDA26" Height="12" Width="12" VerticalAlignment="Center" Margin="3,0"/>
+                                                        <TextBlock Style="{StaticResource MaterialDesignCaptionTextBlock}" Text="{x:Static p:Resources.SpaceAvailable}" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="11" FontWeight="Bold"/>
+                                                        <TextBlock Style="{StaticResource MaterialDesignCaptionTextBlock}" x:Name="lblFreeSpace" Text="{Binding DeviceList.SelectedDevice.Space[1],StringFormat={}{0} GB}" VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="11"
+                                                                   d:Text="12345GB" DockPanel.Dock="Right" Margin="5,0,0,0"/>
+                                                    </DockPanel>
+                                                    <DockPanel LastChildFill="False">
+                                                        <Ellipse Fill="#FFE63434" Height="12" Width="12" VerticalAlignment="Center" Margin="3,0"/>
+                                                        <TextBlock Style="{StaticResource MaterialDesignCaptionTextBlock}" Text="{x:Static p:Resources.SpaceUsed}" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="11" FontWeight="Bold"/>
+                                                        <TextBlock Style="{StaticResource MaterialDesignCaptionTextBlock}" x:Name="lblUsedSpace" Text="{Binding DeviceList.SelectedDevice.Space[2],StringFormat={}{0} GB}" VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="11"
+                                                                   d:Text="1234GB" DockPanel.Dock="Right" Margin="5,0,0,0"/>
+                                                    </DockPanel>
                                                 </StackPanel>
-                                                <StackPanel Orientation="Horizontal">
-                                                    <Ellipse Fill="#FFE63434" Height="12" Width="12" VerticalAlignment="Center" Margin="3,0"/>
-                                                    <TextBlock Style="{StaticResource MaterialDesignCaptionTextBlock}" Text="{x:Static p:Resources.SpaceUsed}" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="11" FontWeight="Bold"/>
-                                                    <TextBlock Text=":" VerticalAlignment="Center" Style="{StaticResource MaterialDesignCaptionTextBlock}" FontSize="11"/>
-                                                    <TextBlock Style="{StaticResource MaterialDesignCaptionTextBlock}" x:Name="lblUsedSpace" Text="{Binding DeviceList.SelectedDevice.Space[2],StringFormat={}{0} GB}" VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="11"/>
-                                                </StackPanel>
-                                                <ProgressBar x:Name="pbSpace" materialDesign:TransitionAssist.DisableTransitions="True" HorizontalAlignment="Left" Height="6" Margin="0,5" VerticalAlignment="Top" Width="253" Value="{Binding DeviceList.SelectedDevice.Space,Converter={StaticResource ArrToProgress},Mode=OneWay}" Background="#FF1DDA26" Foreground="#FFE63434" BorderBrush="{x:Null}" BorderThickness="0"/>
+                                                <ProgressBar x:Name="pbSpace" materialDesign:TransitionAssist.DisableTransitions="True" HorizontalAlignment="Left" Height="6" Margin="0,5" VerticalAlignment="Top" Width="253" Value="{Binding DeviceList.SelectedDevice.Space,Converter={StaticResource ArrToProgress},Mode=OneWay}" Background="#FF1DDA26" Foreground="#FFE63434" BorderBrush="{x:Null}" BorderThickness="0"
+                                                             d:Value="30"/>
                                             </StackPanel>
 
                                             <StackPanel Orientation="Horizontal" Margin="0,3" Visibility="Collapsed">
@@ -322,7 +324,7 @@
                                                         <ItemsControl.ItemsPanel>
                                                             <ItemsPanelTemplate>
                                                                 <StackPanel Orientation="Horizontal"
-                                                                    Margin="5,0"/>
+                                                                    Margin="5,0,0,0"/>
                                                             </ItemsPanelTemplate>
                                                         </ItemsControl.ItemsPanel>
                                                         <ItemsControl.ItemTemplate>
@@ -333,6 +335,8 @@
                                                             </DataTemplate>
                                                         </ItemsControl.ItemTemplate>
                                                     </ItemsControl>
+                                                    <TextBlock Text=".xxx"
+                                                               Style="{StaticResource MaterialDesignBody2TextBlock}"/>
                                                     <StackPanel.Style>
                                                         <Style TargetType="StackPanel">
                                                             <Setter Property="Visibility" Value="Visible"/>
@@ -399,7 +403,7 @@
                                             <TextBox x:Name="tbValue" Width="Auto" MinWidth="100" TextAlignment="Right"
                                                 Text="{Binding DownloadSettings.ThumbnailSettings.Value,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                                                 PreviewTextInput="tbValue_PreviewTextInput"
-                                                MaxLength="5" PreviewKeyDown="tbValue_PreviewKeyDown" LostFocus="tbValue_LostFocus" GotFocus="tbValue_GotFocus"/>
+                                                MaxLength="5" PreviewKeyDown="tbValue_PreviewKeyDown" LostFocus="tbValue_LostFocus" GotFocus="tbValue_GotFocus" Margin="5,0,0,0"/>
                                         </StackPanel>
                                         <TextBlock x:Name="tbThumbnailError" Foreground="Red" Visibility="Collapsed"/>
                                     </StackPanel>
@@ -419,14 +423,14 @@
                                         <RadioButton Content="{x:Static p:Resources.DownloadNewFiles}" x:Name="cbNewFiles" IsChecked="{Binding DownloadSettings.DownloadSelect,Converter={StaticResource EnumToBool},ConverterParameter=lastBackup}" Margin="0,2" GroupName="rbgDate" Checked="cbNewFiles_Checked"/>
                                         <RadioButton Content="{x:Static p:Resources.DownloadDateRange}" x:Name="cbDateRange" Margin="0,2" GroupName="rbgDate" IsChecked="{Binding DownloadSettings.DownloadSelect,Converter={StaticResource EnumToBool},ConverterParameter=dateRange}" Checked="cbDateRange_Checked"/>
                                     </StackPanel>
-                                    <StackPanel Orientation="Vertical" Margin="30,0" x:Name="spDate" Visibility="{Binding ElementName=cbDateRange, Path=IsChecked,Converter={StaticResource BoolToVisConverter},UpdateSourceTrigger=PropertyChanged}" >
-                                        <DockPanel LastChildFill="False">
-                                            <Label Content="{x:Static p:Resources.DateRangeFrom}" VerticalAlignment="Center"/>
+                                    <StackPanel Orientation="Vertical" Margin="30,0" x:Name="spDate" Visibility="{Binding ElementName=cbDateRange, Path=IsChecked,Converter={StaticResource BoolToVisConverter},UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" >
+                                        <DockPanel LastChildFill="False" HorizontalAlignment="Stretch">
+                                            <Label Content="{x:Static p:Resources.DateRangeFrom}" VerticalAlignment="Center" HorizontalAlignment="Left"/>
                                             <DatePicker x:Name="dpDateFrom"  MinWidth="100" Margin="5,0" Padding="5,3" VerticalAlignment="Center" Height="Auto" HorizontalContentAlignment="Left" SelectedDate="{Binding DownloadSettings.Date.Start,Mode=TwoWay}" DisplayDateEnd="{Binding DownloadSettings.Date.End,Mode=TwoWay}" SelectedDateChanged="dpDate_SelectedDateChanged"
                                                         DockPanel.Dock="Right"/>
                                         </DockPanel>
-                                        <DockPanel LastChildFill="False">
-                                            <Label Content="{x:Static p:Resources.DateRangeTo}" VerticalAlignment="Center"/>
+                                        <DockPanel LastChildFill="False" HorizontalAlignment="Stretch">
+                                            <Label Content="{x:Static p:Resources.DateRangeTo}" VerticalAlignment="Center" HorizontalAlignment="Left"/>
                                             <DatePicker x:Name="dpDateTo" MinWidth="100" Margin="5,0" Padding="5,3" VerticalAlignment="Center" Height="Auto" HorizontalContentAlignment="Left" SelectedDate="{Binding DownloadSettings.Date.End,Mode=TwoWay}" DisplayDateStart="{Binding DownloadSettings.Date.Start,Mode=TwoWay}" SelectedDateChanged="dpDate_SelectedDateChanged"
                                                         DockPanel.Dock="Right"/>
                                         </DockPanel>
