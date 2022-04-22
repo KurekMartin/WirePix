@@ -687,8 +687,9 @@ namespace PhotoApp
 
             try
             {
+                // filename in format: filename(ORIG_EXT).jpg
                 string outFile = Path.Combine(settings.Paths.Thumbnail, filePath);
-                outFile = Path.ChangeExtension(outFile, "jpg");
+                outFile = Path.Combine(Path.GetDirectoryName(outFile), $"{Path.GetFileNameWithoutExtension(outFile)}({Path.GetExtension(outFile).Remove(0,1)}).jpg");
 
                 bool cont = false;
                 if (File.Exists(outFile))
