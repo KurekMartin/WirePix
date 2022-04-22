@@ -209,11 +209,11 @@ namespace PhotoApp
                 }
                 else if (codeTag == Properties.TagCodes.MonthShort)
                 {
-                    return CultureInfo.CurrentCulture.DateTimeFormat.GetAbbreviatedMonthName(date.Month);
+                    return CultureInfo.CurrentUICulture.DateTimeFormat.GetAbbreviatedMonthName(date.Month);
                 }
                 else if (codeTag == Properties.TagCodes.MonthLong)
                 {
-                    return CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(date.Month);
+                    return CultureInfo.CurrentUICulture.DateTimeFormat.GetMonthName(date.Month);
                 }
                 else if (codeTag == Properties.TagCodes.Day)
                 {
@@ -221,11 +221,11 @@ namespace PhotoApp
                 }
                 else if (codeTag == Properties.TagCodes.DayShort)
                 {
-                    return CultureInfo.CurrentCulture.DateTimeFormat.GetAbbreviatedDayName(date.DayOfWeek);
+                    return CultureInfo.CurrentUICulture.DateTimeFormat.GetAbbreviatedDayName(date.DayOfWeek);
                 }
                 else if (codeTag == Properties.TagCodes.DayLong)
                 {
-                    return CultureInfo.CurrentCulture.DateTimeFormat.GetDayName(date.DayOfWeek);
+                    return CultureInfo.CurrentUICulture.DateTimeFormat.GetDayName(date.DayOfWeek);
                 }
                 else if (codeTag == Properties.TagCodes.DeviceName)
                 {
