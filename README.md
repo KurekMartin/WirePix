@@ -1,5 +1,5 @@
 # WirePix
-A program designed to automate the download of files from a media device - mainly cameras (full support for smart phones is planned)
+A program for Windows designed to automate the download of files from a media device - mainly cameras (full support for smart phones is planned)
 
 Main functions:
 - download files based on date
