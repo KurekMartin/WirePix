@@ -150,6 +150,9 @@
   <data name="Contact" xml:space="preserve">
     <value>Kontakt</value>
   </data>
+  <data name="CopyToClipboard" xml:space="preserve">
+    <value>Kopírovat</value>
+  </data>
   <data name="DarkMode" xml:space="preserve">
     <value>Tmavý režim</value>
   </data>

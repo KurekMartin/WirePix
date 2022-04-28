@@ -35,7 +35,7 @@
                         <TextBlock x:Name="tbEmail"
                                Text="martinkurek.dev@gmail.com"
                                HorizontalAlignment="Right"
-                               ToolTip="Kopírovat adresu"                               
+                               ToolTip="{x:Static p:Resources.CopyToClipboard}"                               
                                Style="{StaticResource MaterialDesignBody2TextBlock}" MouseLeftButtonDown="tbEmail_MouseLeftButtonDown"/>
                 </DockPanel>
                 <DockPanel Margin="0,5" LastChildFill="False" HorizontalAlignment="Center">

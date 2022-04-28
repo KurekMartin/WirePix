@@ -150,6 +150,9 @@
   <data name="Contact" xml:space="preserve">
     <value>Contact</value>
   </data>
+  <data name="CopyToClipboard" xml:space="preserve">
+    <value>Copy to clipboard</value>
+  </data>
   <data name="DarkMode" xml:space="preserve">
     <value>Dark mode</value>
   </data>
