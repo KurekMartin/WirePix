@@ -17,6 +17,8 @@ Currently supported languages:
 
 This is just initial release and there will be more features in future updates (see end of the page).
 
+Download latest version https://github.com/KurekMartin/WirePix/releases/latest
+
 **For feedback, please use the option that is listed directly in the program.**
 
 ![Main](https://user-images.githubusercontent.com/79570332/164648004-d3749cd4-3c7e-4b7e-bb43-5694332c95f1.png)
