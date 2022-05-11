@@ -15,7 +15,7 @@
         TextOptions.TextFormattingMode="Ideal" 
         TextOptions.TextRenderingMode="Auto"        
         Background="{DynamicResource MaterialDesignPaper}"
-        FontFamily="{DynamicResource MaterialDesignFont}" MinWidth="800" MinHeight="600" Height="717" Width="800" SizeToContent="Height" ResizeMode="CanMinimize" Closing="Window_Closing" WindowStartupLocation="CenterScreen" Icon="/icon.ico">
+        FontFamily="{DynamicResource MaterialDesignFont}" MinWidth="800" MinHeight="600" Height="778" Width="800" SizeToContent="Height" ResizeMode="CanMinimize" Closing="Window_Closing" WindowStartupLocation="CenterScreen" Icon="/icon.ico">
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVisConverter" />
         <converters:EnumToBoleanConverter x:Key="EnumToBool"/>
@@ -442,7 +442,8 @@
                                         <Button x:Name="btnCopyFiles" Content="{x:Static p:Resources.DownloadFiles}" Margin="5,0" Width="Auto"  VerticalAlignment="Center" Click="CopyFiles_Click"/>
                                     </StackPanel>
                                     <TextBlock x:Name="lblResult" HorizontalAlignment="Left" Margin="10" VerticalAlignment="Top" Height="Auto" Width="Auto" Style="{StaticResource MaterialDesignBody2TextBlock}"/>
-                                    <Button x:Name="btnShowLog" Content="Zobrazit log" Margin="10,10" Visibility="Collapsed" Click="btnShowLog_Click"/>
+                                    <Button x:Name="btnShowLog" Content="{x:Static p:Resources.ShowLog}" Margin="10,10" Visibility="Collapsed" Click="btnShowLog_Click"
+                                            d:Visibility="Visible"/>
 
                                 </StackPanel>
                             </materialDesign:Card>

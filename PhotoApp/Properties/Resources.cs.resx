@@ -449,6 +449,9 @@ Uložením tento soubor přepíšete.</value>
   <data name="ShowCrashFiles" xml:space="preserve">
     <value>Zobrazit soubory z pádu aplikace</value>
   </data>
+  <data name="ShowLog" xml:space="preserve">
+    <value>Zobrazit log</value>
+  </data>
   <data name="SourceCode" xml:space="preserve">
     <value>Zdrojový kód</value>
   </data>

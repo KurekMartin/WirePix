@@ -1053,6 +1053,15 @@ namespace PhotoApp.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Show log.
+        /// </summary>
+        public static string ShowLog {
+            get {
+                return ResourceManager.GetString("ShowLog", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Source code.
         /// </summary>
         public static string SourceCode {
