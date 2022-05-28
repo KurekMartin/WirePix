@@ -1,4 +1,5 @@
 ﻿using ImageMagick;
+using ImageMagick.Formats;
 using MediaDevices;
 using PhotoApp.Models;
 using System;
@@ -744,8 +745,15 @@ namespace PhotoApp
                         break;
                 }
 
-                var readSettings = new MagickReadSettings();
-                readSettings.SetDefine(MagickFormat.Dng, "use-camera-wb", "true"); //použít vyvážení bílé z metadat
+                var readSettings = new MagickReadSettings
+                {
+                    Defines = new DngReadDefines
+                    {
+                        ReadThumbnail = true,
+                        UseCameraWhitebalance = true,
+                    }
+                };
+
                 using (MagickImage image = new MagickImage(tmpFile, readSettings))
                 {
                     image.Thumbnail(size);
