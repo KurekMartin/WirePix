@@ -103,16 +103,32 @@ namespace PhotoApp
             DeviceInfo.OrderByDescending(d => d.Name);
             ConnectedDevicesInfo = DeviceInfo.Where(d => d.Connected == true);
             OnPropertyChanged("ConnectedDevicesInfo");
-            SelectDevice(SelectedIndex);
-            return SelectedIndex;
+
+            if(ConnectedDevicesInfo.Count() > 0 && SelectedDeviceIndex == -1)
+            {
+                SelectDevice(0);
+            }
+            else
+            {
+                SelectDevice(SelectedDeviceIndex);
+            }
+
+            return SelectedDeviceIndex;
         }
 
         public void SelectDevice(int index)
         {
-            if (index == -1) { _selectedDevice = null; }
+            if (index > -1)
+            {
+                var newDevice = MediaDevice.GetDevices().First(d => d.DeviceId == ConnectedDevicesInfo.ElementAt(index).ID);
+                if(SelectedDevice == null || newDevice.DeviceId != SelectedDevice.ID)
+                {
+                    _selectedDevice = new Device(newDevice);
+                }
+            }
             else
             {
-                _selectedDevice = new Device(MediaDevice.GetDevices().First(d => d.DeviceId == ConnectedDevicesInfo.ElementAt(index).ID));
+                _selectedDevice = null;
             }
             OnPropertyChanged("SelectedDeviceInfo");
             OnPropertyChanged("SelectedDevice");
@@ -140,7 +156,7 @@ namespace PhotoApp
             }
         }
 
-        public int SelectedIndex
+        public int SelectedDeviceIndex
         {
             get
             {

@@ -814,7 +814,7 @@ namespace PhotoApp
         private void lblDeviceName_TextChanged(object sender, TextChangedEventArgs e)
         {
             TextBox tb = (TextBox)sender;
-            if (DeviceList.SelectedIndex != -1 && tb.Text.Length == 0)
+            if (DeviceList.SelectedDeviceIndex != -1 && tb.Text.Length == 0)
             {
                 SetErrorMessage(tbDeviceNameError, Properties.Resources.DeviceNameEmpty);
                 ListBoxDevices.IsEnabled = false;
