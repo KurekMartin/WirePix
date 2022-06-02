@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace PhotoApp.Models
 {
@@ -9,6 +10,7 @@ namespace PhotoApp.Models
         private List<string> _fileTags = new List<string>();
         private string _backup = string.Empty;
         private string _thumbnail = string.Empty;
+
         public string Root
         {
             get => _root;

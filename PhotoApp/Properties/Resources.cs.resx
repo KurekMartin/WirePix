@@ -362,6 +362,9 @@ Uložením tento soubor přepíšete.</value>
   <data name="ProfileName" xml:space="preserve">
     <value>Název profilu</value>
   </data>
+  <data name="Profile_Load_Error" xml:space="preserve">
+    <value>Profil "{0}" nelze načíst. Chcete jej smazat?</value>
+  </data>
   <data name="Refresh" xml:space="preserve">
     <value>Obnovit</value>
   </data>

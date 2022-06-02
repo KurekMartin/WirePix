@@ -142,7 +142,7 @@ namespace PhotoApp
                 selectedProfile = cbProfiles.SelectedItem.ToString();
             }
 
-            Profiles = Directory.GetFiles(profilesPath, "*.xml").Select(f => Path.GetFileNameWithoutExtension(f)).ToList();
+            Profiles = Directory.GetFiles(profilesPath, "*.xml").Select(f => Path.GetFileNameWithoutExtension(f)).Where(x=>DownloadSettings.IsValid(x)).ToList();
 
             OnPropertyChanged("Profiles");
 
@@ -709,10 +709,9 @@ namespace PhotoApp
             GetProfiles();
         }
 
-        private async void btnDeleteProfile_Click(object sender, RoutedEventArgs e)
+        private void btnDeleteProfile_Click(object sender, RoutedEventArgs e)
         {
-            YesNoDialog ynDialog = new YesNoDialog(this, string.Format(Properties.Resources.DeleteProfilePrompt, cbProfiles.SelectedItem), REQUEST_PROFILE_DELETE);
-            await DialogHost.Show(ynDialog, "RootDialog");
+            ShowYesNoDialog(string.Format(Properties.Resources.DeleteProfilePrompt, cbProfiles.SelectedItem), REQUEST_PROFILE_DELETE);
         }
 
         private void cbProfiles_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -721,7 +720,10 @@ namespace PhotoApp
             if (cb.SelectedItem != null)
             {
 
-                DownloadSettings.Load(cb.SelectedItem.ToString());
+                if (!DownloadSettings.Load(cb.SelectedItem.ToString()))
+                {
+                    ShowYesNoDialog(string.Format(Properties.Resources.Profile_Load_Error,cb.SelectedItem), REQUEST_PROFILE_DELETE);
+                }
                 OnPropertyChanged("DownloadSettings");
 
                 RemoveAllErrors();
@@ -846,6 +848,12 @@ namespace PhotoApp
         {
             var UpdateDialog = new UpdateDialog(this, release);
             await DialogHost.Show(UpdateDialog, "RootDialog");
+        }
+
+        private async void ShowYesNoDialog(string message,int request_code)
+        {
+            YesNoDialog ynDialog = new YesNoDialog(this, message, request_code);
+            await DialogHost.Show(ynDialog, "RootDialog");
         }
 
         public async void ShowLibraries(object sender = null)

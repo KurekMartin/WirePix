@@ -774,6 +774,15 @@ namespace PhotoApp.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Could not load profile &quot;{0}&quot;. Do you want to delete it?.
+        /// </summary>
+        public static string Profile_Load_Error {
+            get {
+                return ResourceManager.GetString("Profile_Load_Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Delete profile.
         /// </summary>
         public static string ProfileDelete {

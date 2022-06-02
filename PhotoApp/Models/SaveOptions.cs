@@ -13,6 +13,11 @@ namespace PhotoApp.Models
         private bool _fileCheck { get; set; } = false;
         private bool _deleteFiles { get; set; } = false;
 
+        public SaveOptions Copy()
+        {
+            return (SaveOptions)MemberwiseClone();
+        }
+
         [XmlIgnore]
         public string FileName
         {

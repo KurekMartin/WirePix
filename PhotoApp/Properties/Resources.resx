@@ -362,6 +362,9 @@ Save to overwrite this file.</value>
   <data name="ProfileName" xml:space="preserve">
     <value>Profile name</value>
   </data>
+  <data name="Profile_Load_Error" xml:space="preserve">
+    <value>Could not load profile "{0}". Do you want to delete it?</value>
+  </data>
   <data name="Refresh" xml:space="preserve">
     <value>Refresh</value>
   </data>

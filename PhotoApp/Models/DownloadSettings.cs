@@ -1,6 +1,8 @@
 ﻿using PhotoApp.Models;
+using System;
 using System.IO;
 using System.Windows;
+using System.Xml;
 using System.Xml.Serialization;
 
 namespace PhotoApp
@@ -70,36 +72,54 @@ namespace PhotoApp
             }
         }
 
-        public void Load(string profileName)
+        public bool Load(string profileName)
+        {
+            bool loaded = false;
+            var profile = Path.Combine(_profilesFolder, $"{profileName}.xml");
+            if (File.Exists(profile) && IsValid(profileName))
+            {
+                try
+                {
+                    XmlSerializer serializer = new XmlSerializer(typeof(DownloadSettings));
+                    using (Stream stream = new FileStream(profile, FileMode.Open, FileAccess.Read))
+                    {
+                        DownloadSettings s = (DownloadSettings)serializer.Deserialize(stream);
+                        if (s.SaveOptions.Root) { Paths.Root = s.Paths.Root; }
+                        if (s.SaveOptions.FolderStruct) { Paths.FolderTags = s.Paths.FolderTags; }
+                        if (s.SaveOptions.FileStruct) { Paths.FileTags = s.Paths.FileTags; }
+                        if (s.SaveOptions.Backup)
+                        {
+                            Paths.Backup = s.Paths.Backup;
+                            Backup = s.Backup;
+                        }
+                        if (s.SaveOptions.Thumbnails)
+                        {
+                            Paths.Thumbnail = s.Paths.Thumbnail;
+                            Thumbnail = s.Thumbnail;
+                            ThumbnailSettings = s.ThumbnailSettings;
+                        }
+                        if (s.SaveOptions.FileCheck) { _checkFiles = s._checkFiles; }
+                        if (s.SaveOptions.DeleteFiles) { _deleteFiles = s._deleteFiles; }
+                        SaveOptions = s.SaveOptions;
+                        SaveOptions.FileName = profileName;
+                        loaded = true;
+                    }
+                }
+                catch { }
+            }
+            return loaded;
+        }
+
+        public bool IsValid(string profileName)
         {
             var profile = Path.Combine(_profilesFolder, $"{profileName}.xml");
-            if (File.Exists(profile))
-            {
-                XmlSerializer serializer = new XmlSerializer(typeof(DownloadSettings));
-                using (Stream stream = new FileStream(profile, FileMode.Open))
-                {
 
-                    DownloadSettings s = (DownloadSettings)serializer.Deserialize(stream);
-                    if (s.SaveOptions.Root) { Paths.Root = s.Paths.Root; }
-                    if (s.SaveOptions.FolderStruct) { Paths.FolderTags = s.Paths.FolderTags; }
-                    if (s.SaveOptions.FileStruct) { Paths.FileTags = s.Paths.FileTags; }
-                    if (s.SaveOptions.Backup)
-                    {
-                        Paths.Backup = s.Paths.Backup;
-                        Backup = s.Backup;
-                    }
-                    if (s.SaveOptions.Thumbnails)
-                    {
-                        Paths.Thumbnail = s.Paths.Thumbnail;
-                        Thumbnail = s.Thumbnail;
-                        ThumbnailSettings = s.ThumbnailSettings;
-                    }
-                    if (s.SaveOptions.FileCheck) { _checkFiles = s._checkFiles; }
-                    if (s.SaveOptions.DeleteFiles) { _deleteFiles = s._deleteFiles; }
-                    SaveOptions = s.SaveOptions;
-                    SaveOptions.FileName = profileName;
-                }
-            }
+            Stream fs = new FileStream(profile, FileMode.Open, FileAccess.Read);
+            XmlReader reader = new XmlTextReader(fs);
+            XmlSerializer serializer = new XmlSerializer(typeof(DownloadSettings));
+            bool isValid = serializer.CanDeserialize(reader);
+            fs.Close();
+            return isValid;
         }
 
         public static void Delete(string profileName)
