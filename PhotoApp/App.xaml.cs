@@ -9,6 +9,7 @@ using System.Globalization;
 using System.Text.RegularExpressions;
 using System.Collections.Generic;
 using System.Collections;
+using System.Threading;
 
 namespace PhotoApp
 {
@@ -18,6 +19,23 @@ namespace PhotoApp
     public partial class App : Application
     {
         private static List<Tuple<string, string>> _availableLanguages = new List<Tuple<string, string>>();
+
+        private static Mutex _mutex = null;
+
+        protected override void OnStartup(StartupEventArgs e)
+        {
+            const string appName = "WirePix";
+            bool createdNew;
+
+            _mutex = new Mutex(true, appName, out createdNew);
+
+            if (!createdNew)
+            {
+                Current.Shutdown();
+            }
+
+            base.OnStartup(e);
+        }
         private void Application_Startup(object sender, StartupEventArgs e)
         {
             SetLanguage();
