@@ -14,5 +14,8 @@
     <Setting Name="Language" Type="System.String" Scope="User">
       <Value Profile="(Default)">system</Value>
     </Setting>
+    <Setting Name="LastVersion" Type="System.String" Scope="User">
+      <Value Profile="(Default)">0.5.0</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

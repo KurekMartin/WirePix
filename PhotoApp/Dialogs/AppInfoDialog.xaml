@@ -13,9 +13,9 @@
             <StackPanel Orientation="Vertical">
                 <materialDesign:ColorZone Mode="PrimaryMid" CornerRadius="5,5,0,0">
                     <TextBlock Style="{StaticResource MaterialDesignHeadline6TextBlock}" Text="{x:Static p:Resources.About}" Padding="5" TextAlignment="Center"/>
-            </materialDesign:ColorZone>
-            <StackPanel Orientation="Vertical" Margin="10,10,10,5" >
-                <DockPanel Margin="0,0,0,5" HorizontalAlignment="Stretch">
+                </materialDesign:ColorZone>
+                <StackPanel Orientation="Vertical" Margin="10,10,10,5" >
+                    <DockPanel Margin="0,0,0,5" HorizontalAlignment="Stretch">
                         <TextBlock VerticalAlignment="Center" Style="{StaticResource MaterialDesignBody2TextBlock}" Text="{x:Static p:Resources.AppVersion}" FontWeight="Bold"/>
                         <TextBlock Text=":" VerticalAlignment="Center" Style="{StaticResource MaterialDesignBody2TextBlock}"/>
                         <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}" Text="{Binding Path=Version, Source={x:Static Application.Current}}" d:Text="1.0.0" VerticalAlignment="Center" Margin="5,0"/>
@@ -25,9 +25,9 @@
                             materialDesign:ButtonProgressAssist.IsIndicatorVisible="False"
                             materialDesign:ButtonProgressAssist.IsIndeterminate="True"
                             HorizontalAlignment="Right" Margin="10,0,0,0"/>
-                </DockPanel>
-                <UI:UpdateControl x:Name="ucUpdate" DownloadingChanged="ucUpdate_DownloadingChanged"/>
-                <DockPanel Margin="0,5">
+                    </DockPanel>
+                    <UI:UpdateControl x:Name="ucUpdate" DownloadingChanged="ucUpdate_DownloadingChanged"/>
+                    <DockPanel Margin="0,5">
                         <TextBlock Text="{x:Static p:Resources.Contact}"
                                FontWeight="Bold"
                                Style="{StaticResource MaterialDesignBody2TextBlock}"/>
@@ -37,32 +37,32 @@
                                HorizontalAlignment="Right"
                                ToolTip="{x:Static p:Resources.CopyToClipboard}"                               
                                Style="{StaticResource MaterialDesignBody2TextBlock}" MouseLeftButtonDown="tbEmail_MouseLeftButtonDown"/>
-                </DockPanel>
-                <DockPanel Margin="0,5" LastChildFill="False" HorizontalAlignment="Center">
-                    <Button x:Name="btnShowLicense"
-                            Margin="5,0" Click="btnShowLicense_Click"
+                    </DockPanel>
+
+                    <UniformGrid Margin="0,5" HorizontalAlignment="Center" Columns="3">
+                        <Button x:Name="btnShowLicense"
+                                Click="btnShowLicense_Click"
                             Style="{StaticResource MaterialDesignFlatButton}">
-                        <StackPanel Orientation="Horizontal">
-                            <materialDesign:PackIcon Kind="FileDocumentOutline"
+                            <StackPanel Orientation="Horizontal">
+                                <materialDesign:PackIcon Kind="FileDocumentOutline"
                                                      Height="Auto"
                                                      Width="Auto"
                                                      VerticalAlignment="Center"/>
                                 <TextBlock Text="{x:Static p:Resources.License}" Margin="5,0,0,0" TextAlignment="Center" VerticalAlignment="Center"/>
-                        </StackPanel>
-                    </Button>
-                    <Button x:Name="btnShowCode"
-                            Margin="5,0" Click="btnShowCode_Click"
+                            </StackPanel>
+                        </Button>
+                        <Button x:Name="btnShowCode"
+                            Click="btnShowCode_Click"
                             Style="{StaticResource MaterialDesignFlatButton}">
-                        <StackPanel Orientation="Horizontal">
-                            <materialDesign:PackIcon Kind="CodeBraces"
+                            <StackPanel Orientation="Horizontal">
+                                <materialDesign:PackIcon Kind="CodeBraces"
                                                      Height="Auto"
                                                      Width="Auto"
                                                      VerticalAlignment="Center"/>
                                 <TextBlock Text="{x:Static p:Resources.SourceCode}" Margin="5,0,0,0" TextAlignment="Center" VerticalAlignment="Center"/>
-                        </StackPanel>
-                    </Button>
+                            </StackPanel>
+                        </Button>
                         <Button x:Name="btnLibraries"
-                            Margin="5,0"
                             Style="{StaticResource MaterialDesignFlatButton}" Click="btnLibraries_Click">
                             <StackPanel Orientation="Horizontal">
                                 <materialDesign:PackIcon Kind="FileCodeOutline"
@@ -73,10 +73,21 @@
                                            Margin="5,0,0,0" TextAlignment="Center" VerticalAlignment="Center"/>
                             </StackPanel>
                         </Button>
-                    </DockPanel>
-            </StackPanel>
+                        <Button x:Name="btnShowChangelog"
+                            Style="{StaticResource MaterialDesignFlatButton}" Click="btnShowChangelog_Click">
+                            <StackPanel Orientation="Horizontal">
+                                <materialDesign:PackIcon Kind="TextBoxOutline"
+                                                         Height="Auto"
+                                                         Width="Auto"
+                                                         VerticalAlignment="Center"/>
+                                <TextBlock Text="{x:Static p:Resources.Changelog}" Margin="5,0,0,0" TextAlignment="Center" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+                    </UniformGrid>
+                </StackPanel>
 
-                <Button x:Name="btnOK" Content="{x:Static p:Resources.OK}" Margin="15,5,15,10" Grid.Row="1" Click="btnOK_Click"/>
+                <Button x:Name="btnOK" Content="{x:Static p:Resources.OK}" Margin="15,5,15,10" Grid.Row="1"
+                        Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"/>
             </StackPanel>
 
             <materialDesign:Snackbar x:Name="SnackBar"

@@ -128,5 +128,12 @@ namespace PhotoApp
             }
             return _availableLanguages;
         }
+
+        protected override void OnExit(ExitEventArgs e)
+        {
+            PhotoApp.Properties.Settings.Default.LastVersion = Version;
+            PhotoApp.Properties.Settings.Default.Save();
+            base.OnExit(e);
+        }
     }
 }

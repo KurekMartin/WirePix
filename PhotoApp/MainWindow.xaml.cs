@@ -79,7 +79,6 @@ namespace PhotoApp
                 CheckNewVersion();
             }
 
-
             progressDialog = new ProgressDialog(this);
 
             spDeviceInfo.Visibility = Visibility.Hidden;
@@ -99,6 +98,16 @@ namespace PhotoApp
             mainTextStyle = (Style)FindResource("MaterialDesignBody2TextBlock");
 
             GetProfiles();
+        }
+
+        private void dhDialog_Loaded(object sender, RoutedEventArgs e)
+        {
+            Version currentVersion = Version.Parse(((App)Application.Current).Version);
+            Version lastRunVerison = Version.Parse(Properties.Settings.Default.LastVersion);
+            if (currentVersion > lastRunVerison)
+            {
+                ShowChangelog();
+            }
         }
 
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)
@@ -829,7 +838,7 @@ namespace PhotoApp
         private async void btnInfoClick(object sender, RoutedEventArgs e)
         {
             var AppInfoDialog = new AppInfoDialog(this);
-            await DialogHost.Show(AppInfoDialog, "RootDialog");
+            await DialogHost.Show((object)AppInfoDialog, "RootDialog");
         }
 
         private async void btnSettings_Click(object sender, RoutedEventArgs e)
@@ -870,6 +879,18 @@ namespace PhotoApp
 
         }
 
+        public async void ShowChangelog(object sender = null)
+        {
+            DialogHost.CloseDialogCommand.Execute(null, null);
+            var ChangelogDialog = new ChangelogDialog(ActualHeight,ActualWidth);
+            await DialogHost.Show(ChangelogDialog, "RootDialog");
+
+            if(sender != null)
+            {
+                await DialogHost.Show(sender, "RootDialog");
+            }
+        }
+
         private async void CheckNewVersion()
         {
             var currentVersion = Version.Parse(((App)Application.Current).Version);
@@ -886,6 +907,7 @@ namespace PhotoApp
             }
             catch (Exception ex) { }
         }
+
     }
 }
 

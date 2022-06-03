@@ -31,7 +31,7 @@
         <CollectionViewSource x:Key="folderStructure" Source="{Binding Path=DownloadSettings.Paths.FolderTags}"/>
     </Window.Resources>
     <Grid>
-        <materialDesign:DialogHost x:Name="dhDialog" Identifier="RootDialog">
+        <materialDesign:DialogHost x:Name="dhDialog" Identifier="RootDialog" Loaded="dhDialog_Loaded">
             <Grid Width="Auto" Height="Auto">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>

@@ -144,6 +144,21 @@
   <data name="CardStorage" xml:space="preserve">
     <value>Struktura uložení</value>
   </data>
+  <data name="Changelog" xml:space="preserve">
+    <value>Co je nového?</value>
+  </data>
+  <data name="Changelog_Fixes" xml:space="preserve">
+    <value>Opravy</value>
+  </data>
+  <data name="Changelog_Fixes_List" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Changelog_NewFeatures" xml:space="preserve">
+    <value>Novinky</value>
+  </data>
+  <data name="Changelog_NewFeatures_List" xml:space="preserve">
+    <value />
+  </data>
   <data name="CheckUpdates" xml:space="preserve">
     <value>Zkontolovat aktualizace</value>
   </data>

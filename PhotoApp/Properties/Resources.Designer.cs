@@ -142,6 +142,51 @@ namespace PhotoApp.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to What&apos;s new?.
+        /// </summary>
+        public static string Changelog {
+            get {
+                return ResourceManager.GetString("Changelog", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Fixes.
+        /// </summary>
+        public static string Changelog_Fixes {
+            get {
+                return ResourceManager.GetString("Changelog_Fixes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string Changelog_Fixes_List {
+            get {
+                return ResourceManager.GetString("Changelog_Fixes_List", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to New features.
+        /// </summary>
+        public static string Changelog_NewFeatures {
+            get {
+                return ResourceManager.GetString("Changelog_NewFeatures", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string Changelog_NewFeatures_List {
+            get {
+                return ResourceManager.GetString("Changelog_NewFeatures_List", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Check for updates.
         /// </summary>
         public static string CheckUpdates {

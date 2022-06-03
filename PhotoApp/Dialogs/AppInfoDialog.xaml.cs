@@ -22,11 +22,6 @@ namespace PhotoApp.Dialogs
             mainWindow = window;
         }
 
-        private void btnOK_Click(object sender, RoutedEventArgs e)
-        {
-            mainWindow.DialogClose(this, null);
-        }
-
         private async void btnCheckUpdate_Click(object sender, RoutedEventArgs e)
         {
             MaterialDesignThemes.Wpf.ButtonProgressAssist.SetIsIndicatorVisible(btnCheckUpdate, true);
@@ -79,6 +74,11 @@ namespace PhotoApp.Dialogs
         private void btnLibraries_Click(object sender, RoutedEventArgs e)
         {
             mainWindow.ShowLibraries(this);
+        }
+
+        private void btnShowChangelog_Click(object sender, RoutedEventArgs e)
+        {
+            mainWindow.ShowChangelog(this);
         }
     }
 }

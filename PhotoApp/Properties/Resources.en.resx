@@ -144,6 +144,21 @@
   <data name="CardStorage" xml:space="preserve">
     <value>Path structure</value>
   </data>
+  <data name="Changelog" xml:space="preserve">
+    <value>What's new?</value>
+  </data>
+  <data name="Changelog_Fixes" xml:space="preserve">
+    <value>Fixes</value>
+  </data>
+  <data name="Changelog_Fixes_List" xml:space="preserve">
+    <value />
+  </data>
+  <data name="Changelog_NewFeatures" xml:space="preserve">
+    <value>New features</value>
+  </data>
+  <data name="Changelog_NewFeatures_List" xml:space="preserve">
+    <value />
+  </data>
   <data name="CheckUpdates" xml:space="preserve">
     <value>Check for updates</value>
   </data>
