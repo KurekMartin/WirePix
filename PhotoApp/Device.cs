@@ -117,7 +117,7 @@ namespace PhotoApp
                 {
                     return DEVICE_FILES_SEARCHING;
                 }
-                else if (fileSearchDone && allFiles.Count()>0)
+                else if (fileSearchDone && allFiles.Count() > 0)
                 {
                     return DEVICE_FILES_READY;
                 }
@@ -690,7 +690,7 @@ namespace PhotoApp
             {
                 // filename in format: filename(ORIG_EXT).jpg
                 string outFile = Path.Combine(settings.Paths.Thumbnail, filePath);
-                outFile = Path.Combine(Path.GetDirectoryName(outFile), $"{Path.GetFileNameWithoutExtension(outFile)}({Path.GetExtension(outFile).Remove(0,1)}).jpg");
+                outFile = Path.Combine(Path.GetDirectoryName(outFile), $"{Path.GetFileNameWithoutExtension(outFile)}({Path.GetExtension(outFile).Remove(0, 1)}).jpg");
 
                 bool cont = false;
                 if (File.Exists(outFile))
@@ -754,16 +754,42 @@ namespace PhotoApp
                     }
                 };
 
-                using (MagickImage image = new MagickImage(tmpFile, readSettings))
+                bool thumbnailCreated = false;
+                using (var image = new MagickImage())
                 {
-                    image.Thumbnail(size);
-                    image.TransformColorSpace(ColorProfile.AdobeRGB1998);
-                    image.AutoLevel();
-                    image.Comment = origHash;
-                    System.IO.Directory.CreateDirectory(Path.GetDirectoryName(outFile));
+                    image.Ping(tmpFile, readSettings); //read only metadata
+                    var profile = image.GetProfile("dng:thumbnail");
 
-                    image.Write(outFile, MagickFormat.Jpg);
+                    if (profile != null)
+                    {
+                        using (var jpgThumbnail = new MagickImage(profile.GetData())) //use embedded thumbnail
+                        {
+                            if (IsLargerResolution(settings.ThumbnailSettings, jpgThumbnail.Width, jpgThumbnail.Height))
+                            {
+                                jpgThumbnail.AutoOrient(); // Correct the image orientation
+                                jpgThumbnail.Thumbnail(size);
+                                Directory.CreateDirectory(Path.GetDirectoryName(outFile));
+                                jpgThumbnail.Write(outFile);
+                                thumbnailCreated = true;
+                            }
+                        }
+                    }
                 }
+
+                if (!thumbnailCreated)
+                {
+                    using (MagickImage image = new MagickImage(tmpFile, readSettings))
+                    {
+                        image.Thumbnail(size);
+                        image.TransformColorSpace(ColorProfile.AdobeRGB1998);
+                        image.AutoLevel();
+                        image.Comment = origHash;
+                        Directory.CreateDirectory(Path.GetDirectoryName(outFile));
+                        image.Write(outFile, MagickFormat.Jpg);
+                    }
+                }
+
+
                 var thread = Thread.CurrentThread;
                 Console.WriteLine($"[{thread.ManagedThreadId}] generated thumbnail for file {Path.GetFileName(origFile)}");
 
@@ -796,6 +822,19 @@ namespace PhotoApp
         {
             var format = MagickFormatInfo.Create(file);
             return format.ModuleFormat == MagickFormat.Dng || (format.MimeType != null && format.MimeType.Contains("image"));
+        }
+
+        private bool IsLargerResolution(Thumbnails thumbnailSettings, int width, int height)
+        {
+
+            if (thumbnailSettings.Selected == ThumbnailSelect.longerSide)
+            {
+                return Math.Max(width, height) > thumbnailSettings.Value;
+            }
+            else
+            {
+                return Math.Min(width, height) > thumbnailSettings.Value;
+            }
         }
 
         private bool SaveFiles(DownloadSettings settings, string fullName, string tmpFile, string origFile, byte[] origHash)
