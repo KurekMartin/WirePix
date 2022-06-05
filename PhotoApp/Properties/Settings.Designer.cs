@@ -79,5 +79,14 @@ namespace PhotoApp.Properties {
                 this["LastVersion"] = value;
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("50")]
+        public int MaxLogs {
+            get {
+                return ((int)(this["MaxLogs"]));
+            }
+        }
     }
 }

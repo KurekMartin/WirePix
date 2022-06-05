@@ -64,6 +64,15 @@ namespace PhotoApp
                 File.Delete(file);
             }
 
+            var logFolder = Current.Resources[PhotoApp.Properties.Keys.LogsFolder].ToString();
+            var maxLogs = PhotoApp.Properties.Settings.Default.MaxLogs;
+            var logFiles = new DirectoryInfo(logFolder);
+            var filesToDelete = logFiles.GetFiles().OrderByDescending(f => f.CreationTime).Skip(maxLogs);
+            foreach (var file in filesToDelete)
+            {
+                file.Delete();
+            }
+
             SetThemeMode(PhotoApp.Properties.Settings.Default.DarkMode);
         }
 
