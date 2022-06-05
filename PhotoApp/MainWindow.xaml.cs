@@ -709,7 +709,7 @@ namespace PhotoApp
         }
         private async void btnSaveAs_Click(object sender, RoutedEventArgs e)
         {
-            SaveDialog saveDialog = new SaveDialog(this);
+            SaveDialog saveDialog = new SaveDialog(this,DownloadSettings.SaveOptions);
             await DialogHost.Show(saveDialog, "RootDialog");
         }
 
