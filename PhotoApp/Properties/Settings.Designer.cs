@@ -88,5 +88,29 @@ namespace PhotoApp.Properties {
                 return ((int)(this["MaxLogs"]));
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("system")]
+        public string TagLanguage {
+            get {
+                return ((string)(this["TagLanguage"]));
+            }
+            set {
+                this["TagLanguage"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool UseDifferentLangForTags {
+            get {
+                return ((bool)(this["UseDifferentLangForTags"]));
+            }
+            set {
+                this["UseDifferentLangForTags"] = value;
+            }
+        }
     }
 }

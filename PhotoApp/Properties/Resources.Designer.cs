@@ -1495,6 +1495,15 @@ namespace PhotoApp.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Tag language.
+        /// </summary>
+        public static string TagLanguage {
+            get {
+                return ResourceManager.GetString("TagLanguage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cannot use {0} after {1}..
         /// </summary>
         public static string TagPairError {
@@ -1590,6 +1599,15 @@ namespace PhotoApp.Properties {
         public static string UpdateInstall {
             get {
                 return ResourceManager.GetString("UpdateInstall", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use different language for tags.
+        /// </summary>
+        public static string UseDifferentLanguageForTags {
+            get {
+                return ResourceManager.GetString("UseDifferentLanguageForTags", resourceCulture);
             }
         }
         

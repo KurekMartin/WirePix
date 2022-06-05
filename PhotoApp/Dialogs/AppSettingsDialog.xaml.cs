@@ -73,5 +73,17 @@ namespace PhotoApp.Dialogs
         {
             MaxWidth = ActualWidth*1.2;
         }
+
+        private void cbTagLanguages_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            //TODO
+        }
+
+        private void cbDifferentLanguageForTags_Checked(object sender, RoutedEventArgs e)
+        {
+            CheckBox checkBox = (CheckBox)sender;
+            Properties.Settings.Default.UseDifferentLangForTags = (bool)checkBox.IsChecked;
+            Properties.Settings.Default.Save();
+        }
     }
 }

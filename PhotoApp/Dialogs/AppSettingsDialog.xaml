@@ -7,6 +7,9 @@
              xmlns:p ="clr-namespace:PhotoApp.Properties"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" Width="Auto" Height="Auto" Loaded="UserControl_Loaded">
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVisConverter" />
+    </UserControl.Resources>
     <materialDesign:Card>
         <StackPanel Orientation="Vertical">
             <materialDesign:ColorZone Mode="PrimaryMid" CornerRadius="5,5,0,0">
@@ -43,6 +46,29 @@
                     <ComboBox x:Name="cbLanguages"
                               Margin="5,0"
                               HorizontalAlignment="Right" SelectionChanged="cbLanguages_SelectionChanged"/>
+                </DockPanel>
+
+                <DockPanel Margin="0,0,0,5">
+                    <TextBlock VerticalAlignment="Center" Style="{StaticResource MaterialDesignBody2TextBlock}" 
+                               Text="{x:Static p:Resources.UseDifferentLanguageForTags}" FontWeight="Bold"/>
+                    <CheckBox x:Name="cbDifferentLanguageForTags"
+                              Margin="5,0"
+                              IsChecked="{Binding UseDifferentLangForTags, Mode=OneTime}"
+                              Style="{StaticResource MaterialDesignSwitchToggleButton}"
+                              VerticalAlignment="Center"
+                              HorizontalAlignment="Right" Checked="cbDifferentLanguageForTags_Checked" Unchecked="cbDifferentLanguageForTags_Checked"/>
+                </DockPanel>
+
+                <DockPanel x:Name="dpTagLanguages" Margin="15,0,0,5"
+                           Visibility="{Binding ElementName=cbDifferentLanguageForTags, Path=IsChecked,Converter={StaticResource BoolToVisConverter},UpdateSourceTrigger=PropertyChanged}">
+                    <TextBlock  Text="{x:Static p:Resources.TagLanguage}"                                
+                                Style="{StaticResource MaterialDesignBody2TextBlock}"
+                                FontWeight="Bold"
+                                VerticalAlignment="Center"/>
+                    <ComboBox x:Name="cbTagLanguages"
+                              Margin="5,0"
+                              HorizontalAlignment="Right" 
+                              SelectionChanged="cbTagLanguages_SelectionChanged"/>
                 </DockPanel>
             </StackPanel>
 

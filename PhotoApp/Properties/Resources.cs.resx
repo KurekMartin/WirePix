@@ -516,6 +516,9 @@ Doplňte tuto hodnotu nebo značku odstraňte.</value>
   <data name="TagGroup_Separator" xml:space="preserve">
     <value>Oddělovač</value>
   </data>
+  <data name="TagLanguage" xml:space="preserve">
+    <value>Jazyk pro značky</value>
+  </data>
   <data name="TagPairError" xml:space="preserve">
     <value>Nelze použít {0} po {1}.</value>
   </data>
@@ -629,6 +632,9 @@ Doplňte tuto hodnotu nebo značku odstraňte.</value>
   </data>
   <data name="Update_NoNewVerison" xml:space="preserve">
     <value>Máte nejnovější verzi programu</value>
+  </data>
+  <data name="UseDifferentLanguageForTags" xml:space="preserve">
+    <value>Použít jiný jazyk pro značky</value>
   </data>
   <data name="Value" xml:space="preserve">
     <value>Hodnota</value>

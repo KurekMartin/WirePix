@@ -516,6 +516,9 @@ Fill the value or remove the tag.</value>
   <data name="TagGroup_Separator" xml:space="preserve">
     <value>Separator</value>
   </data>
+  <data name="TagLanguage" xml:space="preserve">
+    <value>Tag language</value>
+  </data>
   <data name="TagPairError" xml:space="preserve">
     <value>Cannot use {0} after {1}.</value>
   </data>
@@ -629,6 +632,9 @@ Fill the value or remove the tag.</value>
   </data>
   <data name="Update_NoNewVerison" xml:space="preserve">
     <value>You have the latest version</value>
+  </data>
+  <data name="UseDifferentLanguageForTags" xml:space="preserve">
+    <value>Use different language for tags</value>
   </data>
   <data name="Value" xml:space="preserve">
     <value>Value</value>

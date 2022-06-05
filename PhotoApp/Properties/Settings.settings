@@ -20,5 +20,11 @@
     <Setting Name="MaxLogs" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">50</Value>
     </Setting>
+    <Setting Name="TagLanguage" Type="System.String" Scope="User">
+      <Value Profile="(Default)">system</Value>
+    </Setting>
+    <Setting Name="UseDifferentLangForTags" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
