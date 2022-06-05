@@ -42,7 +42,8 @@
                     <UniformGrid Margin="0,5" HorizontalAlignment="Center" Columns="3">
                         <Button x:Name="btnShowLicense"
                                 Click="btnShowLicense_Click"
-                            Style="{StaticResource MaterialDesignFlatButton}">
+                                Style="{StaticResource MaterialDesignFlatButton}"
+                                HorizontalContentAlignment="Left">
                             <StackPanel Orientation="Horizontal">
                                 <materialDesign:PackIcon Kind="FileDocumentOutline"
                                                      Height="Auto"
@@ -52,8 +53,9 @@
                             </StackPanel>
                         </Button>
                         <Button x:Name="btnShowCode"
-                            Click="btnShowCode_Click"
-                            Style="{StaticResource MaterialDesignFlatButton}">
+                                Click="btnShowCode_Click"
+                                Style="{StaticResource MaterialDesignFlatButton}"
+                                HorizontalContentAlignment="Left">
                             <StackPanel Orientation="Horizontal">
                                 <materialDesign:PackIcon Kind="CodeBraces"
                                                      Height="Auto"
@@ -63,7 +65,9 @@
                             </StackPanel>
                         </Button>
                         <Button x:Name="btnLibraries"
-                            Style="{StaticResource MaterialDesignFlatButton}" Click="btnLibraries_Click">
+                                Style="{StaticResource MaterialDesignFlatButton}" 
+                                Click="btnLibraries_Click"
+                                HorizontalContentAlignment="Left">
                             <StackPanel Orientation="Horizontal">
                                 <materialDesign:PackIcon Kind="FileCodeOutline"
                                                      Height="Auto"
@@ -74,13 +78,27 @@
                             </StackPanel>
                         </Button>
                         <Button x:Name="btnShowChangelog"
-                            Style="{StaticResource MaterialDesignFlatButton}" Click="btnShowChangelog_Click">
+                                Style="{StaticResource MaterialDesignFlatButton}" 
+                                Click="btnShowChangelog_Click"
+                                HorizontalContentAlignment="Left">
                             <StackPanel Orientation="Horizontal">
                                 <materialDesign:PackIcon Kind="TextBoxOutline"
                                                          Height="Auto"
                                                          Width="Auto"
                                                          VerticalAlignment="Center"/>
                                 <TextBlock Text="{x:Static p:Resources.Changelog}" Margin="5,0,0,0" TextAlignment="Center" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+                        <Button x:Name="btnShowAppdata"
+                                Style="{StaticResource MaterialDesignFlatButton}" 
+                                Click="btnShowAppdata_Click"
+                                HorizontalContentAlignment="Left">
+                            <StackPanel Orientation="Horizontal">
+                                <materialDesign:PackIcon Kind="FolderOutline"
+                                                         Height="Auto"
+                                                         Width="Auto"
+                                                         VerticalAlignment="Center"/>
+                                <TextBlock Text="{x:Static p:Resources.ShowAppdataFolder}" Margin="5,0,0,0" TextAlignment="Center" VerticalAlignment="Center"/>
                             </StackPanel>
                         </Button>
                     </UniformGrid>

@@ -41,6 +41,7 @@ namespace PhotoApp
             SetLanguage();
             string appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
             string mainFolder = "WirePix";
+            Resources.Add(PhotoApp.Properties.Keys.MainFolder, Path.Combine(appData,mainFolder));
             Resources.Add(PhotoApp.Properties.Keys.TempFolder, Path.Combine(Path.GetTempPath(), mainFolder));
             Resources.Add(PhotoApp.Properties.Keys.LogsFolder, Path.Combine(appData, mainFolder, "Logs"));
             Resources.Add(PhotoApp.Properties.Keys.ProfilesFolder, Path.Combine(appData, mainFolder, "Profiles"));

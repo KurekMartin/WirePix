@@ -88,6 +88,15 @@ namespace PhotoApp.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to MainFolder.
+        /// </summary>
+        internal static string MainFolder {
+            get {
+                return ResourceManager.GetString("MainFolder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to ProfilesFolder.
         /// </summary>
         internal static string ProfilesFolder {

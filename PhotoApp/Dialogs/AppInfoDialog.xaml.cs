@@ -80,5 +80,11 @@ namespace PhotoApp.Dialogs
         {
             mainWindow.ShowChangelog(this);
         }
+
+        private void btnShowAppdata_Click(object sender, RoutedEventArgs e)
+        {
+            string dataFolder = System.Windows.Application.Current.Resources[Properties.Keys.MainFolder].ToString();
+            System.Diagnostics.Process.Start("explorer.exe", dataFolder);
+        }
     }
 }

@@ -464,6 +464,9 @@ Uložením tento soubor přepíšete.</value>
   <data name="Show" xml:space="preserve">
     <value>Zobrazit</value>
   </data>
+  <data name="ShowAppdataFolder" xml:space="preserve">
+    <value>Zobrazit data aplikace</value>
+  </data>
   <data name="ShowCrashFiles" xml:space="preserve">
     <value>Zobrazit soubory z pádu aplikace</value>
   </data>

@@ -1098,6 +1098,15 @@ namespace PhotoApp.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Show app data.
+        /// </summary>
+        public static string ShowAppdataFolder {
+            get {
+                return ResourceManager.GetString("ShowAppdataFolder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Show crash files.
         /// </summary>
         public static string ShowCrashFiles {

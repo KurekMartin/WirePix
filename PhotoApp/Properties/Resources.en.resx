@@ -464,6 +464,9 @@ Save to overwrite this file.</value>
   <data name="Show" xml:space="preserve">
     <value>Show</value>
   </data>
+  <data name="ShowAppdataFolder" xml:space="preserve">
+    <value>Show app data</value>
+  </data>
   <data name="ShowCrashFiles" xml:space="preserve">
     <value>Show crash files</value>
   </data>

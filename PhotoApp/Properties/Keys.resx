@@ -126,6 +126,9 @@
   <data name="LogsFolder" xml:space="preserve">
     <value>LogsFolder</value>
   </data>
+  <data name="MainFolder" xml:space="preserve">
+    <value>MainFolder</value>
+  </data>
   <data name="ProfilesFolder" xml:space="preserve">
     <value>ProfilesFolder</value>
   </data>
