@@ -89,6 +89,8 @@ namespace PhotoApp
             usbEventWatcher.UsbDeviceAdded += (_, device) => Dispatcher.Invoke(ListConnectedDevices);
             usbEventWatcher.UsbDeviceRemoved += (_, device) => Dispatcher.Invoke(ListConnectedDevices);
 
+            Properties.Settings.Default.PropertyChanged += Settings_Changed;
+
             normalBorder.BorderBrush = Brushes.Transparent;
             normalBorder.BorderThickness = new Thickness(0);
 
@@ -98,6 +100,15 @@ namespace PhotoApp
             mainTextStyle = (Style)FindResource("MaterialDesignBody2TextBlock");
 
             GetProfiles();
+        }
+
+        private void Settings_Changed(object sender, PropertyChangedEventArgs e)
+        {
+            if(e.PropertyName == nameof(Properties.Settings.Default.TagLanguage))
+            {
+                icFolderTags.Items.Refresh();
+                icFileTags.Items.Refresh();
+            }
         }
 
         private void dhDialog_Loaded(object sender, RoutedEventArgs e)
@@ -536,7 +547,6 @@ namespace PhotoApp
                     SaveOptions options = (SaveOptions)result;
                     DownloadSettings.Save(options);
                     GetProfiles(options.FileName); // načte nový profil
-
                 }
                 else if (sender.GetType() == typeof(YesNoDialog))
                 {

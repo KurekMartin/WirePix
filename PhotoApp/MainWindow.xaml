@@ -275,7 +275,7 @@
                                                     </Style>
                                                 </StackPanel.Style>
                                             </StackPanel>
-                                            <ItemsControl ItemsSource="{Binding DownloadSettings.Paths.FolderTags}" d:ItemsSource="{d:SampleData ItemCount=3}">
+                                            <ItemsControl x:Name="icFolderTags" ItemsSource="{Binding DownloadSettings.Paths.FolderTags}" d:ItemsSource="{d:SampleData ItemCount=3}">
                                                 <ItemsControl.ItemsPanel>
                                                     <ItemsPanelTemplate>
                                                         <StackPanel Margin="10,0"/>
@@ -320,7 +320,7 @@
                                                 <StackPanel Margin="{Binding  DownloadSettings.Paths.FolderTags.Count,Converter={StaticResource IndexToMarginConverter}}"
                                                     Orientation="Horizontal">
                                                     <materialDesign:PackIcon Kind="ImageOutline"/>
-                                                    <ItemsControl ItemsSource="{Binding DownloadSettings.Paths.FileTags}" d:ItemsSource="{d:SampleData ItemCount=3}">
+                                                    <ItemsControl x:Name="icFileTags" ItemsSource="{Binding DownloadSettings.Paths.FileTags}" d:ItemsSource="{d:SampleData ItemCount=3}">
                                                         <ItemsControl.ItemsPanel>
                                                             <ItemsPanelTemplate>
                                                                 <StackPanel Orientation="Horizontal"

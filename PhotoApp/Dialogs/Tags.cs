@@ -143,6 +143,7 @@ namespace PhotoApp
         //získání hodnot pro zobrazení náhledu výsledného názvu
         public static string GetSampleValueByTag(string tagCode, MediaFileInfo fileInfo = null, Device device = null, string filePath = null)
         {
+            
             TagStruct tag = GetTag(code: tagCode);
             if (tag != null)
             {
@@ -151,7 +152,21 @@ namespace PhotoApp
                 string manufacturer = GetTag(code: Properties.TagCodes.DeviceManuf).VisibleText;
                 string model = GetTag(code: Properties.TagCodes.DeviceName).VisibleText;
                 string filename = GetTag(code: Properties.TagCodes.FileName).VisibleText;
-                if (File.Exists(filePath) && fileInfo != null)
+
+                CultureInfo cultureInfo = CultureInfo.CurrentUICulture;
+                if (dateTags.Contains(codeTag) && Properties.Settings.Default.UseDifferentLangForTags)
+                {
+                    if(Properties.Settings.Default.TagLanguage == nameof(Properties.Languages.system))
+                    {
+                        cultureInfo = CultureInfo.CurrentCulture;
+                    }
+                    else
+                    {
+                        cultureInfo = CultureInfo.CreateSpecificCulture(Properties.Settings.Default.TagLanguage);
+                    }
+                }
+
+                    if (File.Exists(filePath) && fileInfo != null)
                 {
                     if (dateTags.Contains(codeTag))
                     {
@@ -169,6 +184,7 @@ namespace PhotoApp
                                 date = (DateTime)fileInfo.LastWriteTime;
                             }
                         }
+
                     }
 
                     if (codeTag == Properties.TagCodes.DeviceManuf)
@@ -209,11 +225,11 @@ namespace PhotoApp
                 }
                 else if (codeTag == Properties.TagCodes.MonthShort)
                 {
-                    return CultureInfo.CurrentUICulture.DateTimeFormat.GetAbbreviatedMonthName(date.Month);
+                    return cultureInfo.DateTimeFormat.GetAbbreviatedMonthName(date.Month);
                 }
                 else if (codeTag == Properties.TagCodes.MonthLong)
                 {
-                    return CultureInfo.CurrentUICulture.DateTimeFormat.GetMonthName(date.Month);
+                    return cultureInfo.DateTimeFormat.GetMonthName(date.Month);
                 }
                 else if (codeTag == Properties.TagCodes.Day)
                 {
@@ -221,11 +237,11 @@ namespace PhotoApp
                 }
                 else if (codeTag == Properties.TagCodes.DayShort)
                 {
-                    return CultureInfo.CurrentUICulture.DateTimeFormat.GetAbbreviatedDayName(date.DayOfWeek);
+                    return cultureInfo.DateTimeFormat.GetAbbreviatedDayName(date.DayOfWeek);
                 }
                 else if (codeTag == Properties.TagCodes.DayLong)
                 {
-                    return CultureInfo.CurrentUICulture.DateTimeFormat.GetDayName(date.DayOfWeek);
+                    return cultureInfo.DateTimeFormat.GetDayName(date.DayOfWeek);
                 }
                 else if (codeTag == Properties.TagCodes.DeviceName)
                 {

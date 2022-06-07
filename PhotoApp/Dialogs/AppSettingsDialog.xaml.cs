@@ -21,8 +21,9 @@ namespace PhotoApp.Dialogs
             InitializeComponent();
             mainWindow = window;
             languages = App.GetAvailableLanguages();
-            cbLanguages.ItemsSource = languages.ConvertAll(x => x.Item2);
-            cbLanguages.SelectedIndex = cbLanguages.Items.IndexOf(languages.Find(x=>x.Item1==Properties.Settings.Default.Language).Item2);
+            cbLanguages.ItemsSource = cbTagLanguages.ItemsSource = languages.ConvertAll(x => x.Item2);
+            cbLanguages.SelectedIndex = cbLanguages.Items.IndexOf(languages.Find(x => x.Item1 == Properties.Settings.Default.Language).Item2);
+            cbTagLanguages.SelectedIndex = cbTagLanguages.Items.IndexOf(languages.Find(x => x.Item1 == Properties.Settings.Default.TagLanguage).Item2);
             origLanguage = Properties.Settings.Default.Language;
         }
 
@@ -71,12 +72,16 @@ namespace PhotoApp.Dialogs
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
-            MaxWidth = ActualWidth*1.2;
+            MaxWidth = ActualWidth * 1.2;
         }
 
         private void cbTagLanguages_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            //TODO
+            if (e.RemovedItems.Count > 0)
+            {
+                Properties.Settings.Default.TagLanguage = languages.Find(x => x.Item2 == (string)e.AddedItems[0]).Item1;
+                Properties.Settings.Default.Save();
+            }
         }
 
         private void cbDifferentLanguageForTags_Checked(object sender, RoutedEventArgs e)
