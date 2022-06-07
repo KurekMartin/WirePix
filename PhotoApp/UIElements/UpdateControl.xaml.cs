@@ -119,8 +119,6 @@ namespace PhotoApp.UIElements
                     WebClient.CancelAsync();
                 }
             }
-
-
         }
         private void btnManualUpdate_Click(object sender, RoutedEventArgs e)
         {

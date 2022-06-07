@@ -29,6 +29,19 @@ namespace PhotoApp.Dialogs
             var version = Version.Parse(release.TagName.Replace("v", ""));
             ucUpdate.VersionInfo = $"{Properties.Resources.Update_NewVersionAvailable} ({version})";
             ucUpdate.Release = release;
+            ucUpdate.DownloadingChanged += UcUpdate_DownloadingChanged;
+        }
+
+        private void UcUpdate_DownloadingChanged(object sender, EventArgs e)
+        {
+            if (ucUpdate.Downloading)
+            {
+                btnOK.IsEnabled = false;
+            }
+            else
+            {
+                btnOK.IsEnabled = true;
+            }
         }
 
         private void btnOK_Click(object sender, RoutedEventArgs e)

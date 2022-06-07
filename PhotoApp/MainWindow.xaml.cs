@@ -104,7 +104,7 @@ namespace PhotoApp
 
         private void Settings_Changed(object sender, PropertyChangedEventArgs e)
         {
-            if(e.PropertyName == nameof(Properties.Settings.Default.TagLanguage))
+            if (e.PropertyName == nameof(Properties.Settings.Default.TagLanguage))
             {
                 icFolderTags.Items.Refresh();
                 icFileTags.Items.Refresh();
@@ -162,7 +162,7 @@ namespace PhotoApp
                 selectedProfile = cbProfiles.SelectedItem.ToString();
             }
 
-            Profiles = Directory.GetFiles(profilesPath, "*.xml").Select(f => Path.GetFileNameWithoutExtension(f)).Where(x=>DownloadSettings.IsValid(x)).ToList();
+            Profiles = Directory.GetFiles(profilesPath, "*.xml").Select(f => Path.GetFileNameWithoutExtension(f)).Where(x => DownloadSettings.IsValid(x)).ToList();
 
             OnPropertyChanged("Profiles");
 
@@ -719,7 +719,7 @@ namespace PhotoApp
         }
         private async void btnSaveAs_Click(object sender, RoutedEventArgs e)
         {
-            SaveDialog saveDialog = new SaveDialog(this,DownloadSettings.SaveOptions);
+            SaveDialog saveDialog = new SaveDialog(this, DownloadSettings.SaveOptions);
             await DialogHost.Show(saveDialog, "RootDialog");
         }
 
@@ -741,7 +741,7 @@ namespace PhotoApp
 
                 if (!DownloadSettings.Load(cb.SelectedItem.ToString()))
                 {
-                    ShowYesNoDialog(string.Format(Properties.Resources.Profile_Load_Error,cb.SelectedItem), REQUEST_PROFILE_DELETE);
+                    ShowYesNoDialog(string.Format(Properties.Resources.Profile_Load_Error, cb.SelectedItem), REQUEST_PROFILE_DELETE);
                 }
                 OnPropertyChanged("DownloadSettings");
 
@@ -824,10 +824,10 @@ namespace PhotoApp
 
         public static void ClearTemp()
         {
-            Parallel.ForEach(Directory.EnumerateFiles(tmpFolder), (file) =>
-            {
-                File.Delete(file);
-            });
+            Parallel.ForEach(Directory.EnumerateFiles(tmpFolder).Where(x => !x.EndsWith(".msi")), (file) =>
+              {
+                  File.Delete(file);
+              });
         }
 
         private void lblDeviceName_TextChanged(object sender, TextChangedEventArgs e)
@@ -869,7 +869,7 @@ namespace PhotoApp
             await DialogHost.Show(UpdateDialog, "RootDialog");
         }
 
-        private async void ShowYesNoDialog(string message,int request_code)
+        private async void ShowYesNoDialog(string message, int request_code)
         {
             YesNoDialog ynDialog = new YesNoDialog(this, message, request_code);
             await DialogHost.Show(ynDialog, "RootDialog");
@@ -892,10 +892,10 @@ namespace PhotoApp
         public async void ShowChangelog(object sender = null)
         {
             DialogHost.CloseDialogCommand.Execute(null, null);
-            var ChangelogDialog = new ChangelogDialog(ActualHeight,ActualWidth);
+            var ChangelogDialog = new ChangelogDialog(ActualHeight, ActualWidth);
             await DialogHost.Show(ChangelogDialog, "RootDialog");
 
-            if(sender != null)
+            if (sender != null)
             {
                 await DialogHost.Show(sender, "RootDialog");
             }

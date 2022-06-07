@@ -155,7 +155,8 @@
 oprava UI
 automatické mazání starých log souborů
 kontrola profilu před načtením
-může běžet jen jedno okno aplikace</value>
+může běžet jen jedno okno aplikace
+oprava pádu aplikace při instalaci aktualizace</value>
   </data>
   <data name="Changelog_NewFeatures" xml:space="preserve">
     <value>Novinky</value>

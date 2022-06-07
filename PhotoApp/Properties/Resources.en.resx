@@ -155,7 +155,8 @@
 fix UI layout
 keep 50 recent log files
 validation of profile when loading
-allow only one instance of app</value>
+allow only one instance of app
+fixed crash when using in app update feature</value>
   </data>
   <data name="Changelog_NewFeatures" xml:space="preserve">
     <value>New features</value>

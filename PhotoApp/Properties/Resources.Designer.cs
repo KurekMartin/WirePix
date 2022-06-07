@@ -164,7 +164,8 @@ namespace PhotoApp.Properties {
         ///fix UI layout
         ///keep 50 recent log files
         ///validation of profile when loading
-        ///allow only one instance of app.
+        ///allow only one instance of app
+        ///fixed crash when using in app update feature.
         /// </summary>
         public static string Changelog_Fixes_List {
             get {
