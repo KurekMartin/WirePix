@@ -160,7 +160,11 @@ namespace PhotoApp.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to fix localization
+        ///fix UI layout
+        ///keep 50 recent log files
+        ///validation of profile when loading
+        ///allow only one instance of app.
         /// </summary>
         public static string Changelog_Fixes_List {
             get {
@@ -178,7 +182,11 @@ namespace PhotoApp.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to use embbeded thumbnails for thumbnail generation(up to 2x faster generation, uses 6x less memory)
+        ///option to use different language for tags (month and day names)
+        ///show changelog after update
+        ///you can now use save as option to update profile settings
+        ///auto select first connected device.
         /// </summary>
         public static string Changelog_NewFeatures_List {
             get {

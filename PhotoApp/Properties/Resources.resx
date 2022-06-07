@@ -151,13 +151,21 @@
     <value>Fixes</value>
   </data>
   <data name="Changelog_Fixes_List" xml:space="preserve">
-    <value />
+    <value>fix localization
+fix UI layout
+keep 50 recent log files
+validation of profile when loading
+allow only one instance of app</value>
   </data>
   <data name="Changelog_NewFeatures" xml:space="preserve">
     <value>New features</value>
   </data>
   <data name="Changelog_NewFeatures_List" xml:space="preserve">
-    <value />
+    <value>use embbeded thumbnails for thumbnail generation(up to 2x faster generation, uses 6x less memory)
+option to use different language for tags (month and day names)
+show changelog after update
+you can now use save as option to update profile settings
+auto select first connected device</value>
   </data>
   <data name="CheckUpdates" xml:space="preserve">
     <value>Check for updates</value>

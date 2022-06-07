@@ -151,13 +151,22 @@
     <value>Opravy</value>
   </data>
   <data name="Changelog_Fixes_List" xml:space="preserve">
-    <value />
+    <value>oprava překladu
+oprava UI
+automatické mazání starých log souborů
+kontrola profilu před načtením
+může běžet jen jedno okno aplikace</value>
   </data>
   <data name="Changelog_NewFeatures" xml:space="preserve">
     <value>Novinky</value>
   </data>
   <data name="Changelog_NewFeatures_List" xml:space="preserve">
-    <value />
+    <value>využití vložených náhledů pro generování zmenšených fotografií (až 2x rychlejší generování, používá až 6x méně paměti)
+možnost zvolit jiný jazyk pro značky (název dnů a měsíců)
+zobrazení změn po aktualizaci
+možnost zobrazení změn a dat aplikace z dialogu O aplikaci
+možnost aktualizovat nastavení profilu použitím možnosti Uložit jako
+první připojené zařízení se automaticky vybere</value>
   </data>
   <data name="CheckUpdates" xml:space="preserve">
     <value>Zkontolovat aktualizace</value>
