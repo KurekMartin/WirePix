@@ -38,6 +38,14 @@ namespace PhotoApp
         }
         private void Application_Startup(object sender, StartupEventArgs e)
         {
+            if (PhotoApp.Properties.Settings.Default.UpdateSettings)
+            {
+                PhotoApp.Properties.Settings.Default.Upgrade();
+                PhotoApp.Properties.Settings.Default.UpdateSettings = false;
+                PhotoApp.Properties.Settings.Default.Save();
+            }
+
+
             SetLanguage();
             string appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
             string mainFolder = "WirePix";
