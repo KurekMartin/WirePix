@@ -17,7 +17,9 @@ namespace PhotoApp
         [XmlIgnore]
         public IEnumerable<DeviceInfo> ConnectedDevicesInfo { get; set; }
         [XmlIgnore]
-        private Device _selectedDevice;
+        private string _selectedDeviceID;
+        [XmlIgnore]
+        private List<Device> _devices = new List<Device>();
         [XmlIgnore]
         private static readonly string _dataFile = Path.Combine(Application.Current.Resources[Properties.Keys.DataFolder].ToString(), "Devices.xml");
 
@@ -99,46 +101,56 @@ namespace PhotoApp
                     var deviceOnline = DeviceInfo.First(d => d.ID == device.DeviceId);
                     deviceOnline.Connected = true;
                 }
+
+                if (_devices.FindIndex(d => d.ID == device.DeviceId) == -1)
+                {
+                    _devices.Add(new Device(device));
+                }
             }
+
+            foreach (var device in DeviceInfo.Where(d => !d.Connected))
+            {
+                _devices.RemoveAll(d => d.ID == device.ID);
+            }
+
             DeviceInfo.OrderByDescending(d => d.Name);
             ConnectedDevicesInfo = DeviceInfo.Where(d => d.Connected == true);
             OnPropertyChanged("ConnectedDevicesInfo");
 
-            if(ConnectedDevicesInfo.Count() > 0 && SelectedDeviceIndex == -1)
+            if (ConnectedDevicesInfo.Count() > 0 && SelectedDeviceIndex == -1)
             {
-                SelectDevice(0);
+                SelectDeviceByIndex(0);
             }
             else
             {
-                SelectDevice(SelectedDeviceIndex);
+                SelectDeviceByIndex(SelectedDeviceIndex);
             }
 
             return SelectedDeviceIndex;
         }
 
-        public void SelectDevice(int index)
+        public Device SelectDeviceByIndex(int index)
         {
-            if (index > -1)
+            if (index > -1 )
             {
-                var newDevice = MediaDevice.GetDevices().First(d => d.DeviceId == ConnectedDevicesInfo.ElementAt(index).ID);
-                if(SelectedDevice == null || newDevice.DeviceId != SelectedDevice.ID)
-                {
-                    _selectedDevice = new Device(newDevice);
-                }
+                Device device = _devices.FirstOrDefault(d => d.ID == ConnectedDevicesInfo.ElementAt(index).ID);
+                _selectedDeviceID = device.ID;
+                OnPropertyChanged("SelectedDeviceInfo");
+                OnPropertyChanged("SelectedDevice");
+                return device;
             }
-            else
-            {
-                _selectedDevice = null;
-            }
-            OnPropertyChanged("SelectedDeviceInfo");
-            OnPropertyChanged("SelectedDevice");
+            return null;
         }
 
         public Device SelectedDevice
         {
             get
             {
-                return _selectedDevice;
+                if (_selectedDeviceID != null)
+                {
+                    return _devices.First(d => d.ID == _selectedDeviceID);
+                }
+                return null;
             }
         }
 
@@ -146,9 +158,9 @@ namespace PhotoApp
         {
             get
             {
-                if (ConnectedDevicesInfo.Count() > 0 && _selectedDevice != null)
+                if (ConnectedDevicesInfo.Count() > 0 && _selectedDeviceID != null)
                 {
-                    return ConnectedDevicesInfo.First(d => d.ID == _selectedDevice.ID);
+                    return ConnectedDevicesInfo.First(d => d.ID == _selectedDeviceID);
                 }
                 else
                     return new DeviceInfo();
@@ -160,9 +172,9 @@ namespace PhotoApp
         {
             get
             {
-                if (_selectedDevice != null)
+                if (_selectedDeviceID != null)
                 {
-                    return ConnectedDevicesInfo.ToList().FindIndex(d => d.ID == _selectedDevice.ID);
+                    return ConnectedDevicesInfo.ToList().FindIndex(d => d.ID == _selectedDeviceID);
                 }
                 return -1;
             }
