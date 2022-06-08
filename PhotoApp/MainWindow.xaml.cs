@@ -135,7 +135,7 @@ namespace PhotoApp
                 ListBoxDevices.BorderThickness = new Thickness(1);
 
                 //zmena vybraneho zarizeni
-                DeviceList.SelectDevice(ListBoxDevices.SelectedIndex);
+                DeviceList.SelectDeviceByIndex(ListBoxDevices.SelectedIndex);
 
                 //DeviceList.SelectedDevice.FileTypes();
             }
