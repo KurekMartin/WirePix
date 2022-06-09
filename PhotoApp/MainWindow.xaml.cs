@@ -20,6 +20,7 @@ namespace PhotoApp
     public enum TaskType
     {
         FindFiles,
+        FindAllFiles,
         CopyFiles,
         GetFileTypes
     }
@@ -104,7 +105,7 @@ namespace PhotoApp
 
         private void Settings_Changed(object sender, PropertyChangedEventArgs e)
         {
-            if(e.PropertyName == nameof(Properties.Settings.Default.TagLanguage))
+            if (e.PropertyName == nameof(Properties.Settings.Default.TagLanguage))
             {
                 icFolderTags.Items.Refresh();
                 icFileTags.Items.Refresh();
@@ -151,6 +152,7 @@ namespace PhotoApp
         private void ListConnectedDevices()
         {
             ListBoxDevices.SelectedIndex = DeviceList.UpdateDevices();
+            FindAllFiles();
         }
 
         private void GetProfiles(string SelectProfile = "")
@@ -162,7 +164,7 @@ namespace PhotoApp
                 selectedProfile = cbProfiles.SelectedItem.ToString();
             }
 
-            Profiles = Directory.GetFiles(profilesPath, "*.xml").Select(f => Path.GetFileNameWithoutExtension(f)).Where(x=>DownloadSettings.IsValid(x)).ToList();
+            Profiles = Directory.GetFiles(profilesPath, "*.xml").Select(f => Path.GetFileNameWithoutExtension(f)).Where(x => DownloadSettings.IsValid(x)).ToList();
 
             OnPropertyChanged("Profiles");
 
@@ -201,6 +203,26 @@ namespace PhotoApp
         private void Refresh_Click(object sender, RoutedEventArgs e)
         {
             ListConnectedDevices();
+        }
+
+        private void Find_Click(object sender, RoutedEventArgs e)
+        {
+            FindAllFiles();
+        }
+
+        public async void FindAllFiles()
+        {
+            List<Task> tasks = new List<Task>();
+            foreach (var device in DeviceList.Devices)
+            {
+                tasks.Add(Task.Factory.StartNew(() => device.GetAllFiles()));
+            }
+            await Task.WhenAll(tasks);
+            //Parallel.ForEach(DeviceList.Devices/*.Where(d => d.FileSearchStatus == Device.DEVICE_FILES_NOT_SEARCHED)*/,
+            //    device =>
+            //    {
+            //        device.GetAllFiles();
+            //    });
         }
 
         private void FindFiles_Click(object sender, RoutedEventArgs e)
@@ -365,7 +387,7 @@ namespace PhotoApp
             tb.Visibility = Visibility.Visible;
         }
         //spusteni prace na pozadi podle typu ulohy
-        private void RunWorker(object sender, TaskType task, bool showProgress)
+        private void RunWorker(object sender, TaskType task, bool showProgress, string deviceID = "")
         {
             backgroundWorker = new BackgroundWorker();
             backgroundWorker.WorkerSupportsCancellation = true;
@@ -396,7 +418,10 @@ namespace PhotoApp
                     backgroundWorker.DoWork += GetFileTypes;
                     break;
             }
-            backgroundWorker.RunWorkerAsync();
+            if (!backgroundWorker.IsBusy)
+            {
+                backgroundWorker.RunWorkerAsync();
+            }
         }
 
 
@@ -719,7 +744,7 @@ namespace PhotoApp
         }
         private async void btnSaveAs_Click(object sender, RoutedEventArgs e)
         {
-            SaveDialog saveDialog = new SaveDialog(this,DownloadSettings.SaveOptions);
+            SaveDialog saveDialog = new SaveDialog(this, DownloadSettings.SaveOptions);
             await DialogHost.Show(saveDialog, "RootDialog");
         }
 
@@ -741,7 +766,7 @@ namespace PhotoApp
 
                 if (!DownloadSettings.Load(cb.SelectedItem.ToString()))
                 {
-                    ShowYesNoDialog(string.Format(Properties.Resources.Profile_Load_Error,cb.SelectedItem), REQUEST_PROFILE_DELETE);
+                    ShowYesNoDialog(string.Format(Properties.Resources.Profile_Load_Error, cb.SelectedItem), REQUEST_PROFILE_DELETE);
                 }
                 OnPropertyChanged("DownloadSettings");
 
@@ -869,7 +894,7 @@ namespace PhotoApp
             await DialogHost.Show(UpdateDialog, "RootDialog");
         }
 
-        private async void ShowYesNoDialog(string message,int request_code)
+        private async void ShowYesNoDialog(string message, int request_code)
         {
             YesNoDialog ynDialog = new YesNoDialog(this, message, request_code);
             await DialogHost.Show(ynDialog, "RootDialog");
@@ -892,10 +917,10 @@ namespace PhotoApp
         public async void ShowChangelog(object sender = null)
         {
             DialogHost.CloseDialogCommand.Execute(null, null);
-            var ChangelogDialog = new ChangelogDialog(ActualHeight,ActualWidth);
+            var ChangelogDialog = new ChangelogDialog(ActualHeight, ActualWidth);
             await DialogHost.Show(ChangelogDialog, "RootDialog");
 
-            if(sender != null)
+            if (sender != null)
             {
                 await DialogHost.Show(sender, "RootDialog");
             }

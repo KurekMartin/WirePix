@@ -129,6 +129,11 @@ namespace PhotoApp
             return SelectedDeviceIndex;
         }
 
+        public Device GetDeviceByID(string deviceID)
+        {
+            return _devices.FirstOrDefault(d => d.ID == deviceID);
+        }
+
         public Device SelectDeviceByIndex(int index)
         {
             if (index > -1 )
@@ -178,6 +183,11 @@ namespace PhotoApp
                 }
                 return -1;
             }
+        }
+
+        public IEnumerable<Device> Devices
+        {
+            get { return _devices; }
         }
     }
 }
