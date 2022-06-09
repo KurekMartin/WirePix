@@ -137,8 +137,8 @@ namespace PhotoApp
 
                 //zmena vybraneho zarizeni
                 DeviceList.SelectDeviceByIndex(ListBoxDevices.SelectedIndex);
-
                 //DeviceList.SelectedDevice.FileTypes();
+                Console.WriteLine($"[{DeviceList.SelectedDevice.Name}] status {DeviceList.SelectedDevice.FileSearchStatus}");
             }
             else
             {
@@ -146,7 +146,6 @@ namespace PhotoApp
                 ListBoxDevices.IsEnabled = true;
             }
         }
-
 
         //nalezeni a vypis vsech zarizeni vyuzivajicich MTP
         private void ListConnectedDevices()
@@ -207,22 +206,21 @@ namespace PhotoApp
 
         private void Find_Click(object sender, RoutedEventArgs e)
         {
-            FindAllFiles();
+            FindAllFiles(true);
         }
 
-        public async void FindAllFiles()
+        public void FindAllFiles(bool forceSearch = false)
         {
             List<Task> tasks = new List<Task>();
-            foreach (var device in DeviceList.Devices)
+            IEnumerable<Device> devices = DeviceList.Devices;
+            if (!forceSearch)
             {
-                tasks.Add(Task.Factory.StartNew(() => device.GetAllFiles()));
+                devices = devices.Where(d => d.FileSearchStatus == Device.DEVICE_FILES_NOT_SEARCHED);
             }
-            await Task.WhenAll(tasks);
-            //Parallel.ForEach(DeviceList.Devices/*.Where(d => d.FileSearchStatus == Device.DEVICE_FILES_NOT_SEARCHED)*/,
-            //    device =>
-            //    {
-            //        device.GetAllFiles();
-            //    });
+            Parallel.ForEach(devices, (device) =>
+            {
+                device.GetAllFiles();
+            });
         }
 
         private void FindFiles_Click(object sender, RoutedEventArgs e)
@@ -240,7 +238,6 @@ namespace PhotoApp
                 backupStart = DateTime.Now;
                 RunWorker(sender, TaskType.CopyFiles, true);
             }
-
         }
 
         private void RemoveAllErrors()

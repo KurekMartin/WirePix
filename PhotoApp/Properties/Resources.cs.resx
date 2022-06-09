@@ -296,6 +296,12 @@ Uložením tento soubor přepíšete.</value>
   <data name="FileSearchState" xml:space="preserve">
     <value>Vyhledávání souborů</value>
   </data>
+  <data name="FileSearchStatus_Error" xml:space="preserve">
+    <value>Chyba</value>
+  </data>
+  <data name="FileSearchStatus_NotSearched" xml:space="preserve">
+    <value>Nespuštěno</value>
+  </data>
   <data name="FileSearchStatus_Ready" xml:space="preserve">
     <value>Dokončeno</value>
   </data>

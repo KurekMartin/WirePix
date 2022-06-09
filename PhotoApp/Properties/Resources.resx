@@ -295,6 +295,12 @@ Save to overwrite this file.</value>
   <data name="FileSearchState" xml:space="preserve">
     <value>File search</value>
   </data>
+  <data name="FileSearchStatus_Error" xml:space="preserve">
+    <value>Error</value>
+  </data>
+  <data name="FileSearchStatus_NotSearched" xml:space="preserve">
+    <value>Not searched</value>
+  </data>
   <data name="FileSearchStatus_Ready" xml:space="preserve">
     <value>Done</value>
   </data>

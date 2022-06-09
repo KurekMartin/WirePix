@@ -136,12 +136,12 @@ namespace PhotoApp
 
         public Device SelectDeviceByIndex(int index)
         {
-            if (index > -1 )
+            if (index > -1)
             {
                 Device device = _devices.FirstOrDefault(d => d.ID == ConnectedDevicesInfo.ElementAt(index).ID);
                 _selectedDeviceID = device.ID;
                 OnPropertyChanged("SelectedDeviceInfo");
-                OnPropertyChanged("SelectedDevice");
+                OnPropertyChanged(nameof(SelectedDevice));
                 return device;
             }
             return null;
