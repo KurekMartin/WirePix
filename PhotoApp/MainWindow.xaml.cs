@@ -20,6 +20,7 @@ namespace PhotoApp
     public enum TaskType
     {
         FindFiles,
+        FindAllFiles,
         CopyFiles,
         GetFileTypes
     }
@@ -151,6 +152,7 @@ namespace PhotoApp
         private void ListConnectedDevices()
         {
             ListBoxDevices.SelectedIndex = DeviceList.UpdateDevices();
+            FindAllFiles();
         }
 
         private void GetProfiles(string SelectProfile = "")
@@ -201,6 +203,26 @@ namespace PhotoApp
         private void Refresh_Click(object sender, RoutedEventArgs e)
         {
             ListConnectedDevices();
+        }
+
+        private void Find_Click(object sender, RoutedEventArgs e)
+        {
+            FindAllFiles();
+        }
+
+        public async void FindAllFiles()
+        {
+            List<Task> tasks = new List<Task>();
+            foreach (var device in DeviceList.Devices)
+            {
+                tasks.Add(Task.Factory.StartNew(() => device.GetAllFiles()));
+            }
+            await Task.WhenAll(tasks);
+            //Parallel.ForEach(DeviceList.Devices/*.Where(d => d.FileSearchStatus == Device.DEVICE_FILES_NOT_SEARCHED)*/,
+            //    device =>
+            //    {
+            //        device.GetAllFiles();
+            //    });
         }
 
         private void FindFiles_Click(object sender, RoutedEventArgs e)
@@ -365,7 +387,7 @@ namespace PhotoApp
             tb.Visibility = Visibility.Visible;
         }
         //spusteni prace na pozadi podle typu ulohy
-        private void RunWorker(object sender, TaskType task, bool showProgress)
+        private void RunWorker(object sender, TaskType task, bool showProgress, string deviceID = "")
         {
             backgroundWorker = new BackgroundWorker();
             backgroundWorker.WorkerSupportsCancellation = true;
@@ -396,7 +418,10 @@ namespace PhotoApp
                     backgroundWorker.DoWork += GetFileTypes;
                     break;
             }
-            backgroundWorker.RunWorkerAsync();
+            if (!backgroundWorker.IsBusy)
+            {
+                backgroundWorker.RunWorkerAsync();
+            }
         }
 
 

@@ -7,7 +7,11 @@ namespace PhotoApp.Converters
     {
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
-            if ((int)value == Device.DEVICE_FILES_SEARCHING)
+            if ((int)value == Device.DEVICE_FILES_NOT_SEARCHED)
+            {
+                return "not searched";
+            }
+            else if ((int)value == Device.DEVICE_FILES_SEARCHING)
             {
                 return Properties.Resources.FileSearchStatus_Searching;
             }

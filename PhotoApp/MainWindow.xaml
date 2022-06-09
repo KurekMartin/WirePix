@@ -173,7 +173,7 @@
                                                              d:Value="30"/>
                                             </StackPanel>
 
-                                            <StackPanel Orientation="Horizontal" Margin="0,3" Visibility="Collapsed">
+                                            <StackPanel Orientation="Horizontal" Margin="0,3" Visibility="Visible">
                                                 <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}" 
                                                        Text="{x:Static p:Resources.FileSearchState}"
                                                        FontWeight="Bold"/>
@@ -182,6 +182,16 @@
                                                        x:Name="lblFileSearchStatus" 
                                                        Text="{Binding DeviceList.SelectedDevice.FileSearchStatus,Converter={StaticResource IntToFileSearchStatus}}"/>
                                             </StackPanel>
+                                            <StackPanel Orientation="Horizontal" Margin="0,3">
+                                                <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}" 
+                                                       Text="Files count"
+                                                       FontWeight="Bold"/>
+                                                <TextBlock Text=":" VerticalAlignment="Center" Style="{StaticResource MaterialDesignBody2TextBlock}"/>
+                                                <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}" 
+                                                       x:Name="lblAllFilesCount" 
+                                                       Text="{Binding DeviceList.SelectedDevice.AllFilesCount}"/>
+                                            </StackPanel>
+                                            <Button Content="find files" Click="Find_Click"/>
                                         </StackPanel>
                                     </StackPanel>
                                 </StackPanel>

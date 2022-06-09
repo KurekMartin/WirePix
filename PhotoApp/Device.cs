@@ -17,7 +17,7 @@ using System.Windows;
 
 namespace PhotoApp
 {
-    public class Device
+    public class Device : BaseObserveObject
     {
         private struct CopyItem
         {
@@ -43,8 +43,8 @@ namespace PhotoApp
         private List<MediaDirectoryInfo> _mediaDirList;
         private double[] _space;
         private IEnumerable<MediaFileInfo> filesToCopy;
-        private IEnumerable<MediaFileInfo> allFiles;
-        private bool fileSearchDone = false;
+        private IEnumerable<MediaFileInfo> allFiles = Enumerable.Empty<MediaFileInfo>();
+        private int _fileSearchStatus = DEVICE_FILES_NOT_SEARCHED;
         private List<string> fileTypes = new List<string>();
 
         public int FilesToCopyCount { get; private set; } = 0;
@@ -61,8 +61,9 @@ namespace PhotoApp
         public static int DEVICE_READY = 1;
 
         //files status
-        public static int DEVICE_FILES_READY = 1;
-        public static int DEVICE_FILES_SEARCHING = 0;
+        public static int DEVICE_FILES_READY = 2;
+        public static int DEVICE_FILES_SEARCHING = 1;
+        public static int DEVICE_FILES_NOT_SEARCHED = 0;
         public static int DEVICE_FILES_ERROR = -1;
 
         private readonly Log _log = new Log();
@@ -102,7 +103,10 @@ namespace PhotoApp
                     {
                         return DEVICE_CANNOT_CONNECT;
                     }
-                    _device.Disconnect();
+                    if(_fileSearchStatus != DEVICE_FILES_SEARCHING)
+                    {
+                        Disconnect();
+                    }
                     return DEVICE_READY;
                 }
                 return DEVICE_UNKNOWN_STATUS;
@@ -113,17 +117,14 @@ namespace PhotoApp
         {
             get
             {
-                if (!fileSearchDone)
+                return _fileSearchStatus;
+            }
+            private set
+            {
+                if (_fileSearchStatus != value)
                 {
-                    return DEVICE_FILES_SEARCHING;
-                }
-                else if (fileSearchDone && allFiles.Count() > 0)
-                {
-                    return DEVICE_FILES_READY;
-                }
-                else
-                {
-                    return DEVICE_FILES_ERROR;
+                    _fileSearchStatus = value;
+                    OnPropertyChanged();
                 }
             }
         }
@@ -166,39 +167,33 @@ namespace PhotoApp
                         _space[0] += drive.TotalSize / (double)1073741824; //prevod na GB
                         _space[1] += drive.AvailableFreeSpace / (double)1073741824;
                     }
-                    _device.Disconnect();
+                    Disconnect();
                     _space = _space.Select(x => Math.Round(x, 2)).ToArray();
                     _space[2] = Math.Round(_space[0] - _space[1], 2);
                 }
                 return _space;
             }
         }
-
-        public List<string> FileTypes(BackgroundWorker worker, DoWorkEventArgs e)
+        public int AllFilesCount
         {
-            if (fileTypes != null)
+            get
             {
-                return fileTypes;
+                _device.Connect();
+                int count = allFiles.Count();
+                Disconnect();
+                return count;
             }
-            IEnumerable<MediaFileInfo> mediaFiles = filesToCopy;
-            if (mediaFiles == null)
-            {
-                GetAllFiles(worker, e);
-            }
-
-            return fileTypes;
         }
 
-        public int FilesToDownload
+        public int FilesToDownloadCount
         {
             get
             {
                 _device.Connect();
                 int c = filesToCopy.Count();
-                _device.Disconnect();
+                Disconnect();
                 return c;
             }
-
         }
 
         //hledani DCIM
@@ -219,12 +214,37 @@ namespace PhotoApp
                             GetMediaDirectory(_device, root, _mediaDirList);
                         }
                     }
-                    _device.Disconnect();
+                    Disconnect();
                 }
                 return _mediaDirList.Select(dir => { return dir.FullName; }).ToList();
             }
 
         }
+
+        private void Disconnect()
+        {
+            if(_fileSearchStatus != DEVICE_FILES_SEARCHING)
+            {
+                _device.Disconnect();
+            }
+        }
+
+        public List<string> FileTypes(BackgroundWorker worker, DoWorkEventArgs e)
+        {
+            if (fileTypes != null)
+            {
+                return fileTypes;
+            }
+            IEnumerable<MediaFileInfo> mediaFiles = filesToCopy;
+            if (mediaFiles == null)
+            {
+                //GetAllFiles(worker, e);
+            }
+
+            return fileTypes;
+        }
+
+
 
         private void GetMediaDirectory(MediaDevice device, MediaDirectoryInfo dir, List<MediaDirectoryInfo> mediaDirList)
         {
@@ -249,12 +269,20 @@ namespace PhotoApp
             return;
         }
 
-        private void GetAllFiles(BackgroundWorker worker, DoWorkEventArgs e, ProgressUpdateArgs progressArgs = new ProgressUpdateArgs())
+        public void GetAllFiles()
         {
-            allFiles = Enumerable.Empty<MediaFileInfo>();
-            foreach (string dir in MediaDirectories)
+            if (FileSearchStatus != DEVICE_FILES_SEARCHING)
             {
-                allFiles = allFiles.Concat(GetAllFilesList(dir, worker, e, progressArgs));
+                _device.Connect();
+                FileSearchStatus = DEVICE_FILES_SEARCHING;
+                allFiles = Enumerable.Empty<MediaFileInfo>();
+                foreach (string dir in MediaDirectories)
+                {
+                    allFiles = allFiles.Concat(GetAllFilesList(dir));
+                    OnPropertyChanged(nameof(AllFilesCount));
+                }
+                FileSearchStatus = DEVICE_FILES_READY;
+                Disconnect();
             }
         }
 
@@ -301,7 +329,7 @@ namespace PhotoApp
                 //GetAllFiles(worker, e, progressArgs);
                 foreach (MediaDirectoryInfo dir in _mediaDirList)
                 {
-                    allFiles = allFiles.Concat(GetAllFilesList(dir.FullName, worker, e, progressArgs));
+                    allFiles = allFiles.Concat(GetAllFilesList(dir.FullName));
                 }
                 if (_checkDateRange)
                 {
@@ -332,11 +360,11 @@ namespace PhotoApp
 
                 e.Result = new WorkerResult(MainWindow.RESULT_ERROR, TaskType.FindFiles);
 
-                _device.Disconnect();
+                Disconnect();
                 return;
             }
 
-            _device.Disconnect();
+            Disconnect();
             _lastSettings = new DownloadSettings();
             _lastSettings.Date.Start = settings.Date.Start;
             _lastSettings.Date.End = settings.Date.End;
@@ -347,69 +375,48 @@ namespace PhotoApp
 
         //rekurzivni prohledani vsech slozek v adresari
         //vynechani slozek zacinajicich '.'
-        private IEnumerable<MediaFileInfo> GetAllFilesList(string path, BackgroundWorker worker, DoWorkEventArgs e, ProgressUpdateArgs progressArgs)
+        private IEnumerable<MediaFileInfo> GetAllFilesList(string path)
         {
+            if (!_device.IsConnected) { _device.Connect(); }
             IEnumerable<MediaFileInfo> files = Enumerable.Empty<MediaFileInfo>();
-            if (worker.CancellationPending)
+            if (!_log.Running) { _log.Start(); }
+            try
             {
-                e.Cancel = true;
-                FilesTotal = 0;
-                FilesToCopyCount = 0;
-                filesToCopy = Enumerable.Empty<MediaFileInfo>();
-            }
-            else
-            {
-                if (worker.WorkerReportsProgress)
+                //ziskani nazvu vsech souboru ve slozce
+                MediaDirectoryInfo dirInfo = _device.GetDirectoryInfo(path);
+                files = dirInfo.EnumerateFiles("*", SearchOption.TopDirectoryOnly);
+
+                FilesTotal += files.Count();
+
+
+                //prohledani podslozek
+                IEnumerable<string> subdirs = _device.EnumerateDirectories(path);
+                foreach (string dir in subdirs)
                 {
-                    progressArgs.currentTask = path;
-                    progressArgs.progressText = string.Format(Properties.Resources.DeviceFilesFound, FilesTotal);
-                    worker.ReportProgress(0, progressArgs);
-                }
-
-                if (!_log.Running) { _log.Start(); }
-                try
-                {
-                    //ziskani nazvu vsech souboru ve slozce
-                    MediaDirectoryInfo dirInfo = _device.GetDirectoryInfo(path);
-                    files = dirInfo.EnumerateFiles("*", SearchOption.TopDirectoryOnly);
-
-                    FilesTotal += files.Count();
-                    if (worker.WorkerReportsProgress)
+                    if (!dir.ElementAt(dir.LastIndexOf('\\') + 1).Equals('.')) // vynechani slozek zacinajicich "."
                     {
-                        progressArgs.progressText = string.Format(Properties.Resources.DeviceFilesFound, FilesTotal);
-                        worker.ReportProgress(0, progressArgs);
-                    }
+                        var currentFiles = GetAllFilesList(dir);
+                        files = files.Concat(currentFiles);
 
-
-                    //prohledani podslozek
-                    IEnumerable<string> subdirs = _device.EnumerateDirectories(path);
-                    foreach (string dir in subdirs)
-                    {
-                        if (!dir.ElementAt(dir.LastIndexOf('\\') + 1).Equals('.')) // vynechani slozek zacinajicich "."
+                        //získat typy souborů
+                        currentFiles.ToList().ForEach(x =>
                         {
-                            var currentFiles = GetAllFilesList(dir, worker, e, progressArgs);
-                            files = files.Concat(currentFiles);
-
-                            //získat typy souborů
-                            currentFiles.ToList().ForEach(x =>
-                            {
-                                string ext = Path.GetExtension(x.Name).ToUpper();
-                                if (!fileTypes.Contains(ext)) { fileTypes.Add(ext); }
-                            });
-                        }
+                            string ext = Path.GetExtension(x.Name).ToUpper();
+                            if (!fileTypes.Contains(ext)) { fileTypes.Add(ext); }
+                        });
                     }
                 }
-                catch (Exception ex)
-                {
-                    var st = new StackTrace();
-                    var sf = st.GetFrame(0);
-                    var currentMethodName = sf.GetMethod();
+            }
+            catch (Exception ex)
+            {
+                var st = new StackTrace();
+                var sf = st.GetFrame(0);
+                var currentMethodName = sf.GetMethod();
 
-                    Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-us");
-                    _log.Add(ex.ToString(), LogType.ERROR, currentMethodName.Name);
-                    _log.Stop();
-                    return Enumerable.Empty<MediaFileInfo>();
-                }
+                Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-us");
+                _log.Add(ex.ToString(), LogType.ERROR, currentMethodName.Name);
+                _log.Stop();
+                return Enumerable.Empty<MediaFileInfo>();
             }
             return files;
         }
@@ -478,7 +485,7 @@ namespace PhotoApp
                         {
                             e.Cancel = true;
                             filesCollection.CompleteAdding();
-                            _device.Disconnect();
+                            Disconnect();
                             return;
                         }
                         else
@@ -632,7 +639,7 @@ namespace PhotoApp
             DeleteFiles(filesDone, worker);
 
             _log.Stop();
-            _device.Disconnect();
+            Disconnect();
             e.Result = new WorkerResult(MainWindow.RESULT_OK, TaskType.CopyFiles);
         }
 
