@@ -180,7 +180,7 @@
                                                 <TextBlock Text=":" VerticalAlignment="Center" Style="{StaticResource MaterialDesignBody2TextBlock}"/>
                                                 <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}" 
                                                        x:Name="lblFileSearchStatus" 
-                                                       Text="{Binding DeviceList.SelectedDevice.FileSearchStatus,Converter={StaticResource IntToFileSearchStatus}}"/>
+                                                       Text="{Binding DeviceList.SelectedDevice.FileSearchStatus,Converter={StaticResource IntToFileSearchStatus},NotifyOnTargetUpdated=True}"/>
                                             </StackPanel>
                                             <StackPanel Orientation="Horizontal" Margin="0,3">
                                                 <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}" 

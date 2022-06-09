@@ -577,6 +577,24 @@ namespace PhotoApp.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Error.
+        /// </summary>
+        public static string FileSearchStatus_Error {
+            get {
+                return ResourceManager.GetString("FileSearchStatus_Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Not searched.
+        /// </summary>
+        public static string FileSearchStatus_NotSearched {
+            get {
+                return ResourceManager.GetString("FileSearchStatus_NotSearched", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Done.
         /// </summary>
         public static string FileSearchStatus_Ready {

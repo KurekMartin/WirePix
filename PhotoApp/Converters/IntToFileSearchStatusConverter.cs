@@ -9,7 +9,7 @@ namespace PhotoApp.Converters
         {
             if ((int)value == Device.DEVICE_FILES_NOT_SEARCHED)
             {
-                return "not searched";
+                return Properties.Resources.FileSearchStatus_NotSearched;
             }
             else if ((int)value == Device.DEVICE_FILES_SEARCHING)
             {
@@ -18,6 +18,10 @@ namespace PhotoApp.Converters
             else if ((int)value == Device.DEVICE_FILES_READY)
             {
                 return Properties.Resources.FileSearchStatus_Ready;
+            }
+            else if ((int)value == Device.DEVICE_FILES_ERROR)
+            {
+                return Properties.Resources.FileSearchStatus_Error;
             }
             else
             {

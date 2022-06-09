@@ -35,6 +35,17 @@ namespace PhotoApp
 
         }
 
+        private struct BaseFileInfo
+        {
+            public BaseFileInfo(string PersistentUniqueId, string fullPath)
+            {
+                this.PersistentUniqueId = PersistentUniqueId;
+                this.FullPath = fullPath;
+            }
+            public string PersistentUniqueId;
+            public string FullPath;
+        }
+
         public int FilesDoneCount { get; private set; } = 0;
         public int FilesTotal { get; private set; } = 0;
         public int Errors { get; private set; } = 0;
@@ -43,7 +54,7 @@ namespace PhotoApp
         private List<MediaDirectoryInfo> _mediaDirList;
         private double[] _space;
         private IEnumerable<MediaFileInfo> filesToCopy;
-        private IEnumerable<MediaFileInfo> allFiles = Enumerable.Empty<MediaFileInfo>();
+        private IEnumerable<BaseFileInfo> allFilesInfo = Enumerable.Empty<BaseFileInfo>();
         private int _fileSearchStatus = DEVICE_FILES_NOT_SEARCHED;
         private List<string> fileTypes = new List<string>();
 
@@ -103,10 +114,7 @@ namespace PhotoApp
                     {
                         return DEVICE_CANNOT_CONNECT;
                     }
-                    if(_fileSearchStatus != DEVICE_FILES_SEARCHING)
-                    {
-                        Disconnect();
-                    }
+                    Disconnect();
                     return DEVICE_READY;
                 }
                 return DEVICE_UNKNOWN_STATUS;
@@ -119,7 +127,7 @@ namespace PhotoApp
             {
                 return _fileSearchStatus;
             }
-            private set
+            set
             {
                 if (_fileSearchStatus != value)
                 {
@@ -178,10 +186,7 @@ namespace PhotoApp
         {
             get
             {
-                _device.Connect();
-                int count = allFiles.Count();
-                Disconnect();
-                return count;
+                return allFilesInfo.Count();
             }
         }
 
@@ -218,12 +223,11 @@ namespace PhotoApp
                 }
                 return _mediaDirList.Select(dir => { return dir.FullName; }).ToList();
             }
-
         }
 
         private void Disconnect()
         {
-            if(_fileSearchStatus != DEVICE_FILES_SEARCHING)
+            if (_device.IsConnected && _fileSearchStatus != DEVICE_FILES_SEARCHING)
             {
                 _device.Disconnect();
             }
@@ -273,17 +277,43 @@ namespace PhotoApp
         {
             if (FileSearchStatus != DEVICE_FILES_SEARCHING)
             {
-                _device.Connect();
                 FileSearchStatus = DEVICE_FILES_SEARCHING;
-                allFiles = Enumerable.Empty<MediaFileInfo>();
-                foreach (string dir in MediaDirectories)
-                {
-                    allFiles = allFiles.Concat(GetAllFilesList(dir));
-                    OnPropertyChanged(nameof(AllFilesCount));
-                }
-                FileSearchStatus = DEVICE_FILES_READY;
+                allFilesInfo = Enumerable.Empty<BaseFileInfo>();
+                OnPropertyChanged(nameof(AllFilesCount));
+
+                _device.Connect();
+                GetAllFilesAsync(MediaDirectories);
                 Disconnect();
             }
+        }
+
+        private async void GetAllFilesAsync(List<string> mediaDirs)
+        {
+            IEnumerable<MediaFileInfo> allFiles = Enumerable.Empty<MediaFileInfo>();
+            try
+            {        
+                await Task.Run(() =>
+                {                
+                    foreach (string dir in mediaDirs)
+                    {
+                        MediaDirectoryInfo dirInfo = _device.GetDirectoryInfo(dir);
+                        var files = dirInfo.EnumerateFiles("*", SearchOption.AllDirectories);
+                        allFiles = allFiles.Concat(files);
+                    }
+                    allFilesInfo = allFiles.Select(f => new BaseFileInfo(f.PersistentUniqueId, f.FullName)).ToList();
+
+                });
+                
+                FileSearchStatus = DEVICE_FILES_READY;
+            }
+            catch (Exception ex)
+            {
+                allFilesInfo = Enumerable.Empty<BaseFileInfo>();
+                FileSearchStatus = DEVICE_FILES_ERROR;
+            }
+
+            OnPropertyChanged(nameof(AllFilesCount));
+            
         }
 
         //nalezeni souboru dle data
