@@ -137,8 +137,7 @@ namespace PhotoApp
 
                 //zmena vybraneho zarizeni
                 DeviceList.SelectDeviceByIndex(ListBoxDevices.SelectedIndex);
-                //DeviceList.SelectedDevice.FileTypes();
-                Console.WriteLine($"[{DeviceList.SelectedDevice.Name}] status {DeviceList.SelectedDevice.FileSearchStatus}");
+                //DeviceList.SelectedDevice.FileTypes();                
             }
             else
             {
