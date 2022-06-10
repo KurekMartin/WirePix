@@ -80,13 +80,19 @@ namespace PhotoApp
 
         public int UpdateDevices()
         {
+            //select only new devices that support MTP or PTP
             IEnumerable<MediaDevice> devices = MediaDevice.GetDevices().Where(d =>
-            {
-                d.Connect();
-                bool isMediaDevice = d.Protocol.ToUpper().Contains("MTP") || d.Protocol.ToUpper().Contains("PTP"); //filtr podle protokolu
-                d.Disconnect();
-                return isMediaDevice;
-            });
+                  {
+                      bool isMediaDevice = false;
+                      if (!_devices.Any(c => d.DeviceId == c.ID))
+                      {
+                          d.Connect();
+                          isMediaDevice = d.Protocol.ToUpper().Contains("MTP") || d.Protocol.ToUpper().Contains("PTP");
+                          d.Disconnect();
+                      }
+                      else { isMediaDevice = true; }
+                      return isMediaDevice;
+                  });
             DeviceInfo.Select(d => { d.Connected = false; return d; }).ToList();
 
             foreach (MediaDevice device in devices)
