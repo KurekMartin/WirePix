@@ -35,17 +35,6 @@ namespace PhotoApp
 
         }
 
-        private struct BaseFileInfo
-        {
-            public BaseFileInfo(string PersistentUniqueId, string fullPath)
-            {
-                this.PersistentUniqueId = PersistentUniqueId;
-                this.FullPath = fullPath;
-            }
-            public string PersistentUniqueId;
-            public string FullPath;
-        }
-
         public int FilesDoneCount { get; private set; } = 0;
         public int FilesTotal { get; private set; } = 0;
         public int Errors { get; private set; } = 0;
@@ -54,9 +43,9 @@ namespace PhotoApp
         private List<MediaDirectoryInfo> _mediaDirList;
         private double[] _space;
         private IEnumerable<MediaFileInfo> filesToCopy;
-        private IEnumerable<BaseFileInfo> allFilesInfo = Enumerable.Empty<BaseFileInfo>();
+        private DeviceFileInfo _deviceFileInfo;
+        
         private int _fileSearchStatus = DEVICE_FILES_NOT_SEARCHED;
-        private List<string> fileTypes = new List<string>();
 
         public int FilesToCopyCount { get; private set; } = 0;
         private double sizeToProcess;
@@ -182,13 +171,6 @@ namespace PhotoApp
                 return _space;
             }
         }
-        public int AllFilesCount
-        {
-            get
-            {
-                return allFilesInfo.Count();
-            }
-        }
 
         public int FilesToDownloadCount
         {
@@ -225,6 +207,19 @@ namespace PhotoApp
             }
         }
 
+        public DeviceFileInfo DeviceFileInfo
+        {
+            get
+            {
+                return _deviceFileInfo;
+            }
+            private set
+            {
+                _deviceFileInfo = value;
+                OnPropertyChanged();
+            }
+        }
+
         private void Disconnect()
         {
             if (_device.IsConnected && _fileSearchStatus != DEVICE_FILES_SEARCHING)
@@ -232,24 +227,6 @@ namespace PhotoApp
                 _device.Disconnect();
             }
         }
-
-        public List<string> FileTypes(BackgroundWorker worker, DoWorkEventArgs e)
-        {
-            if (fileTypes != null)
-            {
-                return fileTypes;
-            }
-            IEnumerable<MediaFileInfo> mediaFiles = filesToCopy;
-            if (mediaFiles == null)
-            {
-                //GetAllFiles(worker, e);
-            }
-
-            return fileTypes;
-        }
-
-
-
         private void GetMediaDirectory(MediaDevice device, MediaDirectoryInfo dir, List<MediaDirectoryInfo> mediaDirList)
         {
             var dirs = dir.EnumerateDirectories();
@@ -278,9 +255,7 @@ namespace PhotoApp
             if (FileSearchStatus != DEVICE_FILES_SEARCHING)
             {
                 FileSearchStatus = DEVICE_FILES_SEARCHING;
-                allFilesInfo = Enumerable.Empty<BaseFileInfo>();
-                OnPropertyChanged(nameof(AllFilesCount));
-
+                DeviceFileInfo = new DeviceFileInfo();
                 _device.Connect();
                 GetAllFilesAsync(MediaDirectories);
                 Disconnect();
@@ -291,29 +266,26 @@ namespace PhotoApp
         {
             IEnumerable<MediaFileInfo> allFiles = Enumerable.Empty<MediaFileInfo>();
             try
-            {        
+            {
                 await Task.Run(() =>
-                {                
+                {
                     foreach (string dir in mediaDirs)
                     {
                         MediaDirectoryInfo dirInfo = _device.GetDirectoryInfo(dir);
                         var files = dirInfo.EnumerateFiles("*", SearchOption.AllDirectories);
                         allFiles = allFiles.Concat(files);
                     }
-                    allFilesInfo = allFiles.Select(f => new BaseFileInfo(f.PersistentUniqueId, f.FullName)).ToList();
+                    DeviceFileInfo = new DeviceFileInfo(allFiles);
 
                 });
-                
+
                 FileSearchStatus = DEVICE_FILES_READY;
             }
             catch (Exception ex)
             {
-                allFilesInfo = Enumerable.Empty<BaseFileInfo>();
+                DeviceFileInfo = new DeviceFileInfo();
                 FileSearchStatus = DEVICE_FILES_ERROR;
             }
-
-            OnPropertyChanged(nameof(AllFilesCount));
-            
         }
 
         //nalezeni souboru dle data
@@ -427,13 +399,6 @@ namespace PhotoApp
                     {
                         var currentFiles = GetAllFilesList(dir);
                         files = files.Concat(currentFiles);
-
-                        //získat typy souborů
-                        currentFiles.ToList().ForEach(x =>
-                        {
-                            string ext = Path.GetExtension(x.Name).ToUpper();
-                            if (!fileTypes.Contains(ext)) { fileTypes.Add(ext); }
-                        });
                     }
                 }
             }
@@ -713,7 +678,7 @@ namespace PhotoApp
             var sf = st.GetFrame(0);
             var currentMethodName = sf.GetMethod();
 
-            if (!IsImage(origFile))
+            if (!FileType.IsImage(origFile))
             {
                 string message = $"Could not generate thumbnail for [{origFile}]. Not supported image format.";
                 lock (_lockLog)
@@ -853,12 +818,6 @@ namespace PhotoApp
                     }
                 }
             }
-        }
-
-        private bool IsImage(string file)
-        {
-            var format = MagickFormatInfo.Create(file);
-            return format.ModuleFormat == MagickFormat.Dng || (format.MimeType != null && format.MimeType.Contains("image"));
         }
 
         private bool IsLargerResolution(Thumbnails thumbnailSettings, int width, int height)
