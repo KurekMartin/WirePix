@@ -188,6 +188,8 @@
     <Compile Include="Dialogs\UsedLibraries.xaml.cs">
       <DependentUpon>UsedLibraries.xaml</DependentUpon>
     </Compile>
+    <Compile Include="FileType.cs" />
+    <Compile Include="DeviceFileInfo.cs" />
     <Compile Include="Properties\Languages.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

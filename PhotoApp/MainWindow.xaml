@@ -15,7 +15,7 @@
         TextOptions.TextFormattingMode="Ideal" 
         TextOptions.TextRenderingMode="Auto"        
         Background="{DynamicResource MaterialDesignPaper}"
-        FontFamily="{DynamicResource MaterialDesignFont}" MinWidth="800" MinHeight="600" Height="778" Width="800" SizeToContent="Height" ResizeMode="CanMinimize" Closing="Window_Closing" WindowStartupLocation="CenterScreen" Icon="/icon.ico">
+        FontFamily="{DynamicResource MaterialDesignFont}" MinWidth="800" MinHeight="600" Height="778" Width="800" SizeToContent="Height" ResizeMode="CanMinimize" Closing="Window_Closing" WindowStartupLocation="CenterScreen" Icon="/icon.ico" Loaded="Window_Loaded">
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVisConverter" />
         <converters:EnumToBoleanConverter x:Key="EnumToBool"/>
@@ -180,7 +180,7 @@
                                                 <TextBlock Text=":" VerticalAlignment="Center" Style="{StaticResource MaterialDesignBody2TextBlock}"/>
                                                 <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}" 
                                                        x:Name="lblFileSearchStatus" 
-                                                       Text="{Binding DeviceList.SelectedDevice.FileSearchStatus,Converter={StaticResource IntToFileSearchStatus},NotifyOnTargetUpdated=True}"/>
+                                                       Text="{Binding DeviceList.SelectedDevice.FileSearchStatus,Converter={StaticResource IntToFileSearchStatus}}"/>
                                             </StackPanel>
                                             <StackPanel Orientation="Horizontal" Margin="0,3">
                                                 <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}" 
@@ -189,8 +189,17 @@
                                                 <TextBlock Text=":" VerticalAlignment="Center" Style="{StaticResource MaterialDesignBody2TextBlock}"/>
                                                 <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}" 
                                                        x:Name="lblAllFilesCount" 
-                                                       Text="{Binding DeviceList.SelectedDevice.AllFilesCount}"/>
+                                                       Text="{Binding DeviceList.SelectedDevice.DeviceFileInfo.AllFilesCount}"/>
                                             </StackPanel>
+                                            <StackPanel Orientation="Horizontal" Margin="0,3">
+                                                <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}" 
+                                                       Text="Files types "
+                                                       FontWeight="Bold"/>
+                                                <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}" 
+                                                       x:Name="lblFileTypes" 
+                                                       Text="{Binding DeviceList.SelectedDevice.DeviceFileInfo.AllFileTypes,Converter={StaticResource ListToString}}"/>
+                                            </StackPanel>
+                                            
                                             <Button Content="find files" Click="Find_Click"/>
                                         </StackPanel>
                                     </StackPanel>

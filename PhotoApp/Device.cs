@@ -14,6 +14,7 @@ using System.Security.Cryptography;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Threading;
 
 namespace PhotoApp
 {
@@ -44,7 +45,7 @@ namespace PhotoApp
         private double[] _space;
         private IEnumerable<MediaFileInfo> filesToCopy;
         private DeviceFileInfo _deviceFileInfo;
-        
+
         private int _fileSearchStatus = DEVICE_FILES_NOT_SEARCHED;
 
         public int FilesToCopyCount { get; private set; } = 0;
@@ -76,6 +77,7 @@ namespace PhotoApp
         public Device(MediaDevice mediaDevice)
         {
             _device = mediaDevice;
+            DeviceFileInfo = new DeviceFileInfo(mediaDevice);
         }
 
         public string ID
@@ -118,11 +120,9 @@ namespace PhotoApp
             }
             set
             {
-                if (_fileSearchStatus != value)
-                {
-                    _fileSearchStatus = value;
-                    OnPropertyChanged();
-                }
+
+                _fileSearchStatus = value;
+                OnPropertyChanged();
             }
         }
 
@@ -222,7 +222,7 @@ namespace PhotoApp
 
         private void Disconnect()
         {
-            if (_device.IsConnected && _fileSearchStatus != DEVICE_FILES_SEARCHING)
+            if (_device.IsConnected && _fileSearchStatus != DEVICE_FILES_SEARCHING && !DeviceFileInfo.CountingFiles)
             {
                 _device.Disconnect();
             }
@@ -254,39 +254,54 @@ namespace PhotoApp
         {
             if (FileSearchStatus != DEVICE_FILES_SEARCHING)
             {
-                FileSearchStatus = DEVICE_FILES_SEARCHING;
-                DeviceFileInfo = new DeviceFileInfo();
+                Application.Current.Dispatcher.BeginInvoke((Action)(() =>
+                {
+                    FileSearchStatus = DEVICE_FILES_SEARCHING;
+                    DeviceFileInfo = new DeviceFileInfo(_device);
+                }));
                 _device.Connect();
                 GetAllFilesAsync(MediaDirectories);
                 Disconnect();
             }
         }
 
-        private async void GetAllFilesAsync(List<string> mediaDirs)
+        private void GetAllFilesAsync(List<string> mediaDirs)
         {
-            IEnumerable<MediaFileInfo> allFiles = Enumerable.Empty<MediaFileInfo>();
             try
             {
-                await Task.Run(() =>
+                IEnumerable<MediaFileInfo> allFiles = Enumerable.Empty<MediaFileInfo>();
+                foreach (string mediaDir in mediaDirs)
                 {
-                    foreach (string dir in mediaDirs)
-                    {
-                        MediaDirectoryInfo dirInfo = _device.GetDirectoryInfo(dir);
-                        var files = dirInfo.EnumerateFiles("*", SearchOption.AllDirectories);
-                        allFiles = allFiles.Concat(files);
-                    }
-                    DeviceFileInfo = new DeviceFileInfo(allFiles);
-
-                });
-
-                FileSearchStatus = DEVICE_FILES_READY;
+                    MediaDirectoryInfo dirInfo = _device.GetDirectoryInfo(mediaDir);
+                    allFiles = allFiles.Concat(GetAllFilesRecursive(dirInfo));
+                }
+                DeviceFileInfo.SetFiles(allFiles);
+                Application.Current.Dispatcher.BeginInvoke((Action)(() =>
+                {
+                    OnPropertyChanged(nameof(DeviceFileInfo));
+                    FileSearchStatus = DEVICE_FILES_READY;
+                }));
             }
             catch (Exception ex)
             {
-                DeviceFileInfo = new DeviceFileInfo();
-                FileSearchStatus = DEVICE_FILES_ERROR;
+                Application.Current.Dispatcher.BeginInvoke((Action)(() =>
+                {
+                    DeviceFileInfo = new DeviceFileInfo(_device);
+                    FileSearchStatus = DEVICE_FILES_ERROR;
+                }));
             }
         }
+
+        private IEnumerable<MediaFileInfo> GetAllFilesRecursive(MediaDirectoryInfo directoryInfo)
+        {
+            var files = directoryInfo.EnumerateFiles();
+            foreach (var dir in directoryInfo.EnumerateDirectories().Where(d => !d.Name.StartsWith(".")))
+            {
+                files = files.Concat(GetAllFilesRecursive(dir));
+            }
+            return files;
+        }
+
 
         //nalezeni souboru dle data
         public void GetFilesByDate(BackgroundWorker worker, DoWorkEventArgs e, DownloadSettings settings)

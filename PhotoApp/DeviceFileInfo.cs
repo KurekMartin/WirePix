@@ -2,10 +2,13 @@
 using PhotoApp.Models;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace PhotoApp
 {
@@ -22,26 +25,34 @@ namespace PhotoApp
             public string PersistentUniqueId;
             public string FullPath;
         }
-
+        private MediaDevice _device;
         private List<BaseFileInfo> _allFilesInfo = new List<BaseFileInfo>();
         private List<string> _allFileTypes = new List<string>();
         private IEnumerable<string> _images;
         private IEnumerable<string> _videos;
         private IEnumerable<string> _others;
 
-        public DeviceFileInfo(IEnumerable<MediaFileInfo> mediaFiles = null)
+        public bool CountingFiles { get; private set; } = false;
+
+        public DeviceFileInfo(MediaDevice device)
         {
-            if (mediaFiles != null)
+            _device = device;
+        }
+
+        public void SetFiles(IEnumerable<MediaFileInfo> mediaFiles)
+        {
+            _allFilesInfo = mediaFiles.Select(f => new BaseFileInfo(f.PersistentUniqueId, f.FullName)).ToList();
+            Application.Current.Dispatcher.BeginInvoke((Action)(() =>
             {
-                _allFilesInfo = mediaFiles.Select(f => new BaseFileInfo(f.PersistentUniqueId, f.FullName)).ToList();
-            }
+                OnPropertyChanged(nameof(AllFilesCount));
+            }));
         }
 
         public int AllFilesCount
         {
             get
             {
-                return _allFilesInfo.Count();
+                return _allFilesInfo.Count;
             }
         }
 
@@ -49,11 +60,16 @@ namespace PhotoApp
         {
             get
             {
-                if (_allFileTypes.Count() == 0 && AllFilesCount > 0)
+                if (AllFilesCount > 0 && _allFileTypes.Count == 0)
                 {
-                    _allFileTypes = _allFilesInfo.Select(f => Path.GetExtension(f.FullPath).ToUpper()).Distinct().ToList();
+                    AllFileTypes = _allFilesInfo.Select(f => Path.GetExtension(f.FullPath).ToUpper()).Distinct().ToList();
                 }
                 return _allFileTypes;
+            }
+            private set
+            {
+                _allFileTypes = value;
+                OnPropertyChanged();
             }
         }
 
