@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -20,9 +21,7 @@ namespace PhotoApp
     public enum TaskType
     {
         FindFiles,
-        FindAllFiles,
-        CopyFiles,
-        GetFileTypes
+        CopyFiles
     }
 
     public struct WorkerResult
@@ -137,7 +136,6 @@ namespace PhotoApp
 
                 //zmena vybraneho zarizeni
                 DeviceList.SelectDeviceByIndex(ListBoxDevices.SelectedIndex);
-                //DeviceList.SelectedDevice.FileTypes();                
             }
             else
             {
@@ -150,7 +148,10 @@ namespace PhotoApp
         private void ListConnectedDevices()
         {
             ListBoxDevices.SelectedIndex = DeviceList.UpdateDevices();
-            FindAllFiles();
+            if (IsLoaded)
+            {
+                FindAllFiles();
+            }
         }
 
         private void GetProfiles(string SelectProfile = "")
@@ -191,11 +192,6 @@ namespace PhotoApp
             DeviceList.SelectedDevice.CopyFiles(worker, e, DownloadSettings);
         }
 
-        private void GetFileTypes(object sender, DoWorkEventArgs e)
-        {
-            BackgroundWorker worker = sender as BackgroundWorker;
-            DeviceList.SelectedDevice.FileTypes(worker, e);
-        }
 
         //obnovit seznam pripojenych zarizeni
         private void Refresh_Click(object sender, RoutedEventArgs e)
@@ -208,18 +204,28 @@ namespace PhotoApp
             FindAllFiles(true);
         }
 
-        public void FindAllFiles(bool forceSearch = false)
+        public async void FindAllFiles(bool forceSearch = false)
         {
-            List<Task> tasks = new List<Task>();
-            IEnumerable<Device> devices = DeviceList.Devices;
-            if (!forceSearch)
+            List<Device> devices = DeviceList.Devices.ToList();
+            if (!devices.Any(d => d.FileSearchStatus == Device.DEVICE_FILES_SEARCHING))
             {
-                devices = devices.Where(d => d.FileSearchStatus == Device.DEVICE_FILES_NOT_SEARCHED);
+                if (!forceSearch)
+                {
+                    devices = devices.Where(d => d.FileSearchStatus == Device.DEVICE_FILES_NOT_SEARCHED).ToList();
+                }
+
+                await Task.Run(() =>
+                {
+                    foreach (Device device in devices)
+                    {
+                        device.GetAllFiles();
+                    }
+                });
+                if (DeviceList.Devices.Any(d => d.FileSearchStatus == Device.DEVICE_FILES_NOT_SEARCHED))
+                {
+                    FindAllFiles();
+                }
             }
-            Parallel.ForEach(devices, (device) =>
-            {
-                device.GetAllFiles();
-            });
         }
 
         private void FindFiles_Click(object sender, RoutedEventArgs e)
@@ -409,9 +415,6 @@ namespace PhotoApp
                     break;
                 case TaskType.CopyFiles:
                     backgroundWorker.DoWork += CopyFiles;
-                    break;
-                case TaskType.GetFileTypes:
-                    backgroundWorker.DoWork += GetFileTypes;
                     break;
             }
             if (!backgroundWorker.IsBusy)
@@ -939,6 +942,10 @@ namespace PhotoApp
             catch (Exception ex) { }
         }
 
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            FindAllFiles();
+        }
     }
 }
 
