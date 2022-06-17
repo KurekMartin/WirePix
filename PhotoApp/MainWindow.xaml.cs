@@ -154,6 +154,14 @@ namespace PhotoApp
             }
         }
 
+        private void Device_FileSearchFinished(object sender, EventArgs e)
+        {
+            if (DeviceList.DeviceInfo.Any(d => d.FileSearchStatus == DeviceInfo.DEVICE_FILES_WAITING || d.FileSearchStatus == DeviceInfo.DEVICE_FILES_NOT_SEARCHED))
+            {
+                FindAllFiles();
+            }
+        }
+
         private void GetProfiles(string SelectProfile = "")
         {
             var profilesPath = Application.Current.Resources[Properties.Keys.ProfilesFolder].ToString();
@@ -201,30 +209,51 @@ namespace PhotoApp
 
         private void Find_Click(object sender, RoutedEventArgs e)
         {
-            FindAllFiles(true);
+            FindAllFiles(DeviceList.SelectedDevice.ID);
         }
 
-        public async void FindAllFiles(bool forceSearch = false)
+        public async void FindAllFiles(string deviceID = null)
         {
-            List<Device> devices = DeviceList.Devices.ToList();
-            if (!devices.Any(d => d.FileSearchStatus == Device.DEVICE_FILES_SEARCHING))
-            {
-                if (!forceSearch)
-                {
-                    devices = devices.Where(d => d.FileSearchStatus == Device.DEVICE_FILES_NOT_SEARCHED).ToList();
-                }
+            var devices = DeviceList.ConnectedDevicesInfo;
 
-                await Task.Run(() =>
+            if (deviceID != null)
+            {
+                devices.First(d => d.ID == deviceID).FileSearchStatus = DeviceInfo.DEVICE_FILES_WAITING;
+            }
+
+            if (!devices.Any(d => d.FileSearchStatus == DeviceInfo.DEVICE_FILES_SEARCHING))
+            {
+                DeviceInfo deviceInfo;
+                deviceInfo = devices.FirstOrDefault(d => d.FileSearchStatus == DeviceInfo.DEVICE_FILES_WAITING || d.FileSearchStatus == DeviceInfo.DEVICE_FILES_NOT_SEARCHED);
+
+                if (deviceInfo != null)
                 {
-                    foreach (Device device in devices)
+                    deviceInfo.FileSearchStatus = DeviceInfo.DEVICE_FILES_SEARCHING;
+                    bool result = false;
+                    var task = Task.Run(() =>
                     {
-                        device.GetAllFiles();
+                        var device = DeviceList.Devices.First(d => d.ID == deviceInfo.ID);
+                        result = device.GetAllFiles();
+                    });
+                    await task;
+
+                    if (result)
+                    {
+                        deviceInfo.FileSearchStatus = DeviceInfo.DEVICE_FILES_READY;
                     }
-                });
-                if (DeviceList.Devices.Any(d => d.FileSearchStatus == Device.DEVICE_FILES_NOT_SEARCHED))
-                {
-                    FindAllFiles();
+                    else if(deviceInfo.FileSearchStatus != DeviceInfo.DEVICE_FILES_CANCELED)
+                    {
+                        deviceInfo.FileSearchStatus = DeviceInfo.DEVICE_FILES_ERROR;
+                    }
+                    if (DeviceList.ConnectedDevicesInfo.Any(d => d.FileSearchStatus == DeviceInfo.DEVICE_FILES_WAITING || d.FileSearchStatus == DeviceInfo.DEVICE_FILES_NOT_SEARCHED))
+                    {
+                        FindAllFiles();
+                    }
                 }
+            }
+            else
+            {
+                devices.Where(d => d.FileSearchStatus == DeviceInfo.DEVICE_FILES_NOT_SEARCHED).Select(d => d.FileSearchStatus = DeviceInfo.DEVICE_FILES_WAITING).ToList();
             }
         }
 
@@ -945,6 +974,12 @@ namespace PhotoApp
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             FindAllFiles();
+        }
+
+        private void Cancel_Click(object sender, RoutedEventArgs e)
+        {
+            DeviceList.SelectedDevice.CancelCurrentTask();
+            DeviceList.SelectedDeviceInfo.FileSearchStatus = DeviceInfo.DEVICE_FILES_CANCELED;
         }
     }
 }

@@ -46,13 +46,13 @@ namespace PhotoApp
         private IEnumerable<MediaFileInfo> filesToCopy;
         private DeviceFileInfo _deviceFileInfo;
 
-        private int _fileSearchStatus = DEVICE_FILES_NOT_SEARCHED;
-
         public int FilesToCopyCount { get; private set; } = 0;
         private double sizeToProcess;
         private DownloadSettings _lastSettings;
 
         private bool fileCheckDone = false;
+        private bool searchingFiles = false;
+        private bool cancelRequest = false;
 
         private static readonly int maxAttempts = 5;
 
@@ -60,12 +60,6 @@ namespace PhotoApp
         public static int DEVICE_UNKNOWN_STATUS = -1;
         public static int DEVICE_CANNOT_CONNECT = 0;
         public static int DEVICE_READY = 1;
-
-        //files status
-        public static int DEVICE_FILES_READY = 2;
-        public static int DEVICE_FILES_SEARCHING = 1;
-        public static int DEVICE_FILES_NOT_SEARCHED = 0;
-        public static int DEVICE_FILES_ERROR = -1;
 
         private readonly Log _log = new Log();
 
@@ -109,20 +103,6 @@ namespace PhotoApp
                     return DEVICE_READY;
                 }
                 return DEVICE_UNKNOWN_STATUS;
-            }
-        }
-
-        public int FileSearchStatus
-        {
-            get
-            {
-                return _fileSearchStatus;
-            }
-            set
-            {
-
-                _fileSearchStatus = value;
-                OnPropertyChanged();
             }
         }
 
@@ -222,11 +202,25 @@ namespace PhotoApp
 
         private void Disconnect()
         {
-            if (_device.IsConnected && _fileSearchStatus != DEVICE_FILES_SEARCHING)
+            if (_device.IsConnected && !searchingFiles)
             {
                 _device.Disconnect();
             }
         }
+        public void CancelCurrentTask()
+        {
+            if (searchingFiles)
+            {
+                _device.Cancel();
+                _device.Disconnect();
+            }
+            else if (_device.IsConnected)
+            {
+                _device.Cancel();
+                Disconnect();
+            }
+        }
+
         private void GetMediaDirectory(MediaDevice device, MediaDirectoryInfo dir, List<MediaDirectoryInfo> mediaDirList)
         {
             var dirs = dir.EnumerateDirectories();
@@ -250,28 +244,33 @@ namespace PhotoApp
             return;
         }
 
-        public void GetAllFiles()
+        public bool GetAllFiles()
         {
-            if (FileSearchStatus != DEVICE_FILES_SEARCHING)
+            bool result = false;
+            if (!searchingFiles)
             {
+                searchingFiles = true;
                 Application.Current.Dispatcher.BeginInvoke((Action)(() =>
                 {
-                    FileSearchStatus = DEVICE_FILES_SEARCHING;
                     DeviceFileInfo = new DeviceFileInfo(_device);
                 }));
                 _device.Connect();
-                GetAllFilesAsync(MediaDirectories);
+                result = GetAllFilesAsync(MediaDirectories);
                 Disconnect();
+                searchingFiles = false;
             }
+            return result;
         }
 
-        private void GetAllFilesAsync(List<string> mediaDirs)
+        private bool GetAllFilesAsync(List<string> mediaDirs)
         {
+            bool result = false;
             try
             {
                 IEnumerable<MediaFileInfo> allFiles = Enumerable.Empty<MediaFileInfo>();
                 foreach (string mediaDir in mediaDirs)
                 {
+                    if (cancelRequest) { break; }
                     MediaDirectoryInfo dirInfo = _device.GetDirectoryInfo(mediaDir);
                     allFiles = allFiles.Concat(GetAllFilesRecursive(dirInfo));
                 }
@@ -279,17 +278,18 @@ namespace PhotoApp
                 Application.Current.Dispatcher.BeginInvoke((Action)(() =>
                 {
                     OnPropertyChanged(nameof(DeviceFileInfo));
-                    FileSearchStatus = DEVICE_FILES_READY;
                 }));
+                result = true;
             }
             catch (Exception ex)
             {
                 Application.Current.Dispatcher.BeginInvoke((Action)(() =>
                 {
                     DeviceFileInfo = new DeviceFileInfo(_device);
-                    FileSearchStatus = DEVICE_FILES_ERROR;
                 }));
+                result = false;
             }
+            return result;
         }
 
         private IEnumerable<MediaFileInfo> GetAllFilesRecursive(MediaDirectoryInfo directoryInfo)
@@ -297,6 +297,7 @@ namespace PhotoApp
             var files = directoryInfo.EnumerateFiles();
             foreach (var dir in directoryInfo.EnumerateDirectories().Where(d => !d.Name.StartsWith(".")))
             {
+                if (cancelRequest) { break; }
                 files = files.Concat(GetAllFilesRecursive(dir));
             }
             return files;
