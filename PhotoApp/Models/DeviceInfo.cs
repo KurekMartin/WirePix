@@ -8,6 +8,15 @@ namespace PhotoApp.Models
         private string _name = string.Empty;
         private string _originalName = string.Empty;
         private bool _connected = false;
+        private int _fileSearchStatus;
+
+        //files status
+        public static int DEVICE_FILES_READY = 3;
+        public static int DEVICE_FILES_SEARCHING = 2;
+        public static int DEVICE_FILES_WAITING = 1;
+        public static int DEVICE_FILES_NOT_SEARCHED = 0;
+        public static int DEVICE_FILES_CANCELED = -1;
+        public static int DEVICE_FILES_ERROR = -2;
         public string ID { get; set; }
         private DateTime _lastBackup = new DateTime();
         public DeviceInfo() { }
@@ -63,6 +72,21 @@ namespace PhotoApp.Models
                         _name = _originalName;
                     }
                 }
+            }
+        }
+
+        [XmlIgnore]
+        public int FileSearchStatus
+        {
+            get
+            {
+                return _fileSearchStatus;
+            }
+            set
+            {
+
+                _fileSearchStatus = value;
+                OnPropertyChanged();
             }
         }
     }
