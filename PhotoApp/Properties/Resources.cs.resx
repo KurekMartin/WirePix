@@ -311,6 +311,9 @@ Uložením tento soubor přepíšete.</value>
   <data name="FileSearchStatus_Unknown" xml:space="preserve">
     <value>Neznámý</value>
   </data>
+  <data name="FileSearchStatus_Waiting" xml:space="preserve">
+    <value>Čeká</value>
+  </data>
   <data name="FilesFoundTotal" xml:space="preserve">
     <value>Souborů celkem</value>
   </data>
@@ -656,5 +659,8 @@ Doplňte tuto hodnotu nebo značku odstraňte.</value>
   </data>
   <data name="Yes" xml:space="preserve">
     <value>Ano</value>
+  </data>
+  <data name="FileSearchStatus_Canceled" xml:space="preserve">
+    <value>Zrušeno</value>
   </data>
 </root>

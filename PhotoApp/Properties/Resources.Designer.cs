@@ -575,6 +575,15 @@ namespace PhotoApp.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Canceled.
+        /// </summary>
+        public static string FileSearchStatus_Canceled {
+            get {
+                return ResourceManager.GetString("FileSearchStatus_Canceled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Error.
         /// </summary>
         public static string FileSearchStatus_Error {
@@ -616,6 +625,15 @@ namespace PhotoApp.Properties {
         public static string FileSearchStatus_Unknown {
             get {
                 return ResourceManager.GetString("FileSearchStatus_Unknown", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Waiting.
+        /// </summary>
+        public static string FileSearchStatus_Waiting {
+            get {
+                return ResourceManager.GetString("FileSearchStatus_Waiting", resourceCulture);
             }
         }
         
