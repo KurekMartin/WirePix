@@ -312,6 +312,9 @@ Save to overwrite this file.</value>
   <data name="FileSearchStatus_Unknown" xml:space="preserve">
     <value>Unknown</value>
   </data>
+  <data name="FileSearchStatus_Waiting" xml:space="preserve">
+    <value>Waiting</value>
+  </data>
   <data name="FilesFoundTotal" xml:space="preserve">
     <value>Files total</value>
   </data>
@@ -657,5 +660,8 @@ Fill the value or remove the tag.</value>
   </data>
   <data name="Yes" xml:space="preserve">
     <value>Yes</value>
+  </data>
+  <data name="FileSearchStatus_Canceled" xml:space="preserve">
+    <value>Canceled</value>
   </data>
 </root>
