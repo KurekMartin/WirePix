@@ -222,7 +222,7 @@ namespace PhotoApp
 
         private void Disconnect()
         {
-            if (_device.IsConnected && _fileSearchStatus != DEVICE_FILES_SEARCHING && !DeviceFileInfo.CountingFiles)
+            if (_device.IsConnected && _fileSearchStatus != DEVICE_FILES_SEARCHING)
             {
                 _device.Disconnect();
             }
