@@ -25,14 +25,12 @@ namespace PhotoApp
             public string PersistentUniqueId;
             public string FullPath;
         }
-        private MediaDevice _device;
+        private readonly MediaDevice _device;
         private List<BaseFileInfo> _allFilesInfo = new List<BaseFileInfo>();
         private List<string> _allFileTypes = new List<string>();
         private IEnumerable<string> _images;
         private IEnumerable<string> _videos;
         private IEnumerable<string> _others;
-
-        public bool CountingFiles { get; private set; } = false;
 
         public DeviceFileInfo(MediaDevice device)
         {
