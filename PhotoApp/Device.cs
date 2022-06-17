@@ -209,15 +209,11 @@ namespace PhotoApp
         }
         public void CancelCurrentTask()
         {
-            if (searchingFiles)
+            if (_device.IsConnected)
             {
                 _device.Cancel();
+                cancelRequest = true;
                 _device.Disconnect();
-            }
-            else if (_device.IsConnected)
-            {
-                _device.Cancel();
-                Disconnect();
             }
         }
 
@@ -246,6 +242,7 @@ namespace PhotoApp
 
         public bool GetAllFiles()
         {
+            cancelRequest = false;
             bool result = false;
             if (!searchingFiles)
             {
