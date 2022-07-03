@@ -1,37 +1,51 @@
-## Welcome to GitHub Pages
+# WirePix
+A program for Windows designed to automate the download of files from a media device - mainly cameras (full support for smart phones is planned)
 
-You can use the [editor on GitHub](https://github.com/KurekMartin/WirePix/edit/gh-pages/index.md) to maintain and preview the content for your website in Markdown files.
+Main functions:
+- download files based on date
+- download new files since last backup
+- sort and rename files based on specified folder structure
+- create backup in selected folder
+- create smaller images with given resolution
+- check if downloaded files are not corrupted (slower download speed)
+- delete successfully downloaded files from device
+- save all settings for future use
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+Currently supported languages:
+- English
+- Czech
 
-### Markdown
+This is just initial release and there will be more features in future updates (see end of the page).
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+Download latest version https://github.com/KurekMartin/WirePix/releases/latest
 
-```markdown
-Syntax highlighted code block
+**For feedback, please use the option that is listed directly in the program.**
 
-# Header 1
-## Header 2
-### Header 3
+![Main](https://user-images.githubusercontent.com/79570332/164648004-d3749cd4-3c7e-4b7e-bb43-5694332c95f1.png)
 
-- Bulleted
-- List
+## Name structure
+You can choose any filename and folder structure to store your files. For example, by date, device manufacturer or create a folder with a custom name.
+For the day and month format, you can choose a name in addition to the number, in both short and long form. e.g. April can be shown as 04, Apr or April.
 
-1. Numbered
-2. List
+You can switch the format type by selecting the tag and choosing from dropdown list.
 
-**Bold** and _Italic_ and `Code` text
+## Thumbnails
+Thumbnails are generated from all suported images files (https://imagemagick.org/script/formats.php#supported).
 
-[Link](url) and ![Image](src)
-```
+You can specify size of shorter or longer side for the newly created images.
 
-For more details see [Basic writing and formatting syntax](https://docs.github.com/en/github/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax).
+When creating thumbnail from RAW images the program applies automatic exposure due to dark images on some devices. There will be possibility to prefer JPG images in future update.
 
-### Jekyll Themes
+## Smartphone support
+In the current version of the program you can also download files from your phone, but not only files from the camera are placed in the same folder (e.g. social networking apps, etc.). In a future update there will be an option to select folders from which to not download.
 
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/KurekMartin/WirePix/settings/pages). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
+## Planned features
+- sort files based on file type
+- specify prefered file type for thumbnail creation
+- possibility to download only specified file types
+- choose exact files to download
+- select custom color theme
+- exclude selected folder from download (mainly for smart phones)
 
-### Support or Contact
+If you have a suggestion for improvement you can use the feedback option in the program.
 
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://support.github.com/contact) and we’ll help you sort it out.
