@@ -43,5 +43,6 @@ In the current version of the program you can also download files from your phon
 - choose exact files to download
 - select custom color theme
 - exclude selected folder from download (mainly for smartphones)
+- download directly from SD card reader
 
 If you have a suggestion for improvement you can use the feedback option in the program.
