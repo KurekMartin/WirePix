@@ -32,6 +32,8 @@ namespace PhotoApp
         private IEnumerable<string> _videos;
         private IEnumerable<string> _others;
 
+        private bool _cancelOperation = false;
+
         public DeviceFileInfo(MediaDevice device)
         {
             _device = device;
@@ -39,11 +41,23 @@ namespace PhotoApp
 
         public void SetFiles(IEnumerable<MediaFileInfo> mediaFiles)
         {
-            _allFilesInfo = mediaFiles.Select(f => new BaseFileInfo(f.PersistentUniqueId, f.FullName)).ToList();
+            foreach (var file in mediaFiles)
+            {
+                if (!_cancelOperation)
+                {
+                    _allFilesInfo.Add(new BaseFileInfo(file.PersistentUniqueId, file.FullName));
+                }
+            }
+
             Application.Current.Dispatcher.BeginInvoke((Action)(() =>
             {
                 OnPropertyChanged(nameof(AllFilesCount));
             }));
+        }
+
+        public void CancelOperation()
+        {
+            _cancelOperation = true;
         }
 
         public int AllFilesCount

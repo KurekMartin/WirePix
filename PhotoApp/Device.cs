@@ -213,6 +213,7 @@ namespace PhotoApp
             {
                 _device.Cancel();
                 cancelRequest = true;
+                DeviceFileInfo.CancelOperation();
                 _device.Disconnect();
             }
         }
