@@ -10,6 +10,7 @@ using System.Text.RegularExpressions;
 using System.Collections.Generic;
 using System.Collections;
 using System.Threading;
+using System.Windows.Markup;
 
 namespace PhotoApp
 {
@@ -41,7 +42,7 @@ namespace PhotoApp
             SetLanguage();
             string appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
             string mainFolder = "WirePix";
-            Resources.Add(PhotoApp.Properties.Keys.MainFolder, Path.Combine(appData,mainFolder));
+            Resources.Add(PhotoApp.Properties.Keys.MainFolder, Path.Combine(appData, mainFolder));
             Resources.Add(PhotoApp.Properties.Keys.TempFolder, Path.Combine(Path.GetTempPath(), mainFolder));
             Resources.Add(PhotoApp.Properties.Keys.LogsFolder, Path.Combine(appData, mainFolder, "Logs"));
             Resources.Add(PhotoApp.Properties.Keys.ProfilesFolder, Path.Combine(appData, mainFolder, "Profiles"));
@@ -114,15 +115,20 @@ namespace PhotoApp
 
         public static void SetLanguage()
         {
+            CultureInfo cultureInfo = CultureInfo.CurrentCulture;
             if (PhotoApp.Properties.Settings.Default.Language != nameof(PhotoApp.Properties.Languages.system))
             {
-                System.Threading.Thread.CurrentThread.CurrentUICulture = new CultureInfo(PhotoApp.Properties.Settings.Default.Language);
+                cultureInfo = new CultureInfo(PhotoApp.Properties.Settings.Default.Language);
             }
             else
             {
                 string language = CultureInfo.CurrentUICulture.Name.Split('-')[0];
-                System.Threading.Thread.CurrentThread.CurrentUICulture = new CultureInfo(language);
+                cultureInfo = new CultureInfo(language);
             }
+            Thread.CurrentThread.CurrentCulture = cultureInfo;
+            Thread.CurrentThread.CurrentUICulture = cultureInfo;
+            FrameworkElement.LanguageProperty.OverrideMetadata(typeof(FrameworkElement), new FrameworkPropertyMetadata(
+                        XmlLanguage.GetLanguage(CultureInfo.CurrentCulture.IetfLanguageTag)));
             Console.WriteLine("CurrentCulture is {0}.", CultureInfo.CurrentUICulture.Name);
         }
 
