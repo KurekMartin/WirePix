@@ -664,4 +664,13 @@ Doplňte tuto hodnotu nebo značku odstraňte.</value>
   <data name="FileSearchStatus_Canceled" xml:space="preserve">
     <value>Zrušeno</value>
   </data>
+  <data name="Tag_FileType_Button" xml:space="preserve">
+    <value>Typ souboru</value>
+  </data>
+  <data name="Tag_FileType_VisibleText" xml:space="preserve">
+    <value>Typ souboru</value>
+  </data>
+  <data name="TagGroup_File" xml:space="preserve">
+    <value>Soubor</value>
+  </data>
 </root>

@@ -84,6 +84,7 @@ namespace PhotoApp
             new TagStruct(Properties.TagCodes.SequenceNum,Properties.Resources.Tag_SequenceNum_VisibleText,    Properties.Resources.Tag_SequenceNum_Button),
             new TagStruct(Properties.TagCodes.CustomText, Properties.Resources.Tag_CustomText_VisibleText,     Properties.Resources.Tag_CustomText_Button),
             new TagStruct(Properties.TagCodes.FileName,   Properties.Resources.Tag_FileName_VisibleText,       Properties.Resources.Tag_FileName_Button),
+            new TagStruct(Properties.TagCodes.FileType,   Properties.Resources.Tag_FileType_VisibleText,       Properties.Resources.Tag_FileType_Button),
             new TagStruct(Properties.TagCodes.NewFolder,  "\\",                                                Properties.Resources.Tag_NewFolder_Button),
             new TagStruct(Properties.TagCodes.Hyphen,     "-",                                                 "-",                                                 Properties.TagGroups.Separator),
             new TagStruct(Properties.TagCodes.Underscore, "_",                                                 "_",                                                 Properties.TagGroups.Separator)
@@ -152,6 +153,7 @@ namespace PhotoApp
                 string manufacturer = GetTag(code: Properties.TagCodes.DeviceManuf).VisibleText;
                 string model = GetTag(code: Properties.TagCodes.DeviceName).VisibleText;
                 string filename = GetTag(code: Properties.TagCodes.FileName).VisibleText;
+                string filetype = GetTag(code: Properties.TagCodes.FileType).VisibleText;
 
                 CultureInfo cultureInfo = CultureInfo.CurrentUICulture;
                 if (dateTags.Contains(codeTag) && Properties.Settings.Default.UseDifferentLangForTags)
@@ -209,6 +211,11 @@ namespace PhotoApp
                     {
                         filename = Path.GetFileNameWithoutExtension(fileInfo.Name);
                     }
+
+                    if (codeTag == Properties.TagCodes.FileType)
+                    {
+                        filetype = Path.GetExtension(fileInfo.Name).ToUpper().Replace(".",string.Empty);
+                    }
                 }
 
                 if (codeTag == Properties.TagCodes.YearLong)
@@ -254,6 +261,10 @@ namespace PhotoApp
                 else if (codeTag == Properties.TagCodes.FileName)
                 {
                     return filename;
+                }
+                else if (codeTag == Properties.TagCodes.FileType)
+                {
+                    return filetype;
                 }
                 else if (codeTag == Properties.TagCodes.SequenceNum)
                 {
