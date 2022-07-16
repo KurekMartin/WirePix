@@ -567,7 +567,13 @@ namespace PhotoApp
                     new List<string>(){
                         Properties.TagCodes.Hyphen,
                         Properties.TagCodes.Underscore},
-                    new Point(1,1))
+                    new Point(1,1)),
+
+                new ButtonGroupStruct(
+                    Properties.Resources.TagGroup_File,
+                    new List<string>(){ 
+                        Properties.TagCodes.FileType},
+                    new Point(1,2))
             };
 
             FolderStructDialog nameDialog = new FolderStructDialog(this, buttonGroups, DownloadSettings.Paths.FolderTags);

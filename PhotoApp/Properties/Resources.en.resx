@@ -662,4 +662,13 @@ Fill the value or remove the tag.</value>
   <data name="FileSearchStatus_Canceled" xml:space="preserve">
     <value>Canceled</value>
   </data>
+  <data name="Tag_FileType_Button" xml:space="preserve">
+    <value>FileType</value>
+  </data>
+  <data name="Tag_FileType_VisibleText" xml:space="preserve">
+    <value>FileType</value>
+  </data>
+  <data name="TagGroup_File" xml:space="preserve">
+    <value>File</value>
+  </data>
 </root>

@@ -1340,6 +1340,24 @@ namespace PhotoApp.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to FileType.
+        /// </summary>
+        public static string Tag_FileType_Button {
+            get {
+                return ResourceManager.GetString("Tag_FileType_Button", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to FileType.
+        /// </summary>
+        public static string Tag_FileType_VisibleText {
+            get {
+                return ResourceManager.GetString("Tag_FileType_VisibleText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Month.
         /// </summary>
         public static string Tag_Month_Button {
@@ -1508,6 +1526,15 @@ namespace PhotoApp.Properties {
         public static string TagGroup_Device {
             get {
                 return ResourceManager.GetString("TagGroup_Device", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File.
+        /// </summary>
+        public static string TagGroup_File {
+            get {
+                return ResourceManager.GetString("TagGroup_File", resourceCulture);
             }
         }
         
