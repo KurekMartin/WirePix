@@ -30,7 +30,7 @@ For the day and month format, you can choose a name in addition to the number, i
 You can switch the format type by selecting the tag and choosing from dropdown list.
 
 ## Thumbnails
-Thumbnails are generated from all [suported images files](https://imagemagick.org/script/formats.php#supported).
+Thumbnails are generated from all [suported image files](https://imagemagick.org/script/formats.php#supported).
 
 You can specify size of shorter or longer side for the newly created images.
 
