@@ -119,14 +119,18 @@
   </resheader>
   <data name="Day" xml:space="preserve">
     <value>Day</value>
+    <comment>@Invariant</comment>
   </data>
   <data name="Month" xml:space="preserve">
     <value>Month</value>
+    <comment>@Invariant</comment>
   </data>
   <data name="Separator" xml:space="preserve">
     <value>Sep</value>
+    <comment>@Invariant</comment>
   </data>
   <data name="Year" xml:space="preserve">
     <value>Year</value>
+    <comment>@Invariant</comment>
   </data>
 </root>
