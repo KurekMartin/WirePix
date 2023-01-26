@@ -119,20 +119,27 @@
   </resheader>
   <data name="CrashReportsFolder" xml:space="preserve">
     <value>CrashRepFolder</value>
+    <comment>@Invariant</comment>
   </data>
   <data name="DataFolder" xml:space="preserve">
     <value>DataFolder</value>
+    
+    <comment>@Invariant</comment>
   </data>
   <data name="LogsFolder" xml:space="preserve">
     <value>LogsFolder</value>
+    <comment>@Invariant</comment>
   </data>
   <data name="MainFolder" xml:space="preserve">
     <value>MainFolder</value>
+    <comment>@Invariant</comment>
   </data>
   <data name="ProfilesFolder" xml:space="preserve">
     <value>ProfilesFolder</value>
+    <comment>@Invariant</comment>
   </data>
   <data name="TempFolder" xml:space="preserve">
     <value>TempFolder</value>
+    <comment>@Invariant</comment>
   </data>
 </root>

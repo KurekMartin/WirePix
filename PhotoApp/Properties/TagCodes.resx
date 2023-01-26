@@ -119,53 +119,70 @@
   </resheader>
   <data name="CustomText" xml:space="preserve">
     <value>STR</value>
+    <comment>@Invariant</comment>
   </data>
   <data name="Day" xml:space="preserve">
     <value>DD</value>
+    <comment>@Invariant</comment>
   </data>
   <data name="DayLong" xml:space="preserve">
     <value>DDDD</value>
+    <comment>@Invariant</comment>
   </data>
   <data name="DayShort" xml:space="preserve">
     <value>DDD</value>
+    <comment>@Invariant</comment>
   </data>
   <data name="DeviceManuf" xml:space="preserve">
     <value>DM</value>
+    <comment>@Invariant</comment>
   </data>
   <data name="DeviceName" xml:space="preserve">
     <value>DN</value>
+    <comment>@Invariant</comment>
   </data>
   <data name="FileName" xml:space="preserve">
     <value>FN</value>
+    <comment>@Invariant</comment>
   </data>
   <data name="FileType" xml:space="preserve">
     <value>FT</value>
+    <comment>@Invariant</comment>
   </data>
   <data name="Hyphen" xml:space="preserve">
     <value>HYP</value>
+    <comment>@Invariant</comment>
   </data>
   <data name="Month" xml:space="preserve">
     <value>MM</value>
+    <comment>@Invariant</comment>
   </data>
   <data name="MonthLong" xml:space="preserve">
     <value>MMMM</value>
+    <comment>@Invariant</comment>
   </data>
   <data name="MonthShort" xml:space="preserve">
     <value>MMM</value>
+    <comment>@Invariant</comment>
   </data>
   <data name="NewFolder" xml:space="preserve">
     <value>NF</value>
+    <comment>@Invariant</comment>
   </data>
   <data name="SequenceNum" xml:space="preserve">
     <value>SN</value>
+    <comment>@Invariant</comment>
   </data>
   <data name="Underscore" xml:space="preserve">
     <value>UNDS</value>
+    <comment>@Invariant</comment>
   </data>
   <data name="Year" xml:space="preserve">
     <value>YY</value>
+    <comment>@Invariant</comment>
   </data>
   <data name="YearLong" xml:space="preserve">
     <value>YYYY</value>
+    <comment>@Invariant</comment>
   </data>
 </root>

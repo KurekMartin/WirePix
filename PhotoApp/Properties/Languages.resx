@@ -119,11 +119,14 @@
   </resheader>
   <data name="cs" xml:space="preserve">
     <value>Čeština</value>
+    <comment>@Invariant</comment>
   </data>
   <data name="en" xml:space="preserve">
     <value>English</value>
+    <comment>@Invariant</comment>
   </data>
   <data name="system" xml:space="preserve">
     <value>System</value>
+    <comment>@Invariant</comment>
   </data>
 </root>
