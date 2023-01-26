@@ -74,7 +74,7 @@ namespace PhotoApp
             {
                 if (AllFilesCount > 0 && _allFileTypes.Count == 0)
                 {
-                    AllFileTypes = _allFilesInfo.Select(f => Path.GetExtension(f.FullPath).ToUpper()).Distinct().ToList();
+                    AllFileTypes = _allFilesInfo.Select(f => Path.GetExtension(f.FullPath).ToUpper().TrimStart('.')).Distinct().OrderBy(f => f).ToList();
                 }
                 return _allFileTypes;
             }

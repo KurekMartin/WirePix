@@ -332,15 +332,6 @@ namespace PhotoApp.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Found {0} files.
-        /// </summary>
-        public static string DeviceFilesFound {
-            get {
-                return ResourceManager.GetString("DeviceFilesFound", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Generating thumbnail {0}.
         /// </summary>
         public static string DeviceGeneratingThumbnail {
@@ -537,6 +528,33 @@ namespace PhotoApp.Properties {
         public static string FilenameStructure {
             get {
                 return ResourceManager.GetString("FilenameStructure", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Count.
+        /// </summary>
+        public static string Files_Count {
+            get {
+                return ResourceManager.GetString("Files_Count", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Files.
+        /// </summary>
+        public static string Files_Info {
+            get {
+                return ResourceManager.GetString("Files_Info", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Types.
+        /// </summary>
+        public static string Files_Types {
+            get {
+                return ResourceManager.GetString("Files_Types", resourceCulture);
             }
         }
         
@@ -1117,15 +1135,6 @@ namespace PhotoApp.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Path structure.
-        /// </summary>
-        public static string SettingsStorage {
-            get {
-                return ResourceManager.GetString("SettingsStorage", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Thumbnail generation.
         /// </summary>
         public static string SettingsThumbnail {
@@ -1189,7 +1198,7 @@ namespace PhotoApp.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Total space.
+        ///   Looks up a localized string similar to Total.
         /// </summary>
         public static string SpaceTotal {
             get {
@@ -1212,6 +1221,15 @@ namespace PhotoApp.Properties {
         public static string StartupUpdateCheck {
             get {
                 return ResourceManager.GetString("StartupUpdateCheck", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Storage.
+        /// </summary>
+        public static string StorageInfo {
+            get {
+                return ResourceManager.GetString("StorageInfo", resourceCulture);
             }
         }
         

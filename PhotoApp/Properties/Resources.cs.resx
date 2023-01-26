@@ -214,9 +214,6 @@ první připojené zařízení se automaticky vybere</value>
   <data name="DeviceFilesDoneCount" xml:space="preserve">
     <value>Zpracováno {0}/{1} souborů</value>
   </data>
-  <data name="DeviceFilesFound" xml:space="preserve">
-    <value>Nalezeno {0} souborů</value>
-  </data>
   <data name="DeviceGeneratingThumbnail" xml:space="preserve">
     <value>Generuji náhled {0}</value>
   </data>
@@ -474,9 +471,6 @@ Uložením tento soubor přepíšete.</value>
   <data name="SettingsSave" xml:space="preserve">
     <value>Uložit nastavení</value>
   </data>
-  <data name="SettingsStorage" xml:space="preserve">
-    <value>Struktura uložení</value>
-  </data>
   <data name="SettingsThumbnail" xml:space="preserve">
     <value>Generování náhledů</value>
   </data>
@@ -497,9 +491,6 @@ Uložením tento soubor přepíšete.</value>
   </data>
   <data name="SpaceAvailable" xml:space="preserve">
     <value>Dostupné</value>
-  </data>
-  <data name="SpaceTotal" xml:space="preserve">
-    <value>Celkové úložiště</value>
   </data>
   <data name="SpaceUsed" xml:space="preserve">
     <value>Využité</value>
@@ -672,5 +663,20 @@ Doplňte tuto hodnotu nebo značku odstraňte.</value>
   </data>
   <data name="TagGroup_File" xml:space="preserve">
     <value>Soubor</value>
+  </data>
+  <data name="StorageInfo" xml:space="preserve">
+    <value>Úložiště</value>
+  </data>
+  <data name="SpaceTotal" xml:space="preserve">
+    <value>Celkem</value>
+  </data>
+  <data name="Files_Info" xml:space="preserve">
+    <value>Soubory</value>
+  </data>
+  <data name="Files_Count" xml:space="preserve">
+    <value>Počet</value>
+  </data>
+  <data name="Files_Types" xml:space="preserve">
+    <value>Typy</value>
   </data>
 </root>
