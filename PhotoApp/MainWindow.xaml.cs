@@ -476,6 +476,7 @@ namespace PhotoApp
         private void worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             dhDialog.IsOpen = false;
+            lblResult.Visibility = Visibility.Visible;
             if (e.Cancelled)
             {
                 lblResult.Text = Properties.Resources.ResultCanceled;

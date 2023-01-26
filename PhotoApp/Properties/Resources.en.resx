@@ -212,9 +212,6 @@ auto select first connected device</value>
   <data name="DeviceFilesDoneCount" xml:space="preserve">
     <value>Processed {0}/{1} files</value>
   </data>
-  <data name="DeviceFilesFound" xml:space="preserve">
-    <value>Found {0} files</value>
-  </data>
   <data name="DeviceGeneratingThumbnail" xml:space="preserve">
     <value>Generating thumbnail {0}</value>
   </data>
@@ -472,9 +469,6 @@ Save to overwrite this file.</value>
   <data name="SettingsSave" xml:space="preserve">
     <value>Save settings</value>
   </data>
-  <data name="SettingsStorage" xml:space="preserve">
-    <value>Path structure</value>
-  </data>
   <data name="SettingsThumbnail" xml:space="preserve">
     <value>Thumbnail generation</value>
   </data>
@@ -495,9 +489,6 @@ Save to overwrite this file.</value>
   </data>
   <data name="SpaceAvailable" xml:space="preserve">
     <value>Available</value>
-  </data>
-  <data name="SpaceTotal" xml:space="preserve">
-    <value>Total space</value>
   </data>
   <data name="SpaceUsed" xml:space="preserve">
     <value>Used</value>
@@ -670,5 +661,20 @@ Fill the value or remove the tag.</value>
   </data>
   <data name="TagGroup_File" xml:space="preserve">
     <value>File</value>
+  </data>
+  <data name="StorageInfo" xml:space="preserve">
+    <value>Storage</value>
+  </data>
+  <data name="SpaceTotal" xml:space="preserve">
+    <value>Total</value>
+  </data>
+  <data name="Files_Info" xml:space="preserve">
+    <value>Files</value>
+  </data>
+  <data name="Files_Count" xml:space="preserve">
+    <value>Count</value>
+  </data>
+  <data name="Files_Types" xml:space="preserve">
+    <value>Types</value>
   </data>
 </root>

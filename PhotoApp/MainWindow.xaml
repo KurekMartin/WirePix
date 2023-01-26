@@ -15,7 +15,7 @@
         TextOptions.TextFormattingMode="Ideal" 
         TextOptions.TextRenderingMode="Auto"        
         Background="{DynamicResource MaterialDesignPaper}"
-        FontFamily="{DynamicResource MaterialDesignFont}" MinWidth="800" MinHeight="600" Height="778" Width="800" SizeToContent="Height" ResizeMode="CanMinimize" Closing="Window_Closing" WindowStartupLocation="CenterScreen" Icon="/icon.ico" Loaded="Window_Loaded">
+        FontFamily="{DynamicResource MaterialDesignFont}" MinWidth="800" MinHeight="600" Height="778" Width="800" SizeToContent="WidthAndHeight" ResizeMode="CanMinimize" Closing="Window_Closing" WindowStartupLocation="CenterScreen" Icon="/icon.ico" Loaded="Window_Loaded">
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVisConverter" />
         <converters:EnumToBoleanConverter x:Key="EnumToBool"/>
@@ -94,23 +94,35 @@
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
                         <materialDesign:Card Margin="10,5" Grid.Row="0" UniformCornerRadius="5">
-                            <StackPanel Orientation="Vertical">
 
-                                <StackPanel Orientation="Horizontal" Margin="5,5,5,10" VerticalAlignment="Top" Height="Auto">
-                                    <StackPanel Orientation="Vertical" Margin="5,0">
-                                        <ListBox x:Name="ListBoxDevices" ItemsSource="{Binding DeviceList.ConnectedDevicesInfo,UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Height="100" VerticalAlignment="Top" Width="Auto" MinWidth="150" SelectionChanged="ListBoxDevices_SelectionChanged" Background="#00000000" BorderThickness="1" BorderBrush="Black" d:ItemsSource="{d:SampleData ItemCount=5}">
-                                            <ListBox.ItemTemplate>
-                                                <DataTemplate>
-                                                    <TextBlock Text="{Binding Name}"/>
-                                                </DataTemplate>
-                                            </ListBox.ItemTemplate>
-                                        </ListBox>
-                                        <TextBlock x:Name="tbSelectDeviceError" Foreground="Red" TextWrapping="Wrap" Visibility="Collapsed"/>
-                                        <Button Content="{x:Static p:Resources.Refresh}" Margin="0,5,0,0" VerticalAlignment="Top" Click="Refresh_Click" Height="Auto"/>
-                                    </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="5,5,5,10" VerticalAlignment="Top" Height="Auto">
+                                <Grid Margin="5,0">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
 
-                                    <StackPanel Orientation="Horizontal" x:Name="spDeviceInfo">
-                                        <StackPanel x:Name="spBasicInfo" Margin="5,0" Height="Auto" VerticalAlignment="Top" >
+                                    <ListBox Grid.Row="0" x:Name="ListBoxDevices" ItemsSource="{Binding DeviceList.ConnectedDevicesInfo,UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Width="Auto" MinWidth="150" SelectionChanged="ListBoxDevices_SelectionChanged" Background="#00000000" BorderThickness="1" BorderBrush="Black" d:ItemsSource="{d:SampleData ItemCount=5}" MinHeight="100" VerticalContentAlignment="Stretch" DockPanel.Dock="Top">
+                                        <ListBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="{Binding Name}"/>
+                                            </DataTemplate>
+                                        </ListBox.ItemTemplate>
+                                    </ListBox>
+                                    <TextBlock Grid.Row="1" Margin="0,5,0,0" x:Name="tbSelectDeviceError" Foreground="Red" TextWrapping="Wrap" Visibility="Collapsed" d:Visibility="Visible" d:Text="Select error" VerticalAlignment="Bottom"/>
+                                    <Button Grid.Row="2" Content="{x:Static p:Resources.Refresh}" Margin="0,5,0,0" VerticalAlignment="Bottom" Click="Refresh_Click" Height="Auto"/>
+                                </Grid>
+
+                                <Grid x:Name="spDeviceInfo">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Border Grid.Column="0"
+                                            BorderBrush="{DynamicResource MaterialDesignDivider}"
+                                            BorderThickness="0,0,1,0">
+                                        <StackPanel x:Name="spBasicInfo" Margin="10,0" Height="Auto" VerticalAlignment="Top" >
                                             <DockPanel Margin="0,3,0,9"
                                                        LastChildFill="False">
                                                 <TextBlock VerticalAlignment="Center" Style="{StaticResource MaterialDesignBody2TextBlock}" Text="{x:Static p:Resources.DeviceName}" FontWeight="Bold"/>
@@ -142,69 +154,173 @@
                                             </DockPanel>
                                             <DockPanel Margin="0,3" LastChildFill="False">
                                                 <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}" Text="{x:Static p:Resources.MediaPath}" HorizontalAlignment="Left" VerticalAlignment="Top" FontWeight="Bold"/>
-                                                <TextBlock x:Name="tbMediaDir" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Text="{Binding DeviceList.SelectedDevice.MediaDirectories,Converter={StaticResource ListToString}}" Margin="5,0,0,0" DockPanel.Dock="Right"
+                                                <TextBlock x:Name="tbMediaDir" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" 
+                                                           Text="{Binding DeviceList.SelectedDevice.MediaDirectories,Converter={StaticResource ListToString},ConverterParameter='&#x0a;'}" 
+                                                           Margin="5,0,0,0" 
+                                                           DockPanel.Dock="Right"
                                                            d:Text="PATH/TO/DCIM"/>
                                             </DockPanel>
                                         </StackPanel>
-                                        <Separator x:Name="sDivider" Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" Width="1" Margin="0,15"/>
-                                        <StackPanel x:Name="spStorageInfo" Margin="5,0" Height="Auto" VerticalAlignment="Top">
-                                            <StackPanel Orientation="Horizontal" Margin="0,3">
-                                                <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}" Text="{x:Static p:Resources.SpaceTotal}" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold"/>
-                                                <TextBlock Text=":" VerticalAlignment="Center" Style="{StaticResource MaterialDesignBody2TextBlock}"/>
-                                                <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}" x:Name="lblTotalSpace" Text="{Binding DeviceList.SelectedDevice.Space[0],StringFormat={}{0} GB}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="2,0,0,0"/>
-                                            </StackPanel>
+                                    </Border>
 
-                                            <StackPanel Orientation="Vertical" x:Name="spSpace" Margin="15,0">
-                                                <StackPanel HorizontalAlignment="Left">
-                                                    <DockPanel LastChildFill="False">
-                                                        <Ellipse Fill="#FF1DDA26" Height="12" Width="12" VerticalAlignment="Center" Margin="3,0"/>
-                                                        <TextBlock Style="{StaticResource MaterialDesignCaptionTextBlock}" Text="{x:Static p:Resources.SpaceAvailable}" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="11" FontWeight="Bold"/>
-                                                        <TextBlock Style="{StaticResource MaterialDesignCaptionTextBlock}" x:Name="lblFreeSpace" Text="{Binding DeviceList.SelectedDevice.Space[1],StringFormat={}{0} GB}" VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="11"
-                                                                   d:Text="12345GB" DockPanel.Dock="Right" Margin="5,0,0,0"/>
-                                                    </DockPanel>
-                                                    <DockPanel LastChildFill="False">
-                                                        <Ellipse Fill="#FFE63434" Height="12" Width="12" VerticalAlignment="Center" Margin="3,0"/>
-                                                        <TextBlock Style="{StaticResource MaterialDesignCaptionTextBlock}" Text="{x:Static p:Resources.SpaceUsed}" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="11" FontWeight="Bold"/>
-                                                        <TextBlock Style="{StaticResource MaterialDesignCaptionTextBlock}" x:Name="lblUsedSpace" Text="{Binding DeviceList.SelectedDevice.Space[2],StringFormat={}{0} GB}" VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="11"
-                                                                   d:Text="1234GB" DockPanel.Dock="Right" Margin="5,0,0,0"/>
-                                                    </DockPanel>
-                                                </StackPanel>
-                                                <ProgressBar x:Name="pbSpace" materialDesign:TransitionAssist.DisableTransitions="True" HorizontalAlignment="Left" Height="6" Margin="0,5" VerticalAlignment="Top" Width="253" Value="{Binding DeviceList.SelectedDevice.Space,Converter={StaticResource ArrToProgress},Mode=OneWay}" Background="#FF1DDA26" Foreground="#FFE63434" BorderBrush="{x:Null}" BorderThickness="0"
+                                    <StackPanel Grid.Column="1"  Margin="10,0" Height="Auto" VerticalAlignment="Top">
+                                        <Border BorderBrush="{DynamicResource MaterialDesignDivider}"
+                                                BorderThickness="0,0,0,1">
+                                            <StackPanel x:Name="spStorageInfo"
+                                                    Orientation="Vertical">
+                                                <TextBlock Text="{x:Static p:Resources.StorageInfo}" 
+                                                           Style="{StaticResource MaterialDesignBody1TextBlock}"
+                                                           FontWeight="Bold"/>
+                                                <StackPanel Orientation="Vertical" x:Name="spSpace" Margin="15,0">
+                                                    <Grid>
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="Auto"/>
+                                                            <ColumnDefinition Width="Auto"/>
+                                                            <ColumnDefinition Width="Auto"/>
+                                                        </Grid.ColumnDefinitions>
+                                                        <Grid.RowDefinitions>
+                                                            <RowDefinition Height="Auto"/>
+                                                            <RowDefinition Height="Auto"/>
+                                                            <RowDefinition Height="Auto"/>
+                                                        </Grid.RowDefinitions>
+
+                                                        <TextBlock Grid.Row="0"
+                                                                   Grid.Column="0"
+                                                                   Style="{StaticResource MaterialDesignBody2TextBlock}" 
+                                                                   Text="{x:Static p:Resources.SpaceTotal}" 
+                                                                   HorizontalAlignment="Left"
+                                                                   VerticalAlignment="Bottom" 
+                                                                   FontWeight="Bold"/>
+                                                        <TextBlock Grid.Row="0"
+                                                               Grid.Column="1"
+                                                               Style="{StaticResource MaterialDesignBody2TextBlock}"
+                                                               Text="{Binding DeviceList.SelectedDevice.Space[0],StringFormat={}{0} GB}" 
+                                                               d:Text="132465GB" 
+                                                               HorizontalAlignment="Right" 
+                                                               VerticalAlignment="Bottom" 
+                                                               Margin="5,0"/>
+
+                                                        <TextBlock Grid.Row="1"
+                                                               Grid.Column="0"
+                                                               Style="{StaticResource MaterialDesignBody2TextBlock}"
+                                                               Text="{x:Static p:Resources.SpaceAvailable}" 
+                                                               HorizontalAlignment="Left" 
+                                                               VerticalAlignment="Bottom" 
+                                                               FontWeight="Bold"/>
+                                                        <TextBlock Grid.Row="1"
+                                                               Grid.Column="1"                                                        
+                                                               Style="{StaticResource MaterialDesignBody2TextBlock}"
+                                                               Text="{Binding DeviceList.SelectedDevice.Space[1],StringFormat={}{0} GB}" 
+                                                               VerticalAlignment="Bottom" 
+                                                               HorizontalAlignment="Right" 
+                                                               d:Text="12345GB"
+                                                               Margin="5,0"/>
+                                                        <Ellipse Grid.Row="1"
+                                                             Grid.Column="2"
+                                                             Fill="{DynamicResource PrimaryHueMidBrush}" 
+                                                             Height="12" 
+                                                             Width="12" 
+                                                             VerticalAlignment="Center"
+                                                             HorizontalAlignment="Left"
+                                                             Margin="3,0"/>
+
+                                                        <TextBlock Grid.Row="2"
+                                                               Grid.Column="0"
+                                                               Style="{StaticResource MaterialDesignBody2TextBlock}"
+                                                               Text="{x:Static p:Resources.SpaceUsed}" 
+                                                               VerticalAlignment="Bottom" 
+                                                               HorizontalAlignment="Left"
+                                                               FontWeight="Bold"/>
+                                                        <TextBlock Grid.Row="2"
+                                                               Grid.Column="1"
+                                                               Style="{StaticResource MaterialDesignBody2TextBlock}"
+                                                               Text="{Binding DeviceList.SelectedDevice.Space[2],StringFormat={}{0} GB}" 
+                                                               VerticalAlignment="Bottom" 
+                                                               HorizontalAlignment="Right"
+                                                               d:Text="1234GB"
+                                                               Margin="5,0"/>
+                                                        <Ellipse Grid.Row="2"
+                                                                 Grid.Column="2"
+                                                                 Fill="{DynamicResource PrimaryHueDarkBrush}" 
+                                                                 Height="12"
+                                                                 Width="12" 
+                                                                 VerticalAlignment="Center" 
+                                                                 HorizontalAlignment="Left"
+                                                                 Margin="3,0"/>
+                                                    </Grid>
+                                                    <ProgressBar x:Name="pbSpace" materialDesign:TransitionAssist.DisableTransitions="True" HorizontalAlignment="Left" Height="6" Margin="0,5" VerticalAlignment="Top" Width="253" Value="{Binding DeviceList.SelectedDevice.Space,Converter={StaticResource ArrToProgress},Mode=OneWay}" 
+                                                             Background="{DynamicResource PrimaryHueMidBrush}" Foreground="{DynamicResource PrimaryHueDarkBrush}" BorderBrush="{x:Null}" BorderThickness="0"
                                                              d:Value="30"/>
+                                                </StackPanel>
                                             </StackPanel>
+                                        </Border>
 
-                                            <StackPanel Orientation="Horizontal" Margin="0,3" Visibility="Visible">
-                                                <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}" 
-                                                       Text="{x:Static p:Resources.FileSearchState}"
-                                                       FontWeight="Bold"/>
-                                                <TextBlock Text=":" VerticalAlignment="Center" Style="{StaticResource MaterialDesignBody2TextBlock}"/>
-                                                <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}" 
-                                                       x:Name="lblFileSearchStatus" 
-                                                       Text="{Binding DeviceList.SelectedDeviceInfo.FileSearchStatus,Converter={StaticResource IntToFileSearchStatus}}"/>
+                                        <StackPanel Orientation="Vertical" 
+                                                    Margin="0,5">
+                                            <DockPanel LastChildFill="False">
+                                                <TextBlock Text="{x:Static p:Resources.Files_Info}"
+                                                           Style="{StaticResource MaterialDesignBody1TextBlock}"
+                                                           FontWeight="Bold"
+                                                           VerticalAlignment="Center"/>
+                                                <StackPanel Orientation="Horizontal"
+                                                            DockPanel.Dock="Right">
+                                                    <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}" 
+                                                               Text="{Binding DeviceList.SelectedDeviceInfo.FileSearchStatus,Converter={StaticResource IntToFileSearchStatus}}"
+                                                               VerticalAlignment="Center"
+                                                               Margin="5,0"
+                                                               d:Text="status"/>
+                                                    <Button Style="{StaticResource MaterialDesignFloatingActionMiniButton}"
+                                                            ToolTip="Find"
+                                                            Width="25"
+                                                            Height="25"
+                                                            Click="Find_Click">
+                                                        <materialDesign:PackIcon
+                                                            Kind="Refresh"
+                                                            Height="15"
+                                                            Width="15"/>
+                                                    </Button>
+                                                    <Button Style="{StaticResource MaterialDesignFloatingActionMiniButton}"
+                                                            ToolTip="Cancel search"
+                                                            Width="25"
+                                                            Height="25"
+                                                            Click="Cancel_Click">
+                                                        <materialDesign:PackIcon
+                                                            Kind="Cancel"
+                                                            Height="15"
+                                                            Width="15" />
+                                                    </Button>
+                                                </StackPanel>
+                                            </DockPanel>
+
+                                            <StackPanel Orientation="Vertical" Margin="15,0">
+                                                <StackPanel Orientation="Horizontal">
+                                                    <TextBlock Text="{x:Static p:Resources.Files_Count}"
+                                                               Style="{StaticResource MaterialDesignBody2TextBlock}"
+                                                               FontWeight="Bold"
+                                                               VerticalAlignment="Bottom" HorizontalAlignment="Left"/>
+                                                    <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}" 
+                                                               Text="{Binding DeviceList.SelectedDevice.DeviceFileInfo.AllFilesCount}"
+                                                               Margin="5,0"
+                                                               d:Text="1465" VerticalAlignment="Bottom" HorizontalAlignment="Left"/>
+                                                </StackPanel>
+
+                                                <StackPanel Orientation="Horizontal">
+                                                    <TextBlock Text="{x:Static p:Resources.Files_Types}"
+                                                               Style="{StaticResource MaterialDesignBody2TextBlock}"
+                                                               VerticalAlignment="Bottom"
+                                                               FontWeight="Bold"
+                                                               HorizontalAlignment="Left"/>
+                                                    <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}"
+                                                               Text="{Binding DeviceList.SelectedDevice.DeviceFileInfo.AllFileTypes,Converter={StaticResource ListToString},ConverterParameter=', '}"
+                                                               VerticalAlignment="Bottom"
+                                                               Margin="5,0"
+                                                               d:Text="JPG, CR2, RAW" HorizontalAlignment="Left"/>
+                                                </StackPanel>
+
                                             </StackPanel>
-                                            <StackPanel Orientation="Horizontal" Margin="0,3">
-                                                <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}" 
-                                                       Text="Files count"
-                                                       FontWeight="Bold"/>
-                                                <TextBlock Text=":" VerticalAlignment="Center" Style="{StaticResource MaterialDesignBody2TextBlock}"/>
-                                                <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}" 
-                                                       x:Name="lblAllFilesCount" 
-                                                       Text="{Binding DeviceList.SelectedDevice.DeviceFileInfo.AllFilesCount}"/>
-                                            </StackPanel>
-                                            <StackPanel Orientation="Horizontal" Margin="0,3">
-                                                <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}" 
-                                                       Text="Files types "
-                                                       FontWeight="Bold"/>
-                                                <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}" 
-                                                       x:Name="lblFileTypes" 
-                                                       Text="{Binding DeviceList.SelectedDevice.DeviceFileInfo.AllFileTypes,Converter={StaticResource ListToString}}"/>
-                                            </StackPanel>
-                                            
-                                            <Button Content="find files" Click="Find_Click"/>
-                                            <Button x:Name="Cancel" Content="Cancel task" Click="Cancel_Click"/>
                                         </StackPanel>
                                     </StackPanel>
-                                </StackPanel>
+                                </Grid>
                             </StackPanel>
                         </materialDesign:Card>
 
@@ -227,7 +343,7 @@
                                         </Grid.ColumnDefinitions>
                                         <ComboBox x:Name="cbProfiles" Grid.Column="0" ItemsSource="{Binding Profiles}" Margin="5" Text="Profil" SelectionChanged="cbProfiles_SelectionChanged"/>
                                         <Button Style="{StaticResource MaterialDesignFloatingActionMiniButton}"
-                                            ToolTip="Obnovit"
+                                            ToolTip="{x:Static p:Resources.Refresh}"
                                             Grid.Column="1"
                                             Width="25"
                                             Height="25"
@@ -278,7 +394,6 @@
                                         </StackPanel>
 
                                         <StackPanel Orientation="Vertical" Margin="10,5" x:Name="spDestExample">
-                                            <!--<TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}" Text="Struktura uložení: " FontWeight="Bold"/>-->
                                             <StackPanel Orientation="Horizontal">
                                                 <materialDesign:PackIcon Kind="Folder"/>
                                                 <TextBlock Text="{Binding DownloadSettings.Paths.Root}" d:Text="root"
@@ -386,47 +501,55 @@
                                                               CornerRadius="5,5,0,0">
                                         <TextBlock Style="{StaticResource MaterialDesignHeadline6TextBlock}" Text="{x:Static p:Resources.CardOtherSettings}" Padding="5" FontSize="15" TextAlignment="Center"/>
                                     </materialDesign:ColorZone>
-                                    <CheckBox Content="{x:Static p:Resources.Backup}" x:Name="cbBackup" Margin="10,5" IsChecked="{Binding DownloadSettings.Backup, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
-                                    <StackPanel Orientation="Vertical" Margin="10,0" x:Name="spBackup" Visibility="{Binding DownloadSettings.Backup, Converter={StaticResource BoolToVisConverter},UpdateSourceTrigger=PropertyChanged}">
-                                        <StackPanel Orientation="Horizontal" Margin="10,0">
-                                            <Button x:Name="btnChooseBackupDest" Content="{x:Static p:Resources.SelectDestination}" HorizontalAlignment="Left"  Width="Auto" Height="Auto" Click="btnChooseBackupDest_Click"/>
-                                            <Grid HorizontalAlignment="Right" MaxWidth="240" Margin="5,0,0,0">
-                                                <TextBlock x:Name="tbBackupDest" Text="{Binding DownloadSettings.Paths.Backup,UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Right" Margin="5,0" Style="{StaticResource MaterialDesignBody2TextBlock}" VerticalAlignment="Center"
-                                                       ToolTip="{Binding RelativeSource={RelativeSource Self}, Path=Text}"/>
-                                            </Grid>
 
+                                    <StackPanel Margin="0,0,0,5" x:Name="spBackup">
+                                        <CheckBox Content="{x:Static p:Resources.Backup}" x:Name="cbBackup" Margin="10,5" IsChecked="{Binding DownloadSettings.Backup, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
+                                        <StackPanel Orientation="Vertical" Margin="10,0" Visibility="{Binding DownloadSettings.Backup, Converter={StaticResource BoolToVisConverter},UpdateSourceTrigger=PropertyChanged}">
+                                            <StackPanel Orientation="Horizontal" Margin="10,0">
+                                                <Button x:Name="btnChooseBackupDest" Content="{x:Static p:Resources.SelectDestination}" HorizontalAlignment="Left"  Width="Auto" Height="Auto" Click="btnChooseBackupDest_Click"/>
+                                                <Grid HorizontalAlignment="Right" MaxWidth="240" Margin="5,0,0,0">
+                                                    <TextBlock x:Name="tbBackupDest" Text="{Binding DownloadSettings.Paths.Backup,UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Right" Margin="5,0" Style="{StaticResource MaterialDesignBody2TextBlock}" VerticalAlignment="Center"
+                                                       ToolTip="{Binding RelativeSource={RelativeSource Self}, Path=Text}"/>
+                                                </Grid>
+
+                                            </StackPanel>
+                                            <TextBlock x:Name="tbBackupError" Foreground="Red" Visibility="Collapsed" Margin="10,2"/>
                                         </StackPanel>
-                                        <TextBlock x:Name="tbBackupError" Foreground="Red" Visibility="Collapsed" Margin="10,2"/>
-                                        <Separator Margin="5,10" Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" Height="1"/>
                                     </StackPanel>
 
-                                    <CheckBox Content="{x:Static p:Resources.GenerateThumbnails}" x:Name="cbThumbnails" Margin="10,0" IsChecked="{Binding DownloadSettings.Thumbnail,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
-                                    <StackPanel Margin="10,5" x:Name="spThumbnail" Visibility="{Binding DownloadSettings.Thumbnail, Converter={StaticResource BoolToVisConverter},UpdateSourceTrigger=PropertyChanged}">
-                                        <StackPanel Orientation="Horizontal" Margin="10,0">
-                                            <Button x:Name="btnChooseThumbDest" Content="{x:Static p:Resources.SelectDestination}" Width="Auto" Height="Auto" Click="btnChooseThumbDest_Click"/>
+                                    <Border BorderBrush="{DynamicResource MaterialDesignDivider}"
+                                            BorderThickness="0,1,0,0">
+                                        <StackPanel x:Name="spThumbnail"
+                                                    Margin="0,5,0,0">
+                                            <CheckBox Content="{x:Static p:Resources.GenerateThumbnails}" x:Name="cbThumbnails" Margin="10,0" IsChecked="{Binding DownloadSettings.Thumbnail,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
+                                            <StackPanel Margin="10,5" Visibility="{Binding DownloadSettings.Thumbnail, Converter={StaticResource BoolToVisConverter},UpdateSourceTrigger=PropertyChanged}">
+                                                <StackPanel Orientation="Horizontal" Margin="10,0">
+                                                    <Button x:Name="btnChooseThumbDest" Content="{x:Static p:Resources.SelectDestination}" Width="Auto" Height="Auto" Click="btnChooseThumbDest_Click"/>
 
-                                            <Grid HorizontalAlignment="Right" MaxWidth="240" Margin="5,0,0,0">
-                                                <TextBlock x:Name="tbThumbDest" Text="{Binding DownloadSettings.Paths.Thumbnail,UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Right" Margin="5,0" Style="{StaticResource MaterialDesignBody2TextBlock}" VerticalAlignment="Center"
+                                                    <Grid HorizontalAlignment="Right" MaxWidth="240" Margin="5,0,0,0">
+                                                        <TextBlock x:Name="tbThumbDest" Text="{Binding DownloadSettings.Paths.Thumbnail,UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Right" Margin="5,0" Style="{StaticResource MaterialDesignBody2TextBlock}" VerticalAlignment="Center"
                                                    ToolTip="{Binding RelativeSource={RelativeSource Self}, Path=Text}"/>
-                                            </Grid>
-                                        </StackPanel>
-                                        <TextBlock x:Name="tbThumbnailDestError" Foreground="Red" Visibility="Collapsed" Margin="10,2"/>
-                                        <StackPanel Orientation="Horizontal" Margin="5,10,5,5">
-                                            <TextBlock Text="{x:Static p:Resources.ThumbnailMaxSize}" Style="{StaticResource MaterialDesignBody2TextBlock}"/>
-                                            <RadioButton Content="{x:Static p:Resources.ThumbnailLongerSide}" x:Name="cbLongSide" IsChecked="{Binding DownloadSettings.ThumbnailSettings.Selected,Converter={StaticResource EnumToBool},ConverterParameter=longerSide}" Margin="5,0" GroupName="rgResize"/>
-                                            <RadioButton Content="{x:Static p:Resources.ThumbnailShorterSide}" x:Name="cbShortSide" IsChecked="{Binding DownloadSettings.ThumbnailSettings.Selected,Converter={StaticResource EnumToBool},ConverterParameter=shorterSide}" Margin="5,0" GroupName="rgResize"/>
-                                        </StackPanel>
+                                                    </Grid>
+                                                </StackPanel>
+                                                <TextBlock x:Name="tbThumbnailDestError" Foreground="Red" Visibility="Collapsed" Margin="10,2"/>
+                                                <StackPanel Orientation="Horizontal" Margin="5,10,5,5">
+                                                    <TextBlock Text="{x:Static p:Resources.ThumbnailMaxSize}" Style="{StaticResource MaterialDesignBody2TextBlock}"/>
+                                                    <RadioButton Content="{x:Static p:Resources.ThumbnailLongerSide}" x:Name="cbLongSide" IsChecked="{Binding DownloadSettings.ThumbnailSettings.Selected,Converter={StaticResource EnumToBool},ConverterParameter=longerSide}" Margin="5,0" GroupName="rgResize"/>
+                                                    <RadioButton Content="{x:Static p:Resources.ThumbnailShorterSide}" x:Name="cbShortSide" IsChecked="{Binding DownloadSettings.ThumbnailSettings.Selected,Converter={StaticResource EnumToBool},ConverterParameter=shorterSide}" Margin="5,0" GroupName="rgResize"/>
+                                                </StackPanel>
 
-                                        <StackPanel Orientation="Horizontal" Margin="5,0,5,15">
-                                            <TextBlock Text="{x:Static p:Resources.Value}" VerticalAlignment="Center" Style="{StaticResource MaterialDesignBody2TextBlock}"/>
-                                            <TextBlock Text=":" VerticalAlignment="Center" Style="{StaticResource MaterialDesignBody2TextBlock}"/>
-                                            <TextBox x:Name="tbValue" Width="Auto" MinWidth="100" TextAlignment="Right"
+                                                <StackPanel Orientation="Horizontal" Margin="5,0,5,15">
+                                                    <TextBlock Text="{x:Static p:Resources.Value}" VerticalAlignment="Center" Style="{StaticResource MaterialDesignBody2TextBlock}"/>
+                                                    <TextBlock Text=":" VerticalAlignment="Center" Style="{StaticResource MaterialDesignBody2TextBlock}"/>
+                                                    <TextBox x:Name="tbValue" Width="Auto" MinWidth="100" TextAlignment="Right"
                                                 Text="{Binding DownloadSettings.ThumbnailSettings.Value,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                                                 PreviewTextInput="tbValue_PreviewTextInput"
                                                 MaxLength="5" PreviewKeyDown="tbValue_PreviewKeyDown" LostFocus="tbValue_LostFocus" GotFocus="tbValue_GotFocus" Margin="5,0,0,0"/>
+                                                </StackPanel>
+                                                <TextBlock x:Name="tbThumbnailError" Foreground="Red" Visibility="Collapsed"/>
+                                            </StackPanel>
                                         </StackPanel>
-                                        <TextBlock x:Name="tbThumbnailError" Foreground="Red" Visibility="Collapsed"/>
-                                    </StackPanel>
+                                    </Border>
                                 </StackPanel>
                             </materialDesign:Card>
 
@@ -462,11 +585,12 @@
                                                    d:Visibility="Visible"/>
                                     </StackPanel>
 
-                                    <StackPanel Orientation="Horizontal" Margin="10,5">
+                                    <StackPanel Orientation="Horizontal" Margin="10,5,10,10">
                                         <Button Content="{x:Static p:Resources.FindFiles}" VerticalAlignment="Center" Click="FindFiles_Click" Margin="5,0"/>
                                         <Button x:Name="btnCopyFiles" Content="{x:Static p:Resources.DownloadFiles}" Margin="5,0" Width="Auto"  VerticalAlignment="Center" Click="CopyFiles_Click"/>
                                     </StackPanel>
                                     <TextBlock x:Name="lblResult" HorizontalAlignment="Left" Margin="10" VerticalAlignment="Top" Height="Auto" Width="Auto" Style="{StaticResource MaterialDesignBody2TextBlock}"
+                                               Visibility="Collapsed"
                                                d:Text="Result label"/>
                                     <Button x:Name="btnShowLog" Content="{x:Static p:Resources.ShowLog}" Margin="10,10" Visibility="Collapsed" Click="btnShowLog_Click"
                                             d:Visibility="Visible"/>
