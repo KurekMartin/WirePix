@@ -127,6 +127,10 @@ namespace PhotoApp
         }
         private void ListBoxDevices_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            if (e.RemovedItems.Count > 0)
+            {
+                DeviceList.SelectedDeviceInfo.PropertyChanged -= SelectedDeviceInfo_PropertyChanged;
+            }
             if (ListBoxDevices.SelectedItem != null)
             {
                 tbSelectDeviceError.Visibility = Visibility.Collapsed;
@@ -136,12 +140,14 @@ namespace PhotoApp
 
                 //zmena vybraneho zarizeni
                 DeviceList.SelectDeviceByIndex(ListBoxDevices.SelectedIndex);
+                DeviceList.SelectedDeviceInfo.PropertyChanged += SelectedDeviceInfo_PropertyChanged;
             }
             else
             {
                 spDeviceInfo.Visibility = Visibility.Collapsed;
                 ListBoxDevices.IsEnabled = true;
             }
+            UpdateFilesActionIcon();
         }
 
         //nalezeni a vypis vsech zarizeni vyuzivajicich MTP
@@ -207,11 +213,6 @@ namespace PhotoApp
             ListConnectedDevices();
         }
 
-        private void Find_Click(object sender, RoutedEventArgs e)
-        {
-            FindAllFiles(DeviceList.SelectedDevice.ID);
-        }
-
         public async void FindAllFiles(string deviceID = null)
         {
             var devices = DeviceList.ConnectedDevicesInfo;
@@ -241,7 +242,7 @@ namespace PhotoApp
                     {
                         deviceInfo.FileSearchStatus = DeviceInfo.DEVICE_FILES_READY;
                     }
-                    else if(deviceInfo.FileSearchStatus != DeviceInfo.DEVICE_FILES_CANCELED)
+                    else if (deviceInfo.FileSearchStatus != DeviceInfo.DEVICE_FILES_CANCELED)
                     {
                         deviceInfo.FileSearchStatus = DeviceInfo.DEVICE_FILES_ERROR;
                     }
@@ -572,7 +573,7 @@ namespace PhotoApp
 
                 new ButtonGroupStruct(
                     Properties.Resources.TagGroup_File,
-                    new List<string>(){ 
+                    new List<string>(){
                         Properties.TagCodes.FileType},
                     new Point(1,2))
             };
@@ -983,10 +984,48 @@ namespace PhotoApp
             FindAllFiles();
         }
 
-        private void Cancel_Click(object sender, RoutedEventArgs e)
+        private void SelectedDeviceInfo_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            DeviceList.SelectedDevice.CancelCurrentTask();
-            DeviceList.SelectedDeviceInfo.FileSearchStatus = DeviceInfo.DEVICE_FILES_CANCELED;
+            UpdateFilesActionIcon();
+        }
+
+        private void UpdateFilesActionIcon()
+        {
+            Button button = btnFilesAction;
+            PackIcon icon = button.Content as PackIcon;
+            var status = DeviceList.SelectedDeviceInfo.FileSearchStatus;
+            if (status == DeviceInfo.DEVICE_FILES_NOT_SEARCHED ||
+                status == DeviceInfo.DEVICE_FILES_CANCELED ||
+                status == DeviceInfo.DEVICE_FILES_ERROR ||
+                status == DeviceInfo.DEVICE_FILES_READY)
+            {
+                icon.Kind = PackIconKind.Refresh;
+                button.ToolTip = Properties.Resources.Refresh;
+            }
+            else if (status == DeviceInfo.DEVICE_FILES_WAITING ||
+                     status == DeviceInfo.DEVICE_FILES_SEARCHING)
+            {
+                icon.Kind = PackIconKind.Cancel;
+                button.ToolTip = Properties.Resources.Cancel;
+            }
+        }
+
+        private void btnFilesAction_Click(object sender, RoutedEventArgs e)
+        {
+            var status = DeviceList.SelectedDeviceInfo.FileSearchStatus;
+            if (status == DeviceInfo.DEVICE_FILES_NOT_SEARCHED ||
+                status == DeviceInfo.DEVICE_FILES_CANCELED ||
+                status == DeviceInfo.DEVICE_FILES_ERROR ||
+                status == DeviceInfo.DEVICE_FILES_READY)
+            {
+                FindAllFiles(DeviceList.SelectedDevice.ID);
+            }
+            else if (status == DeviceInfo.DEVICE_FILES_WAITING ||
+                     status == DeviceInfo.DEVICE_FILES_SEARCHING)
+            {
+                DeviceList.SelectedDevice.CancelCurrentTask();
+                DeviceList.SelectedDeviceInfo.FileSearchStatus = DeviceInfo.DEVICE_FILES_CANCELED;
+            }
         }
     }
 }
