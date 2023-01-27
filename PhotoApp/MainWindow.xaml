@@ -307,14 +307,17 @@
                                                 <StackPanel Orientation="Horizontal">
                                                     <TextBlock Text="{x:Static p:Resources.Files_Types}"
                                                                Style="{StaticResource MaterialDesignBody2TextBlock}"
-                                                               VerticalAlignment="Bottom"
+                                                               VerticalAlignment="Top"
                                                                FontWeight="Bold"
                                                                HorizontalAlignment="Left"/>
                                                     <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}"
                                                                Text="{Binding DeviceList.SelectedDevice.DeviceFileInfo.AllFileTypes,Converter={StaticResource ListToString},ConverterParameter=', '}"
-                                                               VerticalAlignment="Bottom"
+                                                               VerticalAlignment="Top"
+                                                               HorizontalAlignment="Left"
                                                                Margin="5,0"
-                                                               d:Text="JPG, CR2, RAW" HorizontalAlignment="Left"/>
+                                                               TextWrapping="Wrap"
+                                                               MaxWidth="200"
+                                                               d:Text="JPG, CR2, RAW, PNG, TIFF , CR3, NEF, DNG"/>
                                                 </StackPanel>
 
                                             </StackPanel>
