@@ -265,29 +265,18 @@
                                                 <StackPanel Orientation="Horizontal"
                                                             DockPanel.Dock="Right">
                                                     <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}" 
-                                                               Text="{Binding DeviceList.SelectedDeviceInfo.FileSearchStatus,Converter={StaticResource IntToFileSearchStatus}}"
-                                                               VerticalAlignment="Center"
-                                                               Margin="5,0"
-                                                               d:Text="status"/>
+                                                               Text="{Binding DeviceList.SelectedDeviceInfo.FileSearchStatus, Converter={StaticResource IntToFileSearchStatus}}"
+                                                               d:Text="status" VerticalAlignment="Center"/>
                                                     <Button Style="{StaticResource MaterialDesignFloatingActionMiniButton}"
-                                                            ToolTip="Find"
                                                             Width="25"
                                                             Height="25"
-                                                            Click="Find_Click">
+                                                            Margin="10,0"
+                                                            x:Name="btnFilesAction" 
+                                                            Click="btnFilesAction_Click" >
                                                         <materialDesign:PackIcon
                                                             Kind="Refresh"
                                                             Height="15"
                                                             Width="15"/>
-                                                    </Button>
-                                                    <Button Style="{StaticResource MaterialDesignFloatingActionMiniButton}"
-                                                            ToolTip="Cancel search"
-                                                            Width="25"
-                                                            Height="25"
-                                                            Click="Cancel_Click">
-                                                        <materialDesign:PackIcon
-                                                            Kind="Cancel"
-                                                            Height="15"
-                                                            Width="15" />
                                                     </Button>
                                                 </StackPanel>
                                             </DockPanel>
