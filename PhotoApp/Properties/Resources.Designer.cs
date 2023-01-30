@@ -411,7 +411,7 @@ namespace PhotoApp.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Download files by date.
+        ///   Looks up a localized string similar to By date.
         /// </summary>
         public static string DownloadDateRange {
             get {
@@ -447,7 +447,7 @@ namespace PhotoApp.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Download new files since last backup.
+        ///   Looks up a localized string similar to New since last backup.
         /// </summary>
         public static string DownloadNewFiles {
             get {
