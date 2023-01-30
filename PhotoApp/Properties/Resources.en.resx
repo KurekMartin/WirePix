@@ -679,4 +679,19 @@ Fill the value or remove the tag.</value>
   <data name="Files_Types" xml:space="preserve">
     <value>Types</value>
   </data>
+  <data name="CardFilter" xml:space="preserve">
+    <value>Filters</value>
+  </data>
+  <data name="FilterDate" xml:space="preserve">
+    <value>Date</value>
+  </data>
+  <data name="FilterFileTypes" xml:space="preserve">
+    <value>File types</value>
+  </data>
+  <data name="FilterFileTypes_all" xml:space="preserve">
+    <value>All</value>
+  </data>
+  <data name="FilterFileTypes_selection" xml:space="preserve">
+    <value>Selection</value>
+  </data>
 </root>

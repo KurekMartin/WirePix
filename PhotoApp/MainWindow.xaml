@@ -16,7 +16,7 @@
         TextOptions.TextFormattingMode="Ideal" 
         TextOptions.TextRenderingMode="Auto"        
         Background="{DynamicResource MaterialDesignPaper}"
-        FontFamily="{DynamicResource MaterialDesignFont}" MinWidth="920" MinHeight="600" Height="778" Width="920" SizeToContent="WidthAndHeight" ResizeMode="CanMinimize" Closing="Window_Closing" WindowStartupLocation="CenterScreen" Icon="/icon.ico" Loaded="Window_Loaded">
+        FontFamily="{DynamicResource MaterialDesignFont}" MinWidth="925" MinHeight="600" Height="809" Width="927" SizeToContent="WidthAndHeight" ResizeMode="CanMinimize" Closing="Window_Closing" WindowStartupLocation="CenterScreen" Icon="/icon.ico" Loaded="Window_Loaded">
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVisConverter" />
         <converters:EnumToBoleanConverter x:Key="EnumToBool"/>
@@ -495,12 +495,12 @@
                                 <StackPanel Orientation="Vertical">
                                     <materialDesign:ColorZone Mode="PrimaryMid"
                                                               CornerRadius="5,5,0,0">
-                                        <TextBlock Text="Filter"
+                                        <TextBlock Text="{x:Static p:Resources.CardFilter}"
                                                    Style="{StaticResource MaterialDesignHeadline6TextBlock}" Padding="5" FontSize="15" TextAlignment="Center"/>
                                     </materialDesign:ColorZone>
                                     <StackPanel Orientation="Vertical"
                                                 Margin="10,5">
-                                        <TextBlock Text="Date"
+                                        <TextBlock Text="{x:Static p:Resources.FilterDate}"
                                                    Style="{StaticResource MaterialDesignBody1TextBlock}"
                                                    FontWeight="Bold"
                                                    VerticalAlignment="Center"/>
@@ -515,7 +515,7 @@
                                                             MinWidth="100"
                                                             Height="Auto"
                                                             Margin="5,0"
-                                                            VerticalAlignment="Center"
+                                                            VerticalAlignment="Top"
                                                             HorizontalContentAlignment="Left"
                                                             SelectedDateChanged="dpDate_SelectedDateChanged"
                                                             SelectedDate="{Binding DownloadSettings.Date.Start,Mode=TwoWay}"/>
@@ -525,7 +525,7 @@
                                                             MinWidth="100"
                                                             Height="Auto" 
                                                             Margin="5,0"
-                                                            VerticalAlignment="Center"
+                                                            VerticalAlignment="Top"
                                                             HorizontalContentAlignment="Left" 
                                                             SelectedDate="{Binding DownloadSettings.Date.End,Mode=TwoWay}"
                                                             SelectedDateChanged="dpDate_SelectedDateChanged"/>
@@ -535,6 +535,25 @@
                                                    d:Text="Date range error"
                                                    d:Visibility="Visible"/>
                                         </StackPanel>
+                                    </StackPanel>
+
+                                    <StackPanel Orientation="Vertical"
+                                                Margin="10,5">
+                                        <TextBlock Text="{x:Static p:Resources.FilterFileTypes}"
+                                                   Style="{StaticResource MaterialDesignBody1TextBlock}"
+                                                   FontWeight="Bold"
+                                                   VerticalAlignment="Center"/>
+                                        <RadioButton Content="{x:Static p:Resources.FilterFileTypes_all}"                                                     
+                                                     Margin="0,2"
+                                                     GroupName="rbgFileTypes"
+                                                     IsChecked="{Binding DownloadSettings.FileTypeSelect,Converter={StaticResource EnumToBool},ConverterParameter=all}"
+                                                     />
+                                        <RadioButton Content="{x:Static p:Resources.FilterFileTypes_selection}" 
+                                                     Margin="0,2"
+                                                     GroupName="rbgFileTypes"
+                                                     IsChecked="{Binding DownloadSettings.FileTypeSelect,Converter={StaticResource EnumToBool},ConverterParameter=selection}"
+                                                     />
+
                                     </StackPanel>
                                 </StackPanel>
                             </materialDesign:Card>

@@ -115,6 +115,15 @@ namespace PhotoApp.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Filters.
+        /// </summary>
+        public static string CardFilter {
+            get {
+                return ResourceManager.GetString("CardFilter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Other.
         /// </summary>
         public static string CardOtherSettings {
@@ -672,6 +681,42 @@ namespace PhotoApp.Properties {
         public static string FilesToDownload {
             get {
                 return ResourceManager.GetString("FilesToDownload", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Date.
+        /// </summary>
+        public static string FilterDate {
+            get {
+                return ResourceManager.GetString("FilterDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File types.
+        /// </summary>
+        public static string FilterFileTypes {
+            get {
+                return ResourceManager.GetString("FilterFileTypes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to All.
+        /// </summary>
+        public static string FilterFileTypes_all {
+            get {
+                return ResourceManager.GetString("FilterFileTypes_all", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Selection.
+        /// </summary>
+        public static string FilterFileTypes_selection {
+            get {
+                return ResourceManager.GetString("FilterFileTypes_selection", resourceCulture);
             }
         }
         

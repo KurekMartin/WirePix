@@ -679,4 +679,19 @@ Doplňte tuto hodnotu nebo značku odstraňte.</value>
   <data name="Files_Types" xml:space="preserve">
     <value>Typy</value>
   </data>
+  <data name="CardFilter" xml:space="preserve">
+    <value>Filtry</value>
+  </data>
+  <data name="FilterDate" xml:space="preserve">
+    <value>Datum</value>
+  </data>
+  <data name="FilterFileTypes" xml:space="preserve">
+    <value>Typy souborů</value>
+  </data>
+  <data name="FilterFileTypes_all" xml:space="preserve">
+    <value>Vše</value>
+  </data>
+  <data name="FilterFileTypes_selection" xml:space="preserve">
+    <value>Výběr</value>
+  </data>
 </root>
