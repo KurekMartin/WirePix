@@ -15,7 +15,8 @@
         TextOptions.TextFormattingMode="Ideal" 
         TextOptions.TextRenderingMode="Auto"        
         Background="{DynamicResource MaterialDesignPaper}"
-        FontFamily="{DynamicResource MaterialDesignFont}" MinWidth="800" MinHeight="600" Height="778" Width="800" SizeToContent="WidthAndHeight" ResizeMode="CanMinimize" Closing="Window_Closing" WindowStartupLocation="CenterScreen" Icon="/icon.ico" Loaded="Window_Loaded">
+        FontFamily="{DynamicResource MaterialDesignFont}" MinWidth="900
+    " MinHeight="600" Height="778" Width="896" SizeToContent="WidthAndHeight" ResizeMode="CanMinimize" Closing="Window_Closing" WindowStartupLocation="CenterScreen" Icon="/icon.ico" Loaded="Window_Loaded">
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVisConverter" />
         <converters:EnumToBoleanConverter x:Key="EnumToBool"/>
@@ -95,7 +96,7 @@
                         </Grid.RowDefinitions>
                         <materialDesign:Card Margin="10,5" Grid.Row="0" UniformCornerRadius="5">
 
-                            <StackPanel Orientation="Horizontal" Margin="5,5,5,10" VerticalAlignment="Top" Height="Auto">
+                            <DockPanel Margin="5,5,5,10" VerticalAlignment="Top" Height="Auto">
                                 <Grid Margin="5,0">
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="*"/>
@@ -114,10 +115,11 @@
                                     <Button Grid.Row="2" Content="{x:Static p:Resources.Refresh}" Margin="0,5,0,0" VerticalAlignment="Bottom" Click="Refresh_Click" Height="Auto"/>
                                 </Grid>
 
-                                <Grid x:Name="spDeviceInfo">
+                                <Grid x:Name="spDeviceInfo"
+                                      Width="Auto">
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto"/>
-                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="1*"/>
+                                        <ColumnDefinition Width="1*"/>
                                     </Grid.ColumnDefinitions>
                                     <Border Grid.Column="0"
                                             BorderBrush="{DynamicResource MaterialDesignDivider}"
@@ -313,7 +315,7 @@
                                         </StackPanel>
                                     </StackPanel>
                                 </Grid>
-                            </StackPanel>
+                            </DockPanel>
                         </materialDesign:Card>
 
                         <Grid Grid.Row="1" Margin="10,5">
