@@ -998,7 +998,7 @@ namespace PhotoApp.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Remains.
+        ///   Looks up a localized string similar to Remaining.
         /// </summary>
         public static string RemainingTime_Remains {
             get {
