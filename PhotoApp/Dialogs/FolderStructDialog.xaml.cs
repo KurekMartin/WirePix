@@ -189,8 +189,8 @@ namespace PhotoApp.Dialogs
             {
                 SelectedFolderIndex = 0;
                 if (SelectedFolder.Tags.Count > 0) { SelectedTagIndex = 0; }
+                ShowControls();
             }
-            ShowControls();
         }
 
 
@@ -240,6 +240,7 @@ namespace PhotoApp.Dialogs
             SelectedFolderIndex++;
             SelectedTagIndex = -1;
             btnDeleteFolder.Visibility = Visibility.Collapsed;
+            ShowControls();
         }
 
 
@@ -316,6 +317,11 @@ namespace PhotoApp.Dialogs
             {
                 NewFolderLevel();
             }
+            else if (SelectedFolderIndex == -1)
+            {
+                SelectedFolderIndex = 0;
+            }
+
         }
 
         //změna CustomTextu -> update tagu
@@ -341,7 +347,7 @@ namespace PhotoApp.Dialogs
         {
             cbGroupSelect.Visibility = tbCustomText.Visibility = btnDeleteTag.Visibility = Visibility.Collapsed;
 
-            if (SelectedFolderIndex > -1 && FolderStructure.Count() > 0 && FolderStructure[SelectedFolderIndex].Tags.Count() > 0)
+            if (SelectedFolderIndex > -1 && FolderStructure.Count() > 0/* && FolderStructure[SelectedFolderIndex].Tags.Count() > 0*/)
             {
                 btnDeleteFolder.Visibility = Visibility.Visible;
 
@@ -385,7 +391,7 @@ namespace PhotoApp.Dialogs
             {
                 OnPropertyChanged("SelectedFolder");
                 ShowControls();
-                if (FolderStructure.Count > 0 && SelectedFolderIndex != FolderStructure.Count() - 1 && ((FolderLevel)e.RemovedItems[0]).Tags.Count == 0)
+                if (FolderStructure.Count > 0 && SelectedFolderIndex != FolderStructure.Count() - 1 && e.RemovedItems.Count > 0 && ((FolderLevel)e.RemovedItems[0]).Tags.Count == 0)
                 {
                     FolderStructure.Remove((FolderLevel)e.RemovedItems[0]);
                 }
