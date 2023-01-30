@@ -96,7 +96,7 @@ namespace PhotoApp.Dialogs
             int i = 0;
             foreach (FolderLevel folder in folders)
             {
-                if (i++ > index)
+                if (i++ >= index)
                 {
                     folder.Index += change;
                 }
@@ -385,9 +385,9 @@ namespace PhotoApp.Dialogs
             {
                 OnPropertyChanged("SelectedFolder");
                 ShowControls();
-                if (FolderStructure.Count > 0 && SelectedFolderIndex != FolderStructure.Count() - 1 && FolderStructure.Last().Tags.Count == 0)
+                if (FolderStructure.Count > 0 && SelectedFolderIndex != FolderStructure.Count() - 1 && ((FolderLevel)e.RemovedItems[0]).Tags.Count == 0)
                 {
-                    FolderStructure.Remove(FolderStructure.Last());
+                    FolderStructure.Remove((FolderLevel)e.RemovedItems[0]);
                 }
             }
             else if (e.RemovedItems.Count > 0 && !Tags.IsValidFileName(tbCustomText.Text))
