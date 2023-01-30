@@ -242,6 +242,9 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>TagGroups.resx</DependentUpon>
     </Compile>
+    <Compile Include="Validation\DateEndValidationRule.cs" />
+    <Compile Include="Validation\DateRangeChecker.cs" />
+    <Compile Include="Validation\DateStartValidationRule.cs" />
     <Page Include="CircularProgress.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
