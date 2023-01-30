@@ -242,7 +242,7 @@ auto select first connected device</value>
     <value>Done</value>
   </data>
   <data name="DownloadDateRange" xml:space="preserve">
-    <value>Download files by date</value>
+    <value>By date</value>
   </data>
   <data name="DownloadDeleteFile" xml:space="preserve">
     <value>Delete downloaded files from device</value>
@@ -254,7 +254,7 @@ auto select first connected device</value>
     <value>Download files</value>
   </data>
   <data name="DownloadNewFiles" xml:space="preserve">
-    <value>Download new files since last backup</value>
+    <value>New since last backup</value>
   </data>
   <data name="EmailCopied" xml:space="preserve">
     <value>Email copied to clipboard</value>

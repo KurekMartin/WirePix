@@ -242,7 +242,7 @@ první připojené zařízení se automaticky vybere</value>
     <value>Hotovo</value>
   </data>
   <data name="DownloadDateRange" xml:space="preserve">
-    <value>Stažení souborů dle data</value>
+    <value>Dle data</value>
   </data>
   <data name="DownloadDeleteFile" xml:space="preserve">
     <value>Smazat stažené soubory ze zařízení</value>
@@ -254,7 +254,7 @@ první připojené zařízení se automaticky vybere</value>
     <value>Stáhnout soubory</value>
   </data>
   <data name="DownloadNewFiles" xml:space="preserve">
-    <value>Stažení nových souborů od poslední zálohy</value>
+    <value>Nové od poslední zálohy</value>
   </data>
   <data name="EmailCopied" xml:space="preserve">
     <value>Email zkopírován do schránky</value>
