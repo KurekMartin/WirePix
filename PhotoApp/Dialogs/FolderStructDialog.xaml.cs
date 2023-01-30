@@ -69,6 +69,31 @@ namespace PhotoApp.Dialogs
 
         private static int _folderLimit = 7;
 
+        public FolderStructDialog(MainWindow window, List<ButtonGroupStruct> buttons, List<List<string>> initStructure = null)
+        {
+            FolderStructure = new ObservableCollection<FolderLevel>();
+            DataContext = this;
+            InitializeComponent();
+            mainWindow = window;
+
+            ButtonGridSize = new Point(buttons.Max(x => x.gridPosition.X) + 1,
+                                       buttons.Max(x => x.gridPosition.Y) + 1);
+            Buttons = buttons;
+
+            int i = 0;
+            initStructure.ForEach(x => FolderStructure.Add(new FolderLevel(i++, x)));
+            if (FolderStructure.Count == 0)
+            {
+                //vytvoreni korene treeView
+                NewFolderLevel();
+            }
+            else
+            {
+                SelectedFolderIndex = 0;
+                if (SelectedFolder.Tags.Count > 0) { SelectedTagIndex = 0; }
+                ShowControls();
+            }
+        }
         public ObservableCollection<FolderLevel> FolderStructure
         {
             get { return _folderStructure; }
@@ -167,33 +192,7 @@ namespace PhotoApp.Dialogs
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
-        public FolderStructDialog(MainWindow window, List<ButtonGroupStruct> buttons, List<List<string>> initStructure = null)
-        {
-            FolderStructure = new ObservableCollection<FolderLevel>();
-            DataContext = this;
-            InitializeComponent();
-            mainWindow = window;
-
-            ButtonGridSize = new Point(buttons.Max(x => x.gridPosition.X) + 1,
-                                       buttons.Max(x => x.gridPosition.Y) + 1);
-            Buttons = buttons;
-
-            int i = 0;
-            initStructure.ForEach(x => FolderStructure.Add(new FolderLevel(i++, x)));
-            if (FolderStructure.Count == 0)
-            {
-                //vytvoreni korene treeView
-                NewFolderLevel();
-            }
-            else
-            {
-                SelectedFolderIndex = 0;
-                if (SelectedFolder.Tags.Count > 0) { SelectedTagIndex = 0; }
-                ShowControls();
-            }
-        }
-
-
+        
         //přidání tagu po kliknutí na tlačítko
         private void Button_Click(object sender, RoutedEventArgs e)
         {
