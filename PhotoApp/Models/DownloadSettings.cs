@@ -13,6 +13,12 @@ namespace PhotoApp
         dateRange
     }
 
+    public enum FileTypeSelect
+    {
+        all,
+        selection
+    }
+
     public class DownloadSettings : BaseObserveObject
     {
         public PathStruct Paths { get; set; } = new PathStruct();
@@ -24,6 +30,7 @@ namespace PhotoApp
         private bool _backup = false;
         private bool _thumbnail = false;
         private DownloadSelect _downloadSelect = DownloadSelect.lastBackup;
+        private FileTypeSelect _fileTypeSelect = FileTypeSelect.all;
         public SaveOptions SaveOptions = new SaveOptions();
         [XmlIgnore]
         private static readonly string _profilesFolder = Application.Current.Resources[Properties.Keys.ProfilesFolder].ToString();
@@ -191,6 +198,19 @@ namespace PhotoApp
                 if (value != _downloadSelect)
                 {
                     _downloadSelect = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        public FileTypeSelect FileTypeSelect
+        {
+            get => _fileTypeSelect;
+            set
+            {
+                if(value!=_fileTypeSelect)
+                {
+                    _fileTypeSelect = value;
                     OnPropertyChanged();
                 }
             }
