@@ -742,6 +742,27 @@ namespace PhotoApp
             {
                 tbDateRangeError.Visibility = Visibility.Collapsed;
             }
+            
+            //SetDatePickerRange(dp); //disable date range
+        }
+
+        private void SetDatePickerRange(DatePicker dp)
+        {
+            var dateRange = DownloadSettings.Date;
+            if (dp == dpDateFrom && dpDateTo != null)
+            {
+                dpDateTo.BlackoutDates.Clear();
+                var end = new DateTime(dateRange.Start.Ticks).AddDays(-1);
+                var range = new CalendarDateRange(DateTime.MinValue, end);
+                dpDateTo.BlackoutDates.Add(range);
+            }
+            else if (dp == dpDateTo && dpDateFrom != null)
+            {
+                dpDateFrom.BlackoutDates.Clear();
+                var start = new DateTime(dateRange.End.Ticks).AddDays(1);
+                var range = new CalendarDateRange(start, DateTime.MaxValue);
+                dpDateFrom.BlackoutDates.Add(range);
+            }
         }
 
         private void tbValue_PreviewTextInput(object sender, System.Windows.Input.TextCompositionEventArgs e)

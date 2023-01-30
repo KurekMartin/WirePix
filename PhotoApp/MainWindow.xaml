@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PhotoApp"
         xmlns:converters="clr-namespace:PhotoApp.Converters"
+        xmlns:validation="clr-namespace:PhotoApp.Validation"
         xmlns:p ="clr-namespace:PhotoApp.Properties"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" x:Class="PhotoApp.MainWindow"
         mc:Ignorable="d"
@@ -15,8 +16,7 @@
         TextOptions.TextFormattingMode="Ideal" 
         TextOptions.TextRenderingMode="Auto"        
         Background="{DynamicResource MaterialDesignPaper}"
-        FontFamily="{DynamicResource MaterialDesignFont}" MinWidth="900
-    " MinHeight="600" Height="778" Width="896" SizeToContent="WidthAndHeight" ResizeMode="CanMinimize" Closing="Window_Closing" WindowStartupLocation="CenterScreen" Icon="/icon.ico" Loaded="Window_Loaded">
+        FontFamily="{DynamicResource MaterialDesignFont}" MinWidth="920" MinHeight="600" Height="778" Width="920" SizeToContent="WidthAndHeight" ResizeMode="CanMinimize" Closing="Window_Closing" WindowStartupLocation="CenterScreen" Icon="/icon.ico" Loaded="Window_Loaded">
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVisConverter" />
         <converters:EnumToBoleanConverter x:Key="EnumToBool"/>
@@ -491,7 +491,7 @@
                                 <ColumnDefinition Width="1*"/>
                             </Grid.ColumnDefinitions>
                             <materialDesign:Card Margin="0,0,5,0" UniformCornerRadius="5" Grid.Column="0"
-                                                 MinWidth="235">
+                                                 MinWidth="280">
                                 <StackPanel Orientation="Vertical">
                                     <materialDesign:ColorZone Mode="PrimaryMid"
                                                               CornerRadius="5,5,0,0">
@@ -508,10 +508,27 @@
                                         <RadioButton Content="{x:Static p:Resources.DownloadDateRange}" x:Name="cbDateRange" Margin="0,2" GroupName="rbgDate" IsChecked="{Binding DownloadSettings.DownloadSelect,Converter={StaticResource EnumToBool},ConverterParameter=dateRange}" Checked="cbDateRange_Checked"/>
                                         <StackPanel Orientation="Vertical" Margin="15,0" x:Name="spDate" Visibility="{Binding ElementName=cbDateRange, Path=IsChecked,Converter={StaticResource BoolToVisConverter},UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" d:Visibility="Visible">
                                             <StackPanel Orientation="Horizontal" Width="Auto" HorizontalAlignment="Left">
-                                                <DatePicker x:Name="dpDateFrom"  MinWidth="100" Margin="5,0" Padding="5,3" VerticalAlignment="Center" Height="Auto" HorizontalContentAlignment="Left" SelectedDate="{Binding DownloadSettings.Date.Start,Mode=TwoWay}" DisplayDateEnd="{Binding DownloadSettings.Date.End,Mode=TwoWay}" SelectedDateChanged="dpDate_SelectedDateChanged"
-                                                        DockPanel.Dock="Right"/>
-                                                <DatePicker x:Name="dpDateTo" MinWidth="100" Margin="5,0" Padding="5,3" VerticalAlignment="Center" Height="Auto" HorizontalContentAlignment="Left" SelectedDate="{Binding DownloadSettings.Date.End,Mode=TwoWay}" DisplayDateStart="{Binding DownloadSettings.Date.Start,Mode=TwoWay}" SelectedDateChanged="dpDate_SelectedDateChanged"
-                                                        DockPanel.Dock="Right"/>
+                                                <FrameworkElement Visibility="Hidden" x:Name="dateElement"/>
+                                                <DatePicker x:Name="dpDateFrom"
+                                                            Style="{StaticResource MaterialDesignFloatingHintDatePicker}"
+                                                            materialDesign:HintAssist.Hint="{x:Static p:Resources.DateRangeFrom}"
+                                                            MinWidth="100"
+                                                            Height="Auto"
+                                                            Margin="5,0"
+                                                            VerticalAlignment="Center"
+                                                            HorizontalContentAlignment="Left"
+                                                            SelectedDateChanged="dpDate_SelectedDateChanged"
+                                                            SelectedDate="{Binding DownloadSettings.Date.Start,Mode=TwoWay}"/>
+                                                <DatePicker x:Name="dpDateTo"
+                                                            Style="{StaticResource MaterialDesignFloatingHintDatePicker}"
+                                                            materialDesign:HintAssist.Hint="{x:Static p:Resources.DateRangeTo}"
+                                                            MinWidth="100"
+                                                            Height="Auto" 
+                                                            Margin="5,0"
+                                                            VerticalAlignment="Center"
+                                                            HorizontalContentAlignment="Left" 
+                                                            SelectedDate="{Binding DownloadSettings.Date.End,Mode=TwoWay}"
+                                                            SelectedDateChanged="dpDate_SelectedDateChanged"/>
                                             </StackPanel>
                                             <TextBlock x:Name="tbDateRangeError" Margin="0,3" Foreground="Red" Visibility="Collapsed"
                                                    TextWrapping="Wrap"
@@ -523,7 +540,7 @@
                             </materialDesign:Card>
 
                             <materialDesign:Card Margin="5,0" UniformCornerRadius="5" Grid.Column="1"
-                                                 MinWidth="335">
+                                                 MinWidth="355">
                                 <StackPanel Orientation="Vertical">
                                     <materialDesign:ColorZone Mode="PrimaryMid"
                                                               CornerRadius="5,5,0,0">
@@ -591,9 +608,9 @@
                                     <StackPanel Margin="10,5" Orientation="Vertical">
                                         <CheckBox Content="{x:Static p:Resources.DownloadFileCheck}" x:Name="cbCheckFiles" IsChecked="{Binding DownloadSettings.CheckFiles,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Margin="0,2"/>
                                         <CheckBox Content="{x:Static p:Resources.DownloadDeleteFile}" x:Name="cbDeleteFiles" IsChecked="{Binding DownloadSettings.DeleteFiles,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Margin="0,2"/>
-                                        
+
                                     </StackPanel>
-                                    
+
 
                                     <StackPanel Orientation="Horizontal" Margin="10,5,10,10">
                                         <Button Content="{x:Static p:Resources.FindFiles}" VerticalAlignment="Center" Click="FindFiles_Click" Margin="5,0"/>
