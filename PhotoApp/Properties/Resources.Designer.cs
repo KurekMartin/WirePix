@@ -276,6 +276,15 @@ namespace PhotoApp.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Deselect all.
+        /// </summary>
+        public static string DeselectAll {
+            get {
+                return ResourceManager.GetString("DeselectAll", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Copying files.
         /// </summary>
         public static string DeviceCopyingFiles {
@@ -461,6 +470,15 @@ namespace PhotoApp.Properties {
         public static string DownloadNewFiles {
             get {
                 return ResourceManager.GetString("DownloadNewFiles", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Edit selection.
+        /// </summary>
+        public static string EditSelection {
+            get {
+                return ResourceManager.GetString("EditSelection", resourceCulture);
             }
         }
         
@@ -1048,6 +1066,15 @@ namespace PhotoApp.Properties {
         public static string SaveAs {
             get {
                 return ResourceManager.GetString("SaveAs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select all.
+        /// </summary>
+        public static string SelectAll {
+            get {
+                return ResourceManager.GetString("SelectAll", resourceCulture);
             }
         }
         
