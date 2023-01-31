@@ -13,7 +13,7 @@ namespace PhotoApp
         dateRange
     }
 
-    public enum FileTypeSelect
+    public enum FileTypeSelectMode
     {
         all,
         selection
@@ -25,12 +25,14 @@ namespace PhotoApp
         [XmlIgnore]
         public DateRange Date { get; set; } = new DateRange();
         public Thumbnails ThumbnailSettings { get; set; } = new Thumbnails();
+        public FileTypeSelection FileTypeSelection { get; set; } = new FileTypeSelection();
+
         private bool _checkFiles = false;
         private bool _deleteFiles = false;
         private bool _backup = false;
         private bool _thumbnail = false;
         private DownloadSelect _downloadSelect = DownloadSelect.lastBackup;
-        private FileTypeSelect _fileTypeSelect = FileTypeSelect.all;
+        private FileTypeSelectMode _fileTypeSelectMode = FileTypeSelectMode.all;
         public SaveOptions SaveOptions = new SaveOptions();
         [XmlIgnore]
         private static readonly string _profilesFolder = Application.Current.Resources[Properties.Keys.ProfilesFolder].ToString();
@@ -203,14 +205,14 @@ namespace PhotoApp
             }
         }
 
-        public FileTypeSelect FileTypeSelect
+        public FileTypeSelectMode FileTypeSelectMode
         {
-            get => _fileTypeSelect;
+            get => _fileTypeSelectMode;
             set
             {
-                if(value!=_fileTypeSelect)
+                if(value!=_fileTypeSelectMode)
                 {
-                    _fileTypeSelect = value;
+                    _fileTypeSelectMode = value;
                     OnPropertyChanged();
                 }
             }

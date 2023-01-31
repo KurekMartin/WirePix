@@ -694,4 +694,13 @@ Doplňte tuto hodnotu nebo značku odstraňte.</value>
   <data name="FilterFileTypes_selection" xml:space="preserve">
     <value>Výběr</value>
   </data>
+  <data name="SelectAll" xml:space="preserve">
+    <value>Vybrat vše</value>
+  </data>
+  <data name="DeselectAll" xml:space="preserve">
+    <value>Zrušit výběr</value>
+  </data>
+  <data name="EditSelection" xml:space="preserve">
+    <value>Upravit výběr</value>
+  </data>
 </root>

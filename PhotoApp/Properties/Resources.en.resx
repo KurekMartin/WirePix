@@ -694,4 +694,13 @@ Fill the value or remove the tag.</value>
   <data name="FilterFileTypes_selection" xml:space="preserve">
     <value>Selection</value>
   </data>
+  <data name="SelectAll" xml:space="preserve">
+    <value>Select all</value>
+  </data>
+  <data name="DeselectAll" xml:space="preserve">
+    <value>Deselect all</value>
+  </data>
+  <data name="EditSelection" xml:space="preserve">
+    <value>Edit selection</value>
+  </data>
 </root>

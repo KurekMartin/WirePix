@@ -7,7 +7,7 @@
         xmlns:converters="clr-namespace:PhotoApp.Converters"
         xmlns:validation="clr-namespace:PhotoApp.Validation"
         xmlns:p ="clr-namespace:PhotoApp.Properties"
-        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" x:Class="PhotoApp.MainWindow"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" xmlns:dialogs="clr-namespace:PhotoApp.Dialogs" x:Class="PhotoApp.MainWindow"
         mc:Ignorable="d"
         Title="WirePix"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
@@ -16,7 +16,7 @@
         TextOptions.TextFormattingMode="Ideal" 
         TextOptions.TextRenderingMode="Auto"        
         Background="{DynamicResource MaterialDesignPaper}"
-        FontFamily="{DynamicResource MaterialDesignFont}" MinWidth="925" MinHeight="600" Height="809" Width="927" SizeToContent="WidthAndHeight" ResizeMode="CanMinimize" Closing="Window_Closing" WindowStartupLocation="CenterScreen" Icon="/icon.ico" Loaded="Window_Loaded">
+        FontFamily="{DynamicResource MaterialDesignFont}" MinWidth="925" MinHeight="600" Height="843" Width="927" SizeToContent="WidthAndHeight" ResizeMode="CanMinimize" Closing="Window_Closing" WindowStartupLocation="CenterScreen" Icon="/icon.ico" Loaded="Window_Loaded">
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVisConverter" />
         <converters:EnumToBoleanConverter x:Key="EnumToBool"/>
@@ -546,14 +546,41 @@
                                         <RadioButton Content="{x:Static p:Resources.FilterFileTypes_all}"                                                     
                                                      Margin="0,2"
                                                      GroupName="rbgFileTypes"
-                                                     IsChecked="{Binding DownloadSettings.FileTypeSelect,Converter={StaticResource EnumToBool},ConverterParameter=all}"
-                                                     />
-                                        <RadioButton Content="{x:Static p:Resources.FilterFileTypes_selection}" 
-                                                     Margin="0,2"
-                                                     GroupName="rbgFileTypes"
-                                                     IsChecked="{Binding DownloadSettings.FileTypeSelect,Converter={StaticResource EnumToBool},ConverterParameter=selection}"
-                                                     />
-
+                                                     IsChecked="{Binding DownloadSettings.FileTypeSelectMode,Converter={StaticResource EnumToBool},ConverterParameter=all}"/>
+                                        <StackPanel Orientation="Vertical">
+                                            <DockPanel>
+                                                <RadioButton x:Name="cbFileTypeSelection"
+                                                Content="{x:Static p:Resources.FilterFileTypes_selection}" 
+                                                         Margin="0,2"
+                                                         GroupName="rbgFileTypes"
+                                                         IsChecked="{Binding DownloadSettings.FileTypeSelectMode,Converter={StaticResource EnumToBool},ConverterParameter=selection}"/>
+                                                <materialDesign:PopupBox
+                                                Style="{StaticResource MaterialDesignPopupBox}"
+                                                DockPanel.Dock="Right"
+                                                Margin="5,0"
+                                                ToolTip="{x:Static p:Resources.EditSelection}"
+                                                HorizontalContentAlignment="Center"
+                                                VerticalContentAlignment="Center"
+                                                Visibility="{Binding ElementName=cbFileTypeSelection, Path=IsChecked,Converter={StaticResource BoolToVisConverter},UpdateSourceTrigger=PropertyChanged}"
+                                                d:Visibility="Visible"
+                                                IsEnabled="{Binding DataContext.ControlsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"
+                                                StaysOpen="True">
+                                                    <materialDesign:PopupBox.ToggleContent>
+                                                        <materialDesign:PackIcon Kind="Edit"/>
+                                                    </materialDesign:PopupBox.ToggleContent>
+                                                    <dialogs:FileTypeSelectionDialog FileTypeSelection="{Binding DownloadSettings.FileTypeSelection, Mode=TwoWay}"/>
+                                                </materialDesign:PopupBox>
+                                            </DockPanel>
+                                            <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}"
+                                                       Text="{Binding DownloadSettings.FileTypeSelection.FileTypes,Converter={StaticResource ListToString},ConverterParameter=', '}"
+                                                       Visibility="{Binding ElementName=cbFileTypeSelection, Path=IsChecked,Converter={StaticResource BoolToVisConverter},UpdateSourceTrigger=PropertyChanged}"
+                                                       VerticalAlignment="Top"
+                                                       HorizontalAlignment="Left"
+                                                       Margin="10,0"
+                                                       TextWrapping="Wrap"
+                                                       MaxWidth="200"
+                                                       d:Text="JPG, CR2, RAW, PNG, TIFF , CR3, NEF, DNG"/>
+                                        </StackPanel>
                                     </StackPanel>
                                 </StackPanel>
                             </materialDesign:Card>

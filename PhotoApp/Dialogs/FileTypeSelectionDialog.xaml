@@ -1,0 +1,57 @@
+﻿<UserControl x:Class="PhotoApp.Dialogs.FileTypeSelectionDialog"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:PhotoApp.Dialogs"
+             xmlns:p ="clr-namespace:PhotoApp.Properties"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             mc:Ignorable="d"
+             d:Background="White">
+    <StackPanel Orientation="Vertical" Margin="10">
+        <StackPanel Orientation="Horizontal">
+            <Button Margin="5,0"
+                    x:Name="btnSelectAll" Click="btnSelectAll_Click">
+                <StackPanel Orientation="Horizontal">
+                    <materialDesign:PackIcon Kind="CheckboxMultipleOutline"
+                                             VerticalAlignment="Center"/>
+                    <TextBlock Text="{x:Static p:Resources.SelectAll}"
+                               Margin="5,0"/>
+                </StackPanel>
+            </Button>
+            <Button Margin="5,0"
+                    x:Name="btnDeselectAll" Click="btnDeselectAll_Click">
+                <StackPanel Orientation="Horizontal">
+                    <materialDesign:PackIcon Kind="CheckboxMultipleBlankOutline"
+                                             VerticalAlignment="Center"/>
+                    <TextBlock Text="{x:Static p:Resources.DeselectAll}"
+                               Margin="5,0"/>
+                </StackPanel>
+            </Button>
+        </StackPanel>
+        <ItemsControl ItemsSource="{Binding DeviceList.SelectedDevice.DeviceFileInfo.AllFileTypes}"
+                      d:ItemsSource="{d:SampleData ItemCount=20}"
+                      Margin="5"
+                      x:Name="icItemsGrid">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal"
+                                Margin="5,5">
+                        <CheckBox VerticalAlignment="Center"
+                                  x:Name="cbSelect" Unchecked="cbSelect_Unchecked" Checked="cbSelect_Checked"/>
+                        <TextBlock Text="{Binding .}"
+                                   VerticalAlignment="Center"
+                                   Margin="5,0"
+                                   x:Name="tbItemText"
+                                   MouseDown="tbItemText_MouseDown"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <UniformGrid Rows="5"/>
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+        </ItemsControl>
+    </StackPanel>
+</UserControl>
