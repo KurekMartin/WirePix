@@ -13,8 +13,14 @@ namespace PhotoApp.Converters
         {
             string separator = parameter as string;
             List<string> list;
-            try { list = (List<string>)value; }
-            catch { list = ((ObservableCollection<string>)value).ToList(); }
+            if (value.GetType() == typeof(ObservableCollection<string>))
+            {
+                list = ((ObservableCollection<string>)value).ToList();
+            }
+            else
+            {
+                list = (List<string>)value;
+            }
             return string.Join(separator, list.ToArray());
         }
 
