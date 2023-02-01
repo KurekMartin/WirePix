@@ -22,7 +22,7 @@ namespace PhotoApp
         private List<Device> _devices = new List<Device>();
         [XmlIgnore]
         private static readonly string _dataFile = Path.Combine(Application.Current.Resources[Properties.Keys.DataFolder].ToString(), "Devices.xml");
-
+        private bool _isListUpdated = false;
         public DeviceList()
         {
             DeviceInfo.CollectionChanged += DeviceInfo_CollectionChanged;
@@ -80,8 +80,10 @@ namespace PhotoApp
 
         public int UpdateDevices()
         {
+            _isListUpdated = false;
+            IEnumerable<MediaDevice> connectedDevices = MediaDevice.GetDevices();
             //select only new devices that support MTP or PTP
-            IEnumerable<MediaDevice> devices = MediaDevice.GetDevices().Where(d =>
+            IEnumerable<MediaDevice> devices = connectedDevices.Where(d =>
                   {
                       bool isMediaDevice = false;
                       if (!_devices.Any(c => d.DeviceId == c.ID))
@@ -121,7 +123,8 @@ namespace PhotoApp
 
             DeviceInfo.OrderByDescending(d => d.Name);
             ConnectedDevicesInfo = DeviceInfo.Where(d => d.Connected == true);
-            OnPropertyChanged("ConnectedDevicesInfo");
+            _isListUpdated = true;
+            
 
             if (ConnectedDevicesInfo.Count() > 0 && SelectedDeviceIndex == -1)
             {
@@ -131,6 +134,7 @@ namespace PhotoApp
             {
                 SelectDeviceByIndex(SelectedDeviceIndex);
             }
+            OnPropertyChanged(nameof(ConnectedDevicesInfo));
 
             return SelectedDeviceIndex;
         }
@@ -169,7 +173,7 @@ namespace PhotoApp
         {
             get
             {
-                if (ConnectedDevicesInfo.Count() > 0 && _selectedDeviceID != null)
+                if (ConnectedDevicesInfo.Count() > 0 && _selectedDeviceID != null && _isListUpdated)
                 {
                     return ConnectedDevicesInfo.First(d => d.ID == _selectedDeviceID);
                 }

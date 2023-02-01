@@ -86,8 +86,8 @@ namespace PhotoApp
             ListConnectedDevices();
 
             //udalost pripojeni/odpojeni zarizeni -> aktualizace seznamu
-            usbEventWatcher.UsbDeviceAdded += (_, device) => Dispatcher.Invoke(ListConnectedDevices);
-            usbEventWatcher.UsbDeviceRemoved += (_, device) => Dispatcher.Invoke(ListConnectedDevices);
+            usbEventWatcher.UsbDeviceAdded += (_, device) => Dispatcher.Invoke(new Action(()=> DeviceAdded(device)));
+            usbEventWatcher.UsbDeviceRemoved += (_, device) => Dispatcher.Invoke(new Action(() => DeviceRemoved(device)));
 
             Properties.Settings.Default.PropertyChanged += Settings_Changed;
 
@@ -148,6 +148,17 @@ namespace PhotoApp
                 ListBoxDevices.IsEnabled = true;
             }
             UpdateFilesActionIcon();
+        }
+
+        private void DeviceAdded(UsbDevice device)
+        {
+            Console.WriteLine(device.SerialNumber + " added");
+            ListConnectedDevices();
+        }
+        private void DeviceRemoved(UsbDevice device)
+        {
+            Console.WriteLine(device.SerialNumber + " removed");
+            ListConnectedDevices();
         }
 
         //nalezeni a vypis vsech zarizeni vyuzivajicich MTP
@@ -1007,7 +1018,7 @@ namespace PhotoApp
 
         private void SelectedDeviceInfo_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            UpdateFilesActionIcon();
+            Dispatcher.Invoke(UpdateFilesActionIcon);
         }
 
         private void UpdateFilesActionIcon()
