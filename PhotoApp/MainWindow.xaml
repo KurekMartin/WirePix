@@ -562,8 +562,7 @@
                                                 HorizontalContentAlignment="Center"
                                                 VerticalContentAlignment="Center"
                                                 Visibility="{Binding ElementName=cbFileTypeSelection, Path=IsChecked,Converter={StaticResource BoolToVisConverter},UpdateSourceTrigger=PropertyChanged}"
-                                                d:Visibility="Visible"
-                                                IsEnabled="{Binding DataContext.ControlsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"
+                                                d:Visibility="Visible"                                                
                                                 StaysOpen="True">
                                                     <materialDesign:PopupBox.ToggleContent>
                                                         <materialDesign:PackIcon Kind="Edit"/>
@@ -572,7 +571,7 @@
                                                 </materialDesign:PopupBox>
                                             </DockPanel>
                                             <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}"
-                                                       Text="{Binding DownloadSettings.FileTypeSelection.FileTypes,Converter={StaticResource ListToString},ConverterParameter=', '}"
+                                                       Text="{Binding DownloadSettings.FileTypeSelection.FileTypes,Converter={StaticResource ListToString},ConverterParameter=', ',UpdateSourceTrigger=PropertyChanged}"
                                                        Visibility="{Binding ElementName=cbFileTypeSelection, Path=IsChecked,Converter={StaticResource BoolToVisConverter},UpdateSourceTrigger=PropertyChanged}"
                                                        VerticalAlignment="Top"
                                                        HorizontalAlignment="Left"

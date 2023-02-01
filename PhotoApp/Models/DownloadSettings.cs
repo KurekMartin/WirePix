@@ -25,7 +25,7 @@ namespace PhotoApp
         [XmlIgnore]
         public DateRange Date { get; set; } = new DateRange();
         public Thumbnails ThumbnailSettings { get; set; } = new Thumbnails();
-        public FileTypeSelection FileTypeSelection { get; set; } = new FileTypeSelection();
+        private FileTypeSelection _fileTypeSelection = new FileTypeSelection();
 
         private bool _checkFiles = false;
         private bool _deleteFiles = false;
@@ -213,6 +213,19 @@ namespace PhotoApp
                 if(value!=_fileTypeSelectMode)
                 {
                     _fileTypeSelectMode = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        public FileTypeSelection FileTypeSelection
+        {
+            get => _fileTypeSelection;
+            set
+            {
+                if (value != _fileTypeSelection)
+                {
+                    _fileTypeSelection = value;
                     OnPropertyChanged();
                 }
             }

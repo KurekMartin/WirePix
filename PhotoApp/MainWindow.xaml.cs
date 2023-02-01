@@ -141,6 +141,7 @@ namespace PhotoApp
                 //zmena vybraneho zarizeni
                 DeviceList.SelectDeviceByIndex(ListBoxDevices.SelectedIndex);
                 DeviceList.SelectedDeviceInfo.PropertyChanged += SelectedDeviceInfo_PropertyChanged;
+                DownloadSettings.FileTypeSelection = new FileTypeSelection();
             }
             else
             {

@@ -11,12 +11,12 @@ namespace PhotoApp.Models
     }
     public class FileTypeSelection : BaseObserveObject
     {
-        private ObservableCollection<string> _fileTypes = new ObservableCollection<string>();
+        private ObservableCollection<string> _fileTypes;
         private ListMode _mode = ListMode.whitelist;
 
         public FileTypeSelection()
         {
-            _fileTypes.CollectionChanged += fileTypes_CollectionChanged;
+            FileTypes = new ObservableCollection<string>();
         }
         public ObservableCollection<string> FileTypes
         {
@@ -35,7 +35,6 @@ namespace PhotoApp.Models
         private void fileTypes_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
             OnPropertyChanged(nameof(FileTypes));
-            
         }
 
         public ListMode Mode
