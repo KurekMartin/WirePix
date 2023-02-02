@@ -83,6 +83,7 @@ namespace PhotoApp
             }
 
             SetThemeMode(PhotoApp.Properties.Settings.Default.DarkMode);
+            Database.Connect();
         }
 
         public string Version
