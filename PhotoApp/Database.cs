@@ -51,8 +51,12 @@ namespace PhotoApp
             }
         }
 
-        public static void DeviceInsert(string origName, string customName, string serialNum, DateTime lastBackup = new DateTime())
+        public static void DeviceInsert(string origName, string serialNum, string customName = "", DateTime lastBackup = new DateTime())
         {
+            if(customName == "")
+            {
+                customName = origName;
+            }
             using (SQLiteConnection connection = new SQLiteConnection(_connectionString))
             {
                 connection.Open();
@@ -65,6 +69,32 @@ namespace PhotoApp
                     cmd.Parameters.AddWithValue("$serialNum", serialNum);
                     cmd.Parameters.AddWithValue("$lastBackup", lastBackup.ToString());
                     cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
+        public static string DeviceGetCustomName(string origName, string serialNum)
+        {
+            using (SQLiteConnection connection = new SQLiteConnection(_connectionString))
+            {
+                connection.Open();
+                using (SQLiteCommand cmd = new SQLiteCommand(connection))
+                {
+                    cmd.CommandText = @"SELECT * FROM Devices 
+                                        WHERE 
+                                            OrigName = ($origName) 
+                                        AND SerialNum = ($serialNum)";
+                    cmd.Parameters.AddWithValue("$origName", origName);
+                    cmd.Parameters.AddWithValue("$serialNum", serialNum);
+                    using (SQLiteDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.HasRows)
+                        {
+                            reader.Read();
+                            return reader.GetFieldValue<string>(reader.GetOrdinal("CustomName"));
+                        }
+                        return string.Empty;
+                    }
                 }
             }
         }

@@ -107,9 +107,10 @@ namespace PhotoApp
             foreach (MediaDevice device in devices)
             {
                 device.Connect();
+                
                 if (!Database.DeviceExists(device.Description, device.SerialNumber))
                 {
-                    Database.DeviceInsert(device.Description, device.Description, device.SerialNumber);
+                    Database.DeviceInsert(device.Description, device.SerialNumber);
                 }
                 var deviceInfo = DeviceInfo.Where(d => d.ID == device.DeviceId);
                 if (deviceInfo.Count() == 0)
