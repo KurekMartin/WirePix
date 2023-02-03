@@ -85,6 +85,21 @@ namespace PhotoApp
                 return string.Empty;
             }
         }
+
+        public string SerialNumber
+        {
+            get
+            {
+                if (_device != null)
+                {
+                    _device.Connect();
+                    var sn = _device.SerialNumber;
+                    _device.Disconnect();
+                    return sn;
+                }
+                return string.Empty;
+            }
+        }
         public int Status
         {
             get

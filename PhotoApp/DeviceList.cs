@@ -1,5 +1,6 @@
 ﻿using MediaDevices;
 using PhotoApp.Models;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -76,6 +77,12 @@ namespace PhotoApp
                 writer.Close();
                 fs.Close();
             }
+
+            foreach (var device in _devices)
+            {
+                var deviceInfo = DeviceInfo.Where(d => d.ID == device.ID).First();
+                Database.DeviceEditCustomName(origName: device.Name, serialNum: device.SerialNumber, deviceInfo.Name);
+            }
         }
 
         public int UpdateDevices()
@@ -99,6 +106,11 @@ namespace PhotoApp
 
             foreach (MediaDevice device in devices)
             {
+                device.Connect();
+                if (!Database.DeviceExists(device.Description, device.SerialNumber))
+                {
+                    Database.DeviceInsert(device.Description, device.Description, device.SerialNumber);
+                }
                 var deviceInfo = DeviceInfo.Where(d => d.ID == device.DeviceId);
                 if (deviceInfo.Count() == 0)
                 {
@@ -124,7 +136,7 @@ namespace PhotoApp
             DeviceInfo.OrderByDescending(d => d.Name);
             ConnectedDevicesInfo = DeviceInfo.Where(d => d.Connected == true);
             _isListUpdated = true;
-            
+
 
             if (ConnectedDevicesInfo.Count() > 0 && SelectedDeviceIndex == -1)
             {
