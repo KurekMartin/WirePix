@@ -13,81 +13,21 @@ namespace PhotoApp
 {
     public class DeviceList : BaseObserveObject
     {
-        [XmlElement]
-        public ObservableCollection<DeviceInfo> DeviceInfo = new ObservableCollection<DeviceInfo>();
-        [XmlIgnore]
-        public IEnumerable<DeviceInfo> ConnectedDevicesInfo { get; set; }
-        [XmlIgnore]
-        private string _selectedDeviceID;
-        [XmlIgnore]
         private List<Device> _devices = new List<Device>();
-        [XmlIgnore]
         private static readonly string _dataFile = Path.Combine(Application.Current.Resources[Properties.Keys.DataFolder].ToString(), "Devices.xml");
         private bool _isListUpdated = false;
-        public DeviceList()
-        {
-            DeviceInfo.CollectionChanged += DeviceInfo_CollectionChanged;
-            ConnectedDevicesInfo = new List<DeviceInfo>();
-        }
-
-        public void Load()
-        {
-            if (File.Exists(_dataFile))
-            {
-                XmlSerializer serializer = new XmlSerializer(typeof(DeviceList));
-                using (FileStream fs = File.OpenRead(_dataFile))
-                {
-                    DeviceList deviceList = (DeviceList)serializer.Deserialize(fs);
-                    DeviceInfo = deviceList.DeviceInfo;
-                    fs.Close();
-                }
-            }
-        }
-
-        private void DeviceInfo_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
-        {
-            if (e.OldItems != null)
-            {
-                foreach (INotifyPropertyChanged item in e.OldItems)
-                    item.PropertyChanged -= Item_PropertyChanged;
-            }
-            if (e.NewItems != null)
-            {
-                foreach (INotifyPropertyChanged item in e.NewItems)
-                    item.PropertyChanged += Item_PropertyChanged;
-            }
-            ConnectedDevicesInfo = DeviceInfo.Where(d => d.Connected == true);
-            OnPropertyChanged("ConnectedDevicesInfo");
-        }
-
-        private void Item_PropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            ConnectedDevicesInfo = DeviceInfo.Where(d => d.Connected == true);
-            OnPropertyChanged("ConnectedDevicesInfo");
-        }
+        private string _selectedDeviceID;
 
         public void Save()
         {
-            Directory.CreateDirectory(Application.Current.Resources[Properties.Keys.DataFolder].ToString());
-            XmlSerializer serializer = new XmlSerializer(typeof(DeviceList));
-            using (FileStream fs = File.Create(_dataFile))
-            {
-                TextWriter writer = new StreamWriter(fs);
-                serializer.Serialize(writer, this);
-                writer.Close();
-                fs.Close();
-            }
-
             foreach (var device in _devices)
             {
-                var deviceInfo = DeviceInfo.Where(d => d.ID == device.ID).First();
-                Database.DeviceEditCustomName(origName: device.Name, serialNum: device.SerialNumber, deviceInfo.Name);
+                Database.DeviceEditCustomName(origName: device.Name, serialNum: device.SerialNumber, customName: device.CustomName);
             }
         }
 
-        public int UpdateDevices()
+        public int UpdateDevices(string selectedDeviceID = "")
         {
-            _isListUpdated = false;
             IEnumerable<MediaDevice> connectedDevices = MediaDevice.GetDevices();
             //select only new devices that support MTP or PTP
             IEnumerable<MediaDevice> devices = connectedDevices.Where(d =>
@@ -102,115 +42,59 @@ namespace PhotoApp
                       else { isMediaDevice = true; }
                       return isMediaDevice;
                   });
-            DeviceInfo.Select(d => { d.Connected = false; return d; }).ToList();
 
-            foreach (MediaDevice device in devices)
+            IEnumerable<string> deviceIDs = Devices.Select(d => d.ID);
+            IEnumerable<MediaDevice> newDevices = devices.Where(d => !deviceIDs.Contains(d.DeviceId));
+
+            foreach (MediaDevice mediaDevice in newDevices)
             {
-                device.Connect();
-                
-                if (!Database.DeviceExists(device.Description, device.SerialNumber))
-                {
-                    Database.DeviceInsert(device.Description, device.SerialNumber);
-                }
-                var deviceInfo = DeviceInfo.Where(d => d.ID == device.DeviceId);
-                if (deviceInfo.Count() == 0)
-                {
-                    DeviceInfo.Add(new DeviceInfo(device.Description, device.DeviceId, connected: true));
-                }
-                else
-                {
-                    var deviceOnline = DeviceInfo.First(d => d.ID == device.DeviceId);
-                    deviceOnline.Connected = true;
-                }
+                Device device = new Device(mediaDevice);
 
-                if (_devices.FindIndex(d => d.ID == device.DeviceId) == -1)
+                if (!Database.DeviceExists(device.Name, device.SerialNumber))
                 {
-                    _devices.Add(new Device(device));
+                    Database.DeviceInsert(device.Name, device.SerialNumber);
                 }
+                var deviceData = Database.DeviceGetCustomName(device.Name, device.SerialNumber);
+                device.CustomName = deviceData.customName;
+                device.LastBackup = deviceData.lastBackup;
+                _devices.Add(device);
+                _devices.OrderByDescending(d => d.Name);
+                OnPropertyChanged(nameof(Devices));
             }
-
-            foreach (var device in DeviceInfo.Where(d => !d.Connected))
+            int index = Devices.FindIndex(d => d.ID == selectedDeviceID);
+            if (index >= 0)
             {
-                _devices.RemoveAll(d => d.ID == device.ID);
+                _selectedDeviceID = selectedDeviceID;
             }
-
-            DeviceInfo.OrderByDescending(d => d.Name);
-            ConnectedDevicesInfo = DeviceInfo.Where(d => d.Connected == true);
-            _isListUpdated = true;
-
-
-            if (ConnectedDevicesInfo.Count() > 0 && SelectedDeviceIndex == -1)
-            {
-                SelectDeviceByIndex(0);
-            }
-            else
-            {
-                SelectDeviceByIndex(SelectedDeviceIndex);
-            }
-            OnPropertyChanged(nameof(ConnectedDevicesInfo));
-
-            return SelectedDeviceIndex;
+            return index;
         }
 
-        public Device GetDeviceByID(string deviceID)
+        public List<Device> Devices
         {
-            return _devices.FirstOrDefault(d => d.ID == deviceID);
+            get => _devices;
         }
 
-        public Device SelectDeviceByIndex(int index)
+        public Device SelectDeviceByID(string id)
         {
-            if (index > -1)
+            var device = Devices.First(d => d.ID == id);
+            if (device != null)
             {
-                Device device = _devices.FirstOrDefault(d => d.ID == ConnectedDevicesInfo.ElementAt(index).ID);
-                _selectedDeviceID = device.ID;
-                OnPropertyChanged("SelectedDeviceInfo");
+                _selectedDeviceID = id;
                 OnPropertyChanged(nameof(SelectedDevice));
-                return device;
             }
-            return null;
+            return device;
         }
 
         public Device SelectedDevice
         {
             get
             {
-                if (_selectedDeviceID != null)
+                if (!string.IsNullOrEmpty(_selectedDeviceID))
                 {
-                    return _devices.First(d => d.ID == _selectedDeviceID);
+                    return Devices.First(d => d.ID == _selectedDeviceID);
                 }
                 return null;
             }
-        }
-
-        public DeviceInfo SelectedDeviceInfo
-        {
-            get
-            {
-                if (ConnectedDevicesInfo.Count() > 0 && _selectedDeviceID != null && _isListUpdated)
-                {
-                    return ConnectedDevicesInfo.First(d => d.ID == _selectedDeviceID);
-                }
-                else
-                    return new DeviceInfo();
-
-            }
-        }
-
-        public int SelectedDeviceIndex
-        {
-            get
-            {
-                if (_selectedDeviceID != null)
-                {
-                    return ConnectedDevicesInfo.ToList().FindIndex(d => d.ID == _selectedDeviceID);
-                }
-                return -1;
-            }
-        }
-
-        public IEnumerable<Device> Devices
-        {
-            get { return _devices; }
         }
     }
 }

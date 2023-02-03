@@ -33,26 +33,35 @@ namespace PhotoApp
         private IEnumerable<string> _others;
 
         private bool _cancelOperation = false;
+        private bool _isUpdated = false;
 
         public DeviceFileInfo(MediaDevice device)
         {
             _device = device;
         }
 
-        public void SetFiles(IEnumerable<MediaFileInfo> mediaFiles)
+        public async void AddFiles(IEnumerable<MediaFileInfo> mediaFiles)
         {
-            foreach (var file in mediaFiles)
+            await Task.Run(() =>
             {
-                if (!_cancelOperation)
+                foreach (var file in mediaFiles)
                 {
-                    _allFilesInfo.Add(new BaseFileInfo(file.PersistentUniqueId, file.FullName));
-                }
-            }
+                    if (!_cancelOperation)
+                    {
+                        try
+                        {
 
-            Application.Current.Dispatcher.BeginInvoke((Action)(() =>
-            {
-                OnPropertyChanged(nameof(AllFilesCount));
-            }));
+                            _allFilesInfo.Add(new BaseFileInfo(file.PersistentUniqueId, file.FullName));
+
+                        }
+                        catch (Exception ex) { }
+                    }
+                }
+            });
+            _isUpdated = false;
+            OnPropertyChanged(nameof(DeviceFileInfo));
+            OnPropertyChanged(nameof(AllFilesCount));
+            OnPropertyChanged(nameof(AllFileTypes));
         }
 
         public void CancelOperation()
@@ -72,7 +81,7 @@ namespace PhotoApp
         {
             get
             {
-                if (AllFilesCount > 0 && _allFileTypes.Count == 0)
+                if (AllFilesCount > 0 && !_isUpdated)
                 {
                     AllFileTypes = _allFilesInfo.Select(f => Path.GetExtension(f.FullPath).ToUpper().TrimStart('.')).Distinct().OrderBy(f => f).ToList();
                 }
@@ -80,8 +89,12 @@ namespace PhotoApp
             }
             private set
             {
-                _allFileTypes = value;
-                OnPropertyChanged();
+                if (_allFileTypes != value)
+                {
+                    _allFileTypes = value;
+                    _isUpdated = true;
+                    OnPropertyChanged();
+                }
             }
         }
 

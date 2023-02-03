@@ -104,10 +104,10 @@
                                         <RowDefinition Height="Auto"/>
                                     </Grid.RowDefinitions>
 
-                                    <ListBox Grid.Row="0" x:Name="ListBoxDevices" ItemsSource="{Binding DeviceList.ConnectedDevicesInfo,UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Width="Auto" MinWidth="150" SelectionChanged="ListBoxDevices_SelectionChanged" Background="#00000000" BorderThickness="1" BorderBrush="Black" d:ItemsSource="{d:SampleData ItemCount=5}" MinHeight="100" VerticalContentAlignment="Stretch" DockPanel.Dock="Top">
+                                    <ListBox Grid.Row="0" x:Name="ListBoxDevices" ItemsSource="{Binding DeviceList.Devices,UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Width="Auto" MinWidth="150" SelectionChanged="ListBoxDevices_SelectionChanged" Background="#00000000" BorderThickness="1" BorderBrush="Black" d:ItemsSource="{d:SampleData ItemCount=5}" MinHeight="100" VerticalContentAlignment="Stretch" DockPanel.Dock="Top">
                                         <ListBox.ItemTemplate>
                                             <DataTemplate>
-                                                <TextBlock Text="{Binding Name}"/>
+                                                <TextBlock Text="{Binding CustomName}"/>
                                             </DataTemplate>
                                         </ListBox.ItemTemplate>
                                     </ListBox>
@@ -134,7 +134,7 @@
                                                          TextAlignment="Left"
                                                          MaxLength="20"
                                                          MaxLines="1"
-                                                         Text="{Binding DeviceList.SelectedDeviceInfo.Name,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" 
+                                                         Text="{Binding DeviceList.SelectedDevice.CustomName,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" 
                                                          TextChanged="lblDeviceName_TextChanged"
                                                          DockPanel.Dock="Right" Margin="5,0,0,0"/>
                                             </DockPanel>
@@ -146,12 +146,12 @@
                                             </DockPanel>
                                             <DockPanel Margin="0,3" LastChildFill="False">
                                                 <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}" Text="{x:Static p:Resources.DeviceState}" FontWeight="Bold"/>
-                                                <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}" x:Name="lblDeviceStatus" Text="{Binding DeviceList.SelectedDevice.Status,Converter={StaticResource IntToDeviceStatus},UpdateSourceTrigger=PropertyChanged}" Margin="5,0,0,0" DockPanel.Dock="Right"
+                                                <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}" x:Name="lblDeviceStatus" Text="{Binding DeviceList.SelectedDevice.ConnectionStatus,Converter={StaticResource IntToDeviceStatus},UpdateSourceTrigger=PropertyChanged}" Margin="5,0,0,0" DockPanel.Dock="Right"
                                                            d:Text="device state"/>
                                             </DockPanel>
                                             <DockPanel Margin="0,3" LastChildFill="False">
                                                 <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}" Text="{x:Static p:Resources.LastBackup}" FontWeight="Bold"/>
-                                                <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}" x:Name="lblLastBackup" Text="{Binding DeviceList.SelectedDeviceInfo.LastBackup,Converter={StaticResource LastBckp}}" DockPanel.Dock="Right" Margin="5,0,0,0"
+                                                <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}" x:Name="lblLastBackup" Text="{Binding DeviceList.SelectedDevice.LastBackup,Converter={StaticResource LastBckp}}" DockPanel.Dock="Right" Margin="5,0,0,0"
                                                            d:Text="DD.MM.YYYY HH:MM:SS"/>
                                             </DockPanel>
                                             <DockPanel Margin="0,3" LastChildFill="False">
@@ -267,7 +267,7 @@
                                                 <StackPanel Orientation="Horizontal"
                                                             DockPanel.Dock="Right">
                                                     <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}" 
-                                                               Text="{Binding DeviceList.SelectedDeviceInfo.FileSearchStatus, Converter={StaticResource IntToFileSearchStatus}}"
+                                                               Text="{Binding DeviceList.SelectedDevice.FileSearchStatus, Converter={StaticResource IntToFileSearchStatus}}"
                                                                d:Text="status" VerticalAlignment="Center"/>
                                                     <Button Style="{StaticResource MaterialDesignFloatingActionMiniButton}"
                                                             Width="25"

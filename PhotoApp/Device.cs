@@ -45,6 +45,7 @@ namespace PhotoApp
         private double[] _space;
         private IEnumerable<MediaFileInfo> filesToCopy;
         private DeviceFileInfo _deviceFileInfo;
+        private string _customName;
 
         public int FilesToCopyCount { get; private set; } = 0;
         private double sizeToProcess;
@@ -61,13 +62,22 @@ namespace PhotoApp
         public static int DEVICE_CANNOT_CONNECT = 0;
         public static int DEVICE_READY = 1;
 
+        //files status
+        public static int DEVICE_FILES_READY = 3;
+        public static int DEVICE_FILES_SEARCHING = 2;
+        public static int DEVICE_FILES_WAITING = 1;
+        public static int DEVICE_FILES_NOT_SEARCHED = 0;
+        public static int DEVICE_FILES_CANCELED = -1;
+        public static int DEVICE_FILES_ERROR = -2;
+
+        private int _fileSearchStatus = 0;
+        private DateTime _lastBackup = new DateTime();
+
         private readonly Log _log = new Log();
 
         private readonly object _lockLog = new object();
         private readonly object _lockReport = new object();
 
-
-        //public Device() { }
         public Device(MediaDevice mediaDevice)
         {
             _device = mediaDevice;
@@ -94,13 +104,13 @@ namespace PhotoApp
                 {
                     _device.Connect();
                     var sn = _device.SerialNumber;
-                    _device.Disconnect();
+                    Disconnect("Serial num");
                     return sn;
                 }
                 return string.Empty;
             }
         }
-        public int Status
+        public int ConnectionStatus
         {
             get
             {
@@ -114,10 +124,23 @@ namespace PhotoApp
                     {
                         return DEVICE_CANNOT_CONNECT;
                     }
-                    Disconnect();
+                    Disconnect("connection status");
                     return DEVICE_READY;
                 }
                 return DEVICE_UNKNOWN_STATUS;
+            }
+        }
+
+        public int FileSearchStatus
+        {
+            get { return _fileSearchStatus; }
+            private set
+            {
+                if (_fileSearchStatus != value)
+                {
+                    _fileSearchStatus = value;
+                    OnPropertyChanged();
+                }
             }
         }
 
@@ -143,6 +166,41 @@ namespace PhotoApp
                     return string.Empty;
             }
         }
+        public string CustomName
+        {
+            get
+            {
+                if (_customName != string.Empty)
+                {
+                    return _customName;
+                }
+                else
+                {
+                    return Name;
+                }
+            }
+            set
+            {
+                if (value != _customName)
+                {
+                    _customName = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        public DateTime LastBackup
+        {
+            get => _lastBackup;
+            set
+            {
+                if (_lastBackup != value)
+                {
+                    _lastBackup = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
 
         //uloziste [0]-celkove [1]-volne [2]-obsazene
         public double[] Space
@@ -159,7 +217,7 @@ namespace PhotoApp
                         _space[0] += drive.TotalSize / (double)1073741824; //prevod na GB
                         _space[1] += drive.AvailableFreeSpace / (double)1073741824;
                     }
-                    Disconnect();
+                    Disconnect("space");
                     _space = _space.Select(x => Math.Round(x, 2)).ToArray();
                     _space[2] = Math.Round(_space[0] - _space[1], 2);
                 }
@@ -173,7 +231,7 @@ namespace PhotoApp
             {
                 _device.Connect();
                 int c = filesToCopy.Count();
-                Disconnect();
+                Disconnect("files to donwload");
                 return c;
             }
         }
@@ -196,7 +254,7 @@ namespace PhotoApp
                             GetMediaDirectory(_device, root, _mediaDirList);
                         }
                     }
-                    Disconnect();
+                    Disconnect("media dirs");
                 }
                 return _mediaDirList.Select(dir => { return dir.FullName; }).ToList();
             }
@@ -215,15 +273,20 @@ namespace PhotoApp
             }
         }
 
-        private void Disconnect()
+        private void Disconnect(string reason)
         {
             if (_device.IsConnected && !searchingFiles)
             {
                 _device.Disconnect();
+                Console.WriteLine("Disconnected " + reason);
             }
         }
         public void CancelCurrentTask()
         {
+            if (searchingFiles)
+            {
+                FileSearchStatus = DEVICE_FILES_CANCELED;
+            }
             if (_device.IsConnected)
             {
                 _device.Cancel();
@@ -256,64 +319,64 @@ namespace PhotoApp
             return;
         }
 
-        public bool GetAllFiles()
+        public async void GetAllFiles()
         {
             cancelRequest = false;
-            bool result = false;
+            bool success = false;
             if (!searchingFiles)
             {
                 searchingFiles = true;
-                Application.Current.Dispatcher.BeginInvoke((Action)(() =>
-                {
-                    DeviceFileInfo = new DeviceFileInfo(_device);
-                }));
+                FileSearchStatus = DEVICE_FILES_SEARCHING;
+                DeviceFileInfo = new DeviceFileInfo(_device);
+
                 _device.Connect();
-                result = GetAllFilesAsync(MediaDirectories);
-                Disconnect();
+                success = await GetAllFilesAsync(MediaDirectories);
                 searchingFiles = false;
+
+                if (success)
+                {
+                    FileSearchStatus = DEVICE_FILES_READY;
+                }
+                else
+                {
+                    FileSearchStatus = DEVICE_FILES_ERROR;
+                }
             }
-            return result;
+            //return success;
         }
 
-        private bool GetAllFilesAsync(List<string> mediaDirs)
+        private async Task<bool> GetAllFilesAsync(List<string> mediaDirs)
         {
             bool result = false;
             try
             {
-                IEnumerable<MediaFileInfo> allFiles = Enumerable.Empty<MediaFileInfo>();
                 foreach (string mediaDir in mediaDirs)
                 {
                     if (cancelRequest) { break; }
                     MediaDirectoryInfo dirInfo = _device.GetDirectoryInfo(mediaDir);
-                    allFiles = allFiles.Concat(GetAllFilesRecursive(dirInfo));
+                    await Task.Run(() => GetAllFilesRecursive(dirInfo));
                 }
-                DeviceFileInfo.SetFiles(allFiles);
-                Application.Current.Dispatcher.BeginInvoke((Action)(() =>
-                {
-                    OnPropertyChanged(nameof(DeviceFileInfo));
-                }));
+
                 result = true;
             }
             catch (Exception ex)
             {
-                Application.Current.Dispatcher.BeginInvoke((Action)(() =>
-                {
-                    DeviceFileInfo = new DeviceFileInfo(_device);
-                }));
+
+                DeviceFileInfo = new DeviceFileInfo(_device);
+
                 result = false;
             }
             return result;
         }
 
-        private IEnumerable<MediaFileInfo> GetAllFilesRecursive(MediaDirectoryInfo directoryInfo)
+        private async Task GetAllFilesRecursive(MediaDirectoryInfo directoryInfo)
         {
-            var files = directoryInfo.EnumerateFiles();
+            await Task.Run(() => DeviceFileInfo.AddFiles(directoryInfo.EnumerateFiles()));
             foreach (var dir in directoryInfo.EnumerateDirectories().Where(d => !d.Name.StartsWith(".")))
             {
                 if (cancelRequest) { break; }
-                files = files.Concat(GetAllFilesRecursive(dir));
+                await GetAllFilesRecursive(dir);
             }
-            return files;
         }
 
 
@@ -391,11 +454,11 @@ namespace PhotoApp
 
                 e.Result = new WorkerResult(MainWindow.RESULT_ERROR, TaskType.FindFiles);
 
-                Disconnect();
+                Disconnect("get files by date exception");
                 return;
             }
 
-            Disconnect();
+            Disconnect("get files by date");
             _lastSettings = new DownloadSettings();
             _lastSettings.Date.Start = settings.Date.Start;
             _lastSettings.Date.End = settings.Date.End;
@@ -509,7 +572,7 @@ namespace PhotoApp
                         {
                             e.Cancel = true;
                             filesCollection.CompleteAdding();
-                            Disconnect();
+                            Disconnect("cancel download");
                             return;
                         }
                         else
@@ -663,7 +726,7 @@ namespace PhotoApp
             DeleteFiles(filesDone, worker);
 
             _log.Stop();
-            Disconnect();
+            Disconnect("download end");
             e.Result = new WorkerResult(MainWindow.RESULT_OK, TaskType.CopyFiles);
         }
 

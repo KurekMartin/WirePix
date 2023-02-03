@@ -53,10 +53,6 @@ namespace PhotoApp
 
         public static void DeviceInsert(string origName, string serialNum, string customName = "", DateTime lastBackup = new DateTime())
         {
-            if(customName == "")
-            {
-                customName = origName;
-            }
             using (SQLiteConnection connection = new SQLiteConnection(_connectionString))
             {
                 connection.Open();
@@ -73,8 +69,10 @@ namespace PhotoApp
             }
         }
 
-        public static string DeviceGetCustomName(string origName, string serialNum)
+        public static (string customName,DateTime lastBackup) DeviceGetCustomName(string origName, string serialNum)
         {
+            string customName = "";
+            DateTime lastBackup = new DateTime();
             using (SQLiteConnection connection = new SQLiteConnection(_connectionString))
             {
                 connection.Open();
@@ -91,15 +89,16 @@ namespace PhotoApp
                         if (reader.HasRows)
                         {
                             reader.Read();
-                            return reader.GetFieldValue<string>(reader.GetOrdinal("CustomName"));
+                            customName = reader.GetFieldValue<string>(reader.GetOrdinal("CustomName"));
+                            lastBackup = DateTime.Parse(reader.GetFieldValue<string>(reader.GetOrdinal("LastBackup")));
                         }
-                        return string.Empty;
                     }
                 }
             }
+            return (customName, lastBackup);
         }
 
-        public static void DeviceEditCustomName(string origName, string serialNum, string newCustomName)
+        public static void DeviceEditCustomName(string origName, string serialNum, string customName)
         {
             using (SQLiteConnection connection = new SQLiteConnection(_connectionString))
             {
@@ -111,7 +110,7 @@ namespace PhotoApp
                                         WHERE 
                                             OrigName = ($origName)
                                         AND SerialNum = ($serialNum)";
-                    cmd.Parameters.AddWithValue("$customName", newCustomName);
+                    cmd.Parameters.AddWithValue("$customName", customName);
                     cmd.Parameters.AddWithValue("$origName", origName);
                     cmd.Parameters.AddWithValue("$serialNum", serialNum);
                     cmd.ExecuteNonQuery();
