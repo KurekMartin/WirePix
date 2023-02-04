@@ -106,7 +106,7 @@ namespace PhotoApp
                 {
                     _device.Connect();
                     var sn = _device.SerialNumber;
-                    Disconnect("Serial num");
+                    Disconnect();
                     return sn;
                 }
                 return string.Empty;
@@ -126,7 +126,7 @@ namespace PhotoApp
                     {
                         return DEVICE_CANNOT_CONNECT;
                     }
-                    Disconnect("connection status");
+                    Disconnect();
                     return DEVICE_READY;
                 }
                 return DEVICE_UNKNOWN_STATUS;
@@ -220,7 +220,7 @@ namespace PhotoApp
                         _space[0] += drive.TotalSize / (double)1073741824; //prevod na GB
                         _space[1] += drive.AvailableFreeSpace / (double)1073741824;
                     }
-                    Disconnect("space");
+                    Disconnect();
                     _space = _space.Select(x => Math.Round(x, 2)).ToArray();
                     _space[2] = Math.Round(_space[0] - _space[1], 2);
                 }
@@ -234,7 +234,7 @@ namespace PhotoApp
             {
                 _device.Connect();
                 int c = filesToCopy.Count();
-                Disconnect("files to donwload");
+                Disconnect();
                 return c;
             }
         }
@@ -257,7 +257,7 @@ namespace PhotoApp
                             GetMediaDirectory(_device, root, _mediaDirList);
                         }
                     }
-                    Disconnect("media dirs");
+                    Disconnect();
                 }
                 return _mediaDirList.Select(dir => { return dir.FullName; }).ToList();
             }
@@ -276,12 +276,11 @@ namespace PhotoApp
             }
         }
 
-        private void Disconnect(string reason)
+        private void Disconnect()
         {
             if (_device.IsConnected && !searchingFiles)
             {
                 _device.Disconnect();
-                Console.WriteLine("Disconnected " + reason);
             }
         }
         public void CancelCurrentTask()
@@ -475,11 +474,11 @@ namespace PhotoApp
 
                 e.Result = new WorkerResult(MainWindow.RESULT_ERROR, TaskType.FindFiles);
 
-                Disconnect("get files by date exception");
+                Disconnect();
                 return;
             }
 
-            Disconnect("get files by date");
+            Disconnect();
             _lastSettings = new DownloadSettings();
             _lastSettings.Date.Start = settings.Date.Start;
             _lastSettings.Date.End = settings.Date.End;
@@ -593,7 +592,7 @@ namespace PhotoApp
                         {
                             e.Cancel = true;
                             filesCollection.CompleteAdding();
-                            Disconnect("cancel download");
+                            Disconnect();
                             return;
                         }
                         else
@@ -747,7 +746,7 @@ namespace PhotoApp
             DeleteFiles(filesDone, worker);
 
             _log.Stop();
-            Disconnect("download end");
+            Disconnect();
             e.Result = new WorkerResult(MainWindow.RESULT_OK, TaskType.CopyFiles);
         }
 
