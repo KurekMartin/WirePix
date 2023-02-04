@@ -127,7 +127,7 @@ namespace PhotoApp
         {
             if (e.RemovedItems.Count > 0)
             {
-                //DeviceList.SelectedDevice.PropertyChanged -= SelectedDeviceInfo_PropertyChanged;
+                ((Device)ListBoxDevices.SelectedItem).FileSearchStatusChanged -= DeviceFileSearchStatus_Changed;
             }
             if (ListBoxDevices.SelectedItem != null)
             {
@@ -138,8 +138,7 @@ namespace PhotoApp
 
                 //zmena vybraneho zarizeni
                 DeviceList.SelectDeviceByID(((Device)ListBoxDevices.SelectedItem).ID);
-                //DeviceList.SelectDeviceByIndex(ListBoxDevices.SelectedIndex);
-                //DeviceList.SelectedDevice.PropertyChanged += SelectedDeviceInfo_PropertyChanged;
+                ((Device)ListBoxDevices.SelectedItem).FileSearchStatusChanged += DeviceFileSearchStatus_Changed;
                 DownloadSettings.FileTypeSelection = new FileTypeSelection();
             }
             else
@@ -990,7 +989,7 @@ namespace PhotoApp
             FindAllFiles();
         }
 
-        private void SelectedDeviceInfo_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        private void DeviceFileSearchStatus_Changed(object sender, EventArgs e)
         {
             Dispatcher.Invoke(UpdateFilesActionIcon);
         }

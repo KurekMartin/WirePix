@@ -11,7 +11,6 @@ namespace PhotoApp.Models
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-            Console.WriteLine($"[{propertyName}] changed");
         }
     }
 }

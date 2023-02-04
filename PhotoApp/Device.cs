@@ -70,6 +70,8 @@ namespace PhotoApp
         public static int DEVICE_FILES_CANCELED = -1;
         public static int DEVICE_FILES_ERROR = -2;
 
+        public event EventHandler FileSearchStatusChanged;
+
         private int _fileSearchStatus = 0;
         private DateTime _lastBackup = new DateTime();
 
@@ -140,6 +142,7 @@ namespace PhotoApp
                 {
                     _fileSearchStatus = value;
                     OnPropertyChanged();
+                    FileSearchStatusChanged?.Invoke(this, EventArgs.Empty);
                 }
             }
         }
@@ -326,11 +329,14 @@ namespace PhotoApp
             if (!searchingFiles)
             {
                 searchingFiles = true;
-                FileSearchStatus = DEVICE_FILES_SEARCHING;
-                DeviceFileInfo = new DeviceFileInfo(_device);
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    FileSearchStatus = DEVICE_FILES_SEARCHING;
+                    DeviceFileInfo = new DeviceFileInfo(_device);
+                });
 
                 _device.Connect();
-                success = await GetAllFilesAsync(MediaDirectories);
+                success = await GetAllFilesFromDirs(MediaDirectories);
                 searchingFiles = false;
 
                 if (success)
@@ -345,7 +351,7 @@ namespace PhotoApp
             //return success;
         }
 
-        private async Task<bool> GetAllFilesAsync(List<string> mediaDirs)
+        private async Task<bool> GetAllFilesFromDirs(List<string> mediaDirs)
         {
             bool result = false;
             try
@@ -369,13 +375,28 @@ namespace PhotoApp
             return result;
         }
 
-        private async Task GetAllFilesRecursive(MediaDirectoryInfo directoryInfo)
+        private void GetAllFilesRecursive(MediaDirectoryInfo directoryInfo)
         {
-            await Task.Run(() => DeviceFileInfo.AddFiles(directoryInfo.EnumerateFiles()));
-            foreach (var dir in directoryInfo.EnumerateDirectories().Where(d => !d.Name.StartsWith(".")))
+            var folders = new Stack<MediaDirectoryInfo>();
+            folders.Push(directoryInfo);
+
+            while (!cancelRequest && folders.Count > 0)
             {
-                if (cancelRequest) { break; }
-                await GetAllFilesRecursive(dir);
+                var currentFolder = folders.Pop();
+                DeviceFileInfo.AddFiles(currentFolder.EnumerateFiles());
+
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    OnPropertyChanged(nameof(DeviceFileInfo));
+                });
+
+                var dirs = currentFolder.EnumerateDirectories().Where(d => !d.Name.StartsWith("."));
+
+                foreach (var dir in dirs)
+                {
+                    if (cancelRequest) { break; }
+                    folders.Push(dir);
+                }
             }
         }
 
