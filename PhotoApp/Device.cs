@@ -286,10 +286,6 @@ namespace PhotoApp
         }
         public void CancelCurrentTask()
         {
-            if (searchingFiles)
-            {
-                FileSearchStatus = DEVICE_FILES_CANCELED;
-            }
             if (_device.IsConnected)
             {
                 _device.Cancel();
@@ -339,13 +335,19 @@ namespace PhotoApp
                 success = await GetAllFilesFromDirs(MediaDirectories);
                 searchingFiles = false;
 
-                if (success)
+                if (success && !cancelRequest)
                 {
                     FileSearchStatus = DEVICE_FILES_READY;
+                }
+                else if (cancelRequest)
+                {
+                    FileSearchStatus = DEVICE_FILES_CANCELED;
+                    DeviceFileInfo = new DeviceFileInfo(_device);
                 }
                 else
                 {
                     FileSearchStatus = DEVICE_FILES_ERROR;
+                    DeviceFileInfo = new DeviceFileInfo(_device);
                 }
             }
             //return success;
@@ -353,7 +355,6 @@ namespace PhotoApp
 
         private async Task<bool> GetAllFilesFromDirs(List<string> mediaDirs)
         {
-            bool result = false;
             try
             {
                 foreach (string mediaDir in mediaDirs)
@@ -362,17 +363,12 @@ namespace PhotoApp
                     MediaDirectoryInfo dirInfo = _device.GetDirectoryInfo(mediaDir);
                     await Task.Run(() => GetAllFilesRecursive(dirInfo));
                 }
-
-                result = true;
             }
             catch (Exception ex)
             {
-
-                DeviceFileInfo = new DeviceFileInfo(_device);
-
-                result = false;
+                return false;
             }
-            return result;
+            return true;
         }
 
         private void GetAllFilesRecursive(MediaDirectoryInfo directoryInfo)
@@ -382,21 +378,25 @@ namespace PhotoApp
 
             while (!cancelRequest && folders.Count > 0)
             {
-                var currentFolder = folders.Pop();
-                DeviceFileInfo.AddFiles(currentFolder.EnumerateFiles());
-
-                Application.Current.Dispatcher.Invoke(() =>
+                try
                 {
-                    OnPropertyChanged(nameof(DeviceFileInfo));
-                });
+                    var currentFolder = folders.Pop();
+                    DeviceFileInfo.AddFiles(currentFolder.EnumerateFiles());
 
-                var dirs = currentFolder.EnumerateDirectories().Where(d => !d.Name.StartsWith("."));
+                    Application.Current.Dispatcher.Invoke(() =>
+                    {
+                        OnPropertyChanged(nameof(DeviceFileInfo));
+                    });
 
-                foreach (var dir in dirs)
-                {
-                    if (cancelRequest) { break; }
-                    folders.Push(dir);
+                    var dirs = currentFolder.EnumerateDirectories().Where(d => !d.Name.StartsWith("."));
+
+                    foreach (var dir in dirs)
+                    {
+                        if (cancelRequest) { break; }
+                        folders.Push(dir);
+                    }
                 }
+                catch { cancelRequest = true; }
             }
         }
 

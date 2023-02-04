@@ -42,18 +42,23 @@ namespace PhotoApp
 
         public void AddFiles(IEnumerable<MediaFileInfo> mediaFiles)
         {
-            foreach (var file in mediaFiles)
+            try
             {
-                if (!_cancelOperation)
+                foreach (var file in mediaFiles)
                 {
-                    try
+                    if (!_cancelOperation)
                     {
+
                         _allFilesInfo.Add(new BaseFileInfo(file.PersistentUniqueId, file.FullName));
                     }
-                    catch (Exception ex) { }
+
                 }
             }
-            _isUpdated = false;  
+            catch (Exception ex)
+            {
+                _cancelOperation = true;
+            }
+            _isUpdated = false;
         }
 
         public void CancelOperation()
