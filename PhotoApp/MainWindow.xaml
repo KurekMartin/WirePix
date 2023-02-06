@@ -29,6 +29,9 @@
         <converters:ListIndexToMargin x:Key="ItemIndexToMarginConverter"/>
         <converters:TagToValue x:Key="TagToValueConverter"/>
         <converters:MarginFromListCount x:Key="ListCountToMarginConverter"/>
+        <converters:FileSearchStatusToButtonIconConverter x:Key="FileSearchStatusToButtonIcon"/>
+        <converters:FileSearchStatusToToolTipConverter x:Key="FileSearchStatusToToolTip"/>
+        <converters:FileSearchStatusToListIconConverter x:Key="FileSearchStatusToListIcon"/>
         <CollectionViewSource x:Key="folderStructure" Source="{Binding Path=DownloadSettings.Paths.FolderTags}"/>
     </Window.Resources>
     <Grid>
@@ -107,7 +110,19 @@
                                     <ListBox Grid.Row="0" x:Name="ListBoxDevices" ItemsSource="{Binding DeviceList.Devices,UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Width="Auto" MinWidth="150" SelectionChanged="ListBoxDevices_SelectionChanged" Background="#00000000" BorderThickness="1" BorderBrush="Black" d:ItemsSource="{d:SampleData ItemCount=5}" MinHeight="100" VerticalContentAlignment="Stretch" DockPanel.Dock="Top">
                                         <ListBox.ItemTemplate>
                                             <DataTemplate>
-                                                <TextBlock Text="{Binding CustomName}"/>
+                                                <DockPanel>
+                                                    <TextBlock Text="{Binding CustomName}"
+                                                               VerticalAlignment="Center"
+                                                               Margin="5,0"/>
+                                                    <StackPanel x:Name="deviceListSearchStatusIcon"
+                                                                Orientation="Horizontal"
+                                                                d:Visibility="Visible">
+                                                        <materialDesign:PackIcon Kind="{Binding FileSearchStatus, Converter={StaticResource FileSearchStatusToListIcon}}"
+                                                                                 d:Kind="ListStatus"
+                                                                                 VerticalAlignment="Center"/>
+                                                    </StackPanel>
+                                                </DockPanel>
+
                                             </DataTemplate>
                                         </ListBox.ItemTemplate>
                                     </ListBox>
@@ -274,9 +289,11 @@
                                                             Height="25"
                                                             Margin="10,0"
                                                             x:Name="btnFilesAction" 
-                                                            Click="btnFilesAction_Click" >
+                                                            Click="btnFilesAction_Click"
+                                                            ToolTip="{Binding DeviceList.SelectedDevice.FileSearchStatus, Converter={StaticResource FileSearchStatusToToolTip}}">
                                                         <materialDesign:PackIcon
-                                                            Kind="Refresh"
+                                                            Kind="{Binding DeviceList.SelectedDevice.FileSearchStatus, Converter={StaticResource FileSearchStatusToButtonIcon}}"
+                                                            d:Kind="Refresh"
                                                             Height="15"
                                                             Width="15"/>
                                                     </Button>

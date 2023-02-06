@@ -163,6 +163,9 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Converters\EqualityConverter.cs" />
+    <Compile Include="Converters\FileSearchStatusToButtonIconConverter.cs" />
+    <Compile Include="Converters\FileSearchStatusToListIconConverter.cs" />
+    <Compile Include="Converters\FileSearchStatusToToolTipConverter.cs" />
     <Compile Include="Converters\IndexToMargin.cs" />
     <Compile Include="Converters\MarginFromListCount.cs" />
     <Compile Include="Converters\ListIndexToMargin.cs" />
@@ -243,7 +246,6 @@
     <Compile Include="FileExif.cs" />
     <Compile Include="Log.cs" />
     <Compile Include="Models\BaseObserveObject.cs" />
-    <Compile Include="Models\DeviceInfo.cs" />
     <Compile Include="Models\SaveOptions.cs" />
     <Compile Include="Models\DateRange.cs" />
     <Compile Include="Models\PathStruct.cs" />

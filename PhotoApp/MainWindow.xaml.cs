@@ -84,7 +84,7 @@ namespace PhotoApp
             ListConnectedDevices();
 
             //udalost pripojeni/odpojeni zarizeni -> aktualizace seznamu
-            usbEventWatcher.UsbDeviceAdded += (_, device) => Dispatcher.Invoke(new Action(()=> DeviceAdded(device)));
+            usbEventWatcher.UsbDeviceAdded += (_, device) => Dispatcher.Invoke(new Action(() => DeviceAdded(device)));
             usbEventWatcher.UsbDeviceRemoved += (_, device) => Dispatcher.Invoke(new Action(() => DeviceRemoved(device)));
 
             Properties.Settings.Default.PropertyChanged += Settings_Changed;
@@ -125,10 +125,6 @@ namespace PhotoApp
         }
         private void ListBoxDevices_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (e.RemovedItems.Count > 0)
-            {
-                ((Device)ListBoxDevices.SelectedItem).FileSearchStatusChanged -= DeviceFileSearchStatus_Changed;
-            }
             if (ListBoxDevices.SelectedItem != null)
             {
                 tbSelectDeviceError.Visibility = Visibility.Collapsed;
@@ -138,7 +134,6 @@ namespace PhotoApp
 
                 //zmena vybraneho zarizeni
                 DeviceList.SelectDeviceByID(((Device)ListBoxDevices.SelectedItem).ID);
-                ((Device)ListBoxDevices.SelectedItem).FileSearchStatusChanged += DeviceFileSearchStatus_Changed;
                 DownloadSettings.FileTypeSelection = new FileTypeSelection();
             }
             else
@@ -146,7 +141,6 @@ namespace PhotoApp
                 spDeviceInfo.Visibility = Visibility.Collapsed;
                 ListBoxDevices.IsEnabled = true;
             }
-            UpdateFilesActionIcon();
         }
 
         private void DeviceAdded(UsbDevice device)
@@ -172,7 +166,7 @@ namespace PhotoApp
 
         private void Device_FileSearchFinished(object sender, EventArgs e)
         {
-            if (DeviceList.Devices.Any(d => d.FileSearchStatus == DeviceInfo.DEVICE_FILES_WAITING || d.FileSearchStatus == DeviceInfo.DEVICE_FILES_NOT_SEARCHED))
+            if (DeviceList.Devices.Any(d => d.FileSearchStatus == Device.DEVICE_FILES_WAITING || d.FileSearchStatus == Device.DEVICE_FILES_NOT_SEARCHED))
             {
                 FindAllFiles();
             }
@@ -230,14 +224,13 @@ namespace PhotoApp
             if (!string.IsNullOrEmpty(deviceID))
             {
                 var device = devices.First(d => d.ID == deviceID);
-                device.GetAllFiles();
+                await device.GetAllFiles();
             }
 
-            if(devices.Any(d=>d.FileSearchStatus == Device.DEVICE_FILES_NOT_SEARCHED))
+            if (devices.Any(d => d.FileSearchStatus == Device.DEVICE_FILES_NOT_SEARCHED))
             {
-
                 var device = devices.First(d => d.FileSearchStatus == Device.DEVICE_FILES_NOT_SEARCHED);
-                await Task.Run(() => { device.GetAllFiles(); });
+                await device.GetAllFiles();
                 FindAllFiles();
             }
         }
@@ -726,7 +719,7 @@ namespace PhotoApp
             {
                 tbDateRangeError.Visibility = Visibility.Collapsed;
             }
-            
+
             //SetDatePickerRange(dp); //disable date range
         }
 
@@ -989,44 +982,18 @@ namespace PhotoApp
             FindAllFiles();
         }
 
-        private void DeviceFileSearchStatus_Changed(object sender, EventArgs e)
-        {
-            Dispatcher.Invoke(UpdateFilesActionIcon);
-        }
-
-        private void UpdateFilesActionIcon()
-        {
-            Button button = btnFilesAction;
-            PackIcon icon = button.Content as PackIcon;
-            var status = DeviceList.SelectedDevice.FileSearchStatus;
-            if (status == DeviceInfo.DEVICE_FILES_NOT_SEARCHED ||
-                status == DeviceInfo.DEVICE_FILES_CANCELED ||
-                status == DeviceInfo.DEVICE_FILES_ERROR ||
-                status == DeviceInfo.DEVICE_FILES_READY)
-            {
-                icon.Kind = PackIconKind.Refresh;
-                button.ToolTip = Properties.Resources.Refresh;
-            }
-            else if (status == DeviceInfo.DEVICE_FILES_WAITING ||
-                     status == DeviceInfo.DEVICE_FILES_SEARCHING)
-            {
-                icon.Kind = PackIconKind.Cancel;
-                button.ToolTip = Properties.Resources.Cancel;
-            }
-        }
-
         private void btnFilesAction_Click(object sender, RoutedEventArgs e)
         {
             var status = DeviceList.SelectedDevice.FileSearchStatus;
-            if (status == DeviceInfo.DEVICE_FILES_NOT_SEARCHED ||
-                status == DeviceInfo.DEVICE_FILES_CANCELED ||
-                status == DeviceInfo.DEVICE_FILES_ERROR ||
-                status == DeviceInfo.DEVICE_FILES_READY)
+            if (status == Device.DEVICE_FILES_NOT_SEARCHED ||
+                status == Device.DEVICE_FILES_CANCELED ||
+                status == Device.DEVICE_FILES_ERROR ||
+                status == Device.DEVICE_FILES_READY)
             {
                 FindAllFiles(DeviceList.SelectedDevice.ID);
             }
-            else if (status == DeviceInfo.DEVICE_FILES_WAITING ||
-                     status == DeviceInfo.DEVICE_FILES_SEARCHING)
+            else if (status == Device.DEVICE_FILES_WAITING ||
+                     status == Device.DEVICE_FILES_SEARCHING)
             {
                 DeviceList.SelectedDevice.CancelCurrentTask();
             }
