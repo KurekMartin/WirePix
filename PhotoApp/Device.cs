@@ -55,20 +55,20 @@ namespace PhotoApp
         private bool searchingFiles = false;
         private bool cancelRequest = false;
 
-        private static readonly int maxAttempts = 5;
+        private const int maxAttempts = 5;
 
         //device status
-        public static int DEVICE_UNKNOWN_STATUS = -1;
-        public static int DEVICE_CANNOT_CONNECT = 0;
-        public static int DEVICE_READY = 1;
+        public const int DEVICE_UNKNOWN_STATUS = -1;
+        public const int DEVICE_CANNOT_CONNECT = 0;
+        public const int DEVICE_READY = 1;
 
         //files status
-        public static int DEVICE_FILES_READY = 3;
-        public static int DEVICE_FILES_SEARCHING = 2;
-        public static int DEVICE_FILES_WAITING = 1;
-        public static int DEVICE_FILES_NOT_SEARCHED = 0;
-        public static int DEVICE_FILES_CANCELED = -1;
-        public static int DEVICE_FILES_ERROR = -2;
+        public const int DEVICE_FILES_READY = 3;
+        public const int DEVICE_FILES_SEARCHING = 2;
+        public const int DEVICE_FILES_WAITING = 1;
+        public const int DEVICE_FILES_NOT_SEARCHED = 0;
+        public const int DEVICE_FILES_CANCELED = -1;
+        public const int DEVICE_FILES_ERROR = -2;
 
         public event EventHandler FileSearchStatusChanged;
 
@@ -317,7 +317,7 @@ namespace PhotoApp
             return;
         }
 
-        public async void GetAllFiles()
+        public async Task GetAllFiles()
         {
             cancelRequest = false;
             bool success = false;
