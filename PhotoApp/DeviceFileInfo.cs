@@ -15,7 +15,7 @@ namespace PhotoApp
 
     public class DeviceFileInfo : BaseObserveObject
     {
-        private struct BaseFileInfo
+        public struct BaseFileInfo
         {
             public BaseFileInfo(string PersistentUniqueId, string fullPath)
             {
@@ -126,6 +126,18 @@ namespace PhotoApp
                     _others = AllFileTypes.Except(_images.Concat(_videos));
                 }
                 return _others;
+            }
+        }
+
+        public IEnumerable<BaseFileInfo> FilterByType(FileTypeSelection selection)
+        {
+            if (selection.Mode == ListMode.whitelist)
+            {
+                return _allFilesInfo.Where(f => selection.FileTypes.Contains(Path.GetExtension(f.FullPath).TrimStart('.').ToUpper()));
+            }
+            else
+            {
+                return _allFilesInfo.Where(f => !selection.FileTypes.Contains(Path.GetExtension(f.FullPath).TrimStart('.').ToUpper()));
             }
         }
     }
