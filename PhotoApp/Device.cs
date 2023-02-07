@@ -136,7 +136,7 @@ namespace PhotoApp
         public int FileSearchStatus
         {
             get { return _fileSearchStatus; }
-            private set
+            set
             {
                 if (_fileSearchStatus != value)
                 {

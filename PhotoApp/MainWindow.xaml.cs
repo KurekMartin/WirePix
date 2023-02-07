@@ -217,21 +217,33 @@ namespace PhotoApp
             ListConnectedDevices();
         }
 
-        public async void FindAllFiles(string deviceID = null)
+        public async void FindAllFiles(string deviceID = "")
         {
             var devices = DeviceList.Devices;
+            Device device;
 
-            if (!string.IsNullOrEmpty(deviceID))
+            foreach (var dev in DeviceList.Devices.Where(d => d.FileSearchStatus == Device.DEVICE_FILES_NOT_SEARCHED ||
+                                                              d.ID == deviceID))
             {
-                var device = devices.First(d => d.ID == deviceID);
-                await device.GetAllFiles();
+                dev.FileSearchStatus = Device.DEVICE_FILES_WAITING;
             }
 
-            if (devices.Any(d => d.FileSearchStatus == Device.DEVICE_FILES_NOT_SEARCHED))
+            if (!devices.Any(d => d.FileSearchStatus == Device.DEVICE_FILES_SEARCHING))
             {
-                var device = devices.First(d => d.FileSearchStatus == Device.DEVICE_FILES_NOT_SEARCHED);
-                await device.GetAllFiles();
-                FindAllFiles();
+                if (!string.IsNullOrEmpty(deviceID))
+                {
+                    device = devices.First(d => d.ID == deviceID);
+                }
+                else
+                {
+                    device = devices.FirstOrDefault(d => d.FileSearchStatus == Device.DEVICE_FILES_NOT_SEARCHED ||
+                                                         d.FileSearchStatus == Device.DEVICE_FILES_WAITING);
+                }
+                if (device != null)
+                {
+                    await device?.GetAllFiles();
+                    FindAllFiles();
+                }
             }
         }
 
@@ -990,6 +1002,7 @@ namespace PhotoApp
                 status == Device.DEVICE_FILES_ERROR ||
                 status == Device.DEVICE_FILES_READY)
             {
+                DeviceList.SelectedDevice.FileSearchStatus = Device.DEVICE_FILES_WAITING;
                 FindAllFiles(DeviceList.SelectedDevice.ID);
             }
             else if (status == Device.DEVICE_FILES_WAITING ||

@@ -13,7 +13,7 @@ namespace PhotoApp
 {
     public class DeviceList : BaseObserveObject
     {
-        private List<Device> _devices = new List<Device>();
+        private ObservableCollection<Device> _devices = new ObservableCollection<Device>();
         private static readonly string _dataFile = Path.Combine(Application.Current.Resources[Properties.Keys.DataFolder].ToString(), "Devices.xml");
         private bool _isListUpdated = false;
         private string _selectedDeviceID;
@@ -30,7 +30,7 @@ namespace PhotoApp
         {
             IEnumerable<MediaDevice> connectedDevices = MediaDevice.GetDevices();
             //select only new devices that support MTP or PTP
-            IEnumerable<MediaDevice> devices = connectedDevices.Where(d =>
+            IEnumerable<MediaDevice> MTPDevices = connectedDevices.Where(d =>
                   {
                       bool isMediaDevice = false;
                       if (!_devices.Any(c => d.DeviceId == c.ID))
@@ -44,7 +44,10 @@ namespace PhotoApp
                   });
 
             IEnumerable<string> deviceIDs = Devices.Select(d => d.ID);
-            IEnumerable<MediaDevice> newDevices = devices.Where(d => !deviceIDs.Contains(d.DeviceId));
+            IEnumerable<MediaDevice> newDevices = MTPDevices.Where(d => !deviceIDs.Contains(d.DeviceId));
+
+            int devicesAdded = newDevices.Count();
+            int devicesRemoved = RemoveDisconnectedDevices(MTPDevices);
 
             foreach (MediaDevice mediaDevice in newDevices)
             {
@@ -57,21 +60,44 @@ namespace PhotoApp
                 var deviceData = Database.DeviceGetCustomName(device.Name, device.SerialNumber);
                 device.CustomName = deviceData.customName;
                 device.LastBackup = deviceData.lastBackup;
-                _devices.Add(device);
-                _devices.OrderByDescending(d => d.Name);
-                OnPropertyChanged(nameof(Devices));
+                Devices.Add(device);
+                Devices = new ObservableCollection<Device>(Devices.OrderBy(d => d.Name));
             }
-            int index = Devices.FindIndex(d => d.ID == selectedDeviceID);
+
+            var selectedDevice = Devices.FirstOrDefault(d => d.ID == selectedDeviceID);
+            int index = Devices.IndexOf(selectedDevice);
+
+            _selectedDeviceID = string.Empty;
             if (index >= 0)
             {
                 _selectedDeviceID = selectedDeviceID;
             }
+            else if (Devices.Count() > 0)
+            {
+                _selectedDeviceID = Devices.First().ID;
+                index = 0;
+            }
             return index;
         }
 
-        public List<Device> Devices
+        private int RemoveDisconnectedDevices(IEnumerable<MediaDevice> connectedDevices)
+        {
+            var devicesToRemove = Devices.Where(device => !connectedDevices.Any(conDev => device.ID == conDev.DeviceId)).ToList();
+            foreach (var device in devicesToRemove)
+            {
+                Devices.Remove(device);
+            }
+            return devicesToRemove.Count();
+        }
+
+        public ObservableCollection<Device> Devices
         {
             get => _devices;
+            private set
+            {
+                _devices = value;
+                OnPropertyChanged();
+            }
         }
 
         public Device SelectDeviceByID(string id)
