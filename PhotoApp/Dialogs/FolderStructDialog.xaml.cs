@@ -1,4 +1,5 @@
-﻿using PhotoApp.Models;
+﻿using MaterialDesignThemes.Wpf;
+using PhotoApp.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -60,7 +61,7 @@ namespace PhotoApp.Dialogs
 
     public partial class FolderStructDialog : UserControl, INotifyPropertyChanged
     {
-        private MainWindow mainWindow;
+        public DialogSession Session { private get; set; }
         private ObservableCollection<FolderLevel> _folderStructure;//struktura pro uložení fotek
         private List<ButtonGroupStruct> _buttons = new List<ButtonGroupStruct>();
         private Point _buttonGridSize = new Point();
@@ -69,12 +70,11 @@ namespace PhotoApp.Dialogs
 
         private static int _folderLimit = 7;
 
-        public FolderStructDialog(MainWindow window, List<ButtonGroupStruct> buttons, List<List<string>> initStructure = null)
+        public FolderStructDialog(List<ButtonGroupStruct> buttons, List<List<string>> initStructure = null)
         {
             FolderStructure = new ObservableCollection<FolderLevel>();
             DataContext = this;
             InitializeComponent();
-            mainWindow = window;
 
             ButtonGridSize = new Point(buttons.Max(x => x.gridPosition.X) + 1,
                                        buttons.Max(x => x.gridPosition.Y) + 1);
@@ -192,7 +192,7 @@ namespace PhotoApp.Dialogs
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
-        
+
         //přidání tagu po kliknutí na tlačítko
         private void Button_Click(object sender, RoutedEventArgs e)
         {
@@ -410,7 +410,7 @@ namespace PhotoApp.Dialogs
             {
                 List<List<string>> result = new List<List<string>>();
                 FolderStructure.ToList().ForEach(x => result.Add(x.Tags.ToList()));
-                mainWindow.DialogClose(this, result, MainWindow.RESULT_OK);
+                Session?.Close(new DialogResultWithData(result, DialogResultWithData.RESULT_OK));
             }
             else
             {
@@ -420,7 +420,7 @@ namespace PhotoApp.Dialogs
 
         private void btnCancel_Click(object sender, RoutedEventArgs e)
         {
-            mainWindow.DialogClose(this, resultCode: MainWindow.RESULT_CANCEL);
+            Session?.Close(new DialogResultWithData(null, DialogResultWithData.RESULT_CANCEL));
         }
     }
 }

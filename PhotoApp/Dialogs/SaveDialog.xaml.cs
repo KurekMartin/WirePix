@@ -1,4 +1,5 @@
-﻿using PhotoApp.Models;
+﻿using MaterialDesignThemes.Wpf;
+using PhotoApp.Models;
 using System.IO;
 using System.Linq;
 using System.Windows;
@@ -12,9 +13,9 @@ namespace PhotoApp.Dialogs
     /// </summary>
     public partial class SaveDialog : UserControl
     {
+        public DialogSession Session {private get; set; }
         private SaveOptions saveResult;
-        private MainWindow mainWindow;
-        public SaveDialog(MainWindow window, SaveOptions options = null)
+        public SaveDialog(SaveOptions options = null)
         {
             InitializeComponent();
             if (options == null)
@@ -26,7 +27,6 @@ namespace PhotoApp.Dialogs
                 saveResult = options;
             }
             DataContext = saveResult;
-            mainWindow = window;
         }
 
         private bool ValidFileName(string filename)
@@ -83,8 +83,13 @@ namespace PhotoApp.Dialogs
         {
             if (ValidFileName(saveResult.FileName))
             {
-                mainWindow.DialogClose(this, saveResult, MainWindow.RESULT_OK);
+                Session?.Close(new DialogResultWithData(saveResult, DialogResultWithData.RESULT_OK));
             }
+        }
+
+        private void btnCancel_Click(object sender, RoutedEventArgs e)
+        {
+            Session?.Close(new DialogResultWithData(null, DialogResultWithData.RESULT_CANCEL));
         }
     }
 }

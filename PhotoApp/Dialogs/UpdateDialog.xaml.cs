@@ -1,4 +1,5 @@
-﻿using Octokit;
+﻿using MaterialDesignThemes.Wpf;
+using Octokit;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,11 +22,10 @@ namespace PhotoApp.Dialogs
     /// </summary>
     public partial class UpdateDialog : UserControl
     {
-        private MainWindow mainWindow;
-        public UpdateDialog(MainWindow window, Release release)
+        public DialogSession Session { private get; set; }
+        public UpdateDialog(Release release)
         {
             InitializeComponent();
-            mainWindow = window;
             var version = Version.Parse(release.TagName.Replace("v", ""));
             ucUpdate.VersionInfo = $"{Properties.Resources.Update_NewVersionAvailable} ({version})";
             ucUpdate.Release = release;
@@ -46,7 +46,7 @@ namespace PhotoApp.Dialogs
 
         private void btnOK_Click(object sender, RoutedEventArgs e)
         {
-            mainWindow.DialogClose(this, null);
+            Session?.Close();
         }
     }
 }

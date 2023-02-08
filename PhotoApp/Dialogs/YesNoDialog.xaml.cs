@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using MaterialDesignThemes.Wpf;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace PhotoApp.Dialogs
@@ -8,21 +9,22 @@ namespace PhotoApp.Dialogs
     /// </summary>
     public partial class YesNoDialog : UserControl
     {
+        public DialogSession Session { private get; set; }
         private int _requestCode;
-        public static int RESULT_YES = 1;
-        public static int RESULT_NO = 0;
-        private MainWindow _mainWindow;
-        public YesNoDialog(MainWindow window, string text, int requestCode)
+        public YesNoDialog(string text)
         {
             InitializeComponent();
             tbMain.Text = text;
-            _requestCode = requestCode;
-            _mainWindow = window;
         }
 
         private void btnYes_Click(object sender, RoutedEventArgs e)
         {
-            _mainWindow.DialogClose(this, RESULT_YES, MainWindow.RESULT_OK, _requestCode);
+            Session?.Close(true);
+        }
+
+        private void btnNo_Click(object sender, RoutedEventArgs e)
+        {
+            Session?.Close(false);
         }
     }
 }

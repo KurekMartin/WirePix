@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MaterialDesignThemes.Wpf;
+using System;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -6,6 +7,7 @@ namespace PhotoApp.Dialogs
 {
     public partial class ChangelogDialog : UserControl
     {
+        public DialogSession Session { private get; set; }
         public ChangelogDialog(double parentHeight,double parentWidth)
         {
             InitializeComponent();
@@ -36,6 +38,11 @@ namespace PhotoApp.Dialogs
             textBlock.TextWrapping = TextWrapping.Wrap;
             textBlock.Style = FindResource("MaterialDesignBody2TextBlock") as Style;
             return textBlock;
+        }
+
+        private void btnOK_Click(object sender, RoutedEventArgs e)
+        {
+            Session?.Close();
         }
     }
 }

@@ -7,6 +7,7 @@ using System.Net;
 using System.Threading.Tasks;
 using System.Diagnostics;
 using System.IO;
+using MaterialDesignThemes.Wpf;
 
 namespace PhotoApp.Dialogs
 {
@@ -15,11 +16,10 @@ namespace PhotoApp.Dialogs
     /// </summary>
     public partial class AppInfoDialog : UserControl
     {
-        private MainWindow mainWindow;
-        public AppInfoDialog(MainWindow window)
+        public DialogSession Session { private get; set; }
+        public AppInfoDialog()
         {
             InitializeComponent();
-            mainWindow = window;
         }
 
         private async void btnCheckUpdate_Click(object sender, RoutedEventArgs e)
@@ -73,18 +73,23 @@ namespace PhotoApp.Dialogs
 
         private void btnLibraries_Click(object sender, RoutedEventArgs e)
         {
-            mainWindow.ShowLibraries(this);
+            Session?.Close(MainWindow.DIALOG_SHOW_LIBRARIES);
         }
 
         private void btnShowChangelog_Click(object sender, RoutedEventArgs e)
         {
-            mainWindow.ShowChangelog(this);
+            Session?.Close(MainWindow.DIALOG_SHOW_CHANGELOG);
         }
 
         private void btnShowAppdata_Click(object sender, RoutedEventArgs e)
         {
             string dataFolder = System.Windows.Application.Current.Resources[Properties.Keys.MainFolder].ToString();
             System.Diagnostics.Process.Start("explorer.exe", dataFolder);
+        }
+
+        private void btnOK_Click(object sender, RoutedEventArgs e)
+        {
+            Session?.Close();
         }
     }
 }

@@ -29,7 +29,7 @@
                     </StackPanel>
                 </ScrollViewer>
                 <Button x:Name="btnOK" Content="{x:Static p:Resources.OK}" Margin="15,5,15,10" Grid.Row="1"
-                        Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}" VerticalAlignment="Bottom" HorizontalAlignment="Stretch"/>
+                        VerticalAlignment="Bottom" HorizontalAlignment="Stretch" Click="btnOK_Click"/>
             </StackPanel>
     </materialDesign:Card>
 

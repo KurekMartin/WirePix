@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using MaterialDesignThemes.Wpf;
+using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -10,16 +11,15 @@ namespace PhotoApp.Dialogs
     /// </summary>
     public partial class AppFeedbackDialog : UserControl
     {
-        private MainWindow mainWindow;
+        public DialogSession Session { private get; set; }
         public AppFeedbackDialog(MainWindow window)
         {
             InitializeComponent();
-            mainWindow = window;
         }
 
         private void btnOK_Click(object sender, RoutedEventArgs e)
         {
-            mainWindow.DialogClose(this, null);
+            Session?.Close();
         }
         private void btnSendFeedback_Click(object sender, RoutedEventArgs e)
         {

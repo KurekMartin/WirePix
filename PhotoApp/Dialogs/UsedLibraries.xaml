@@ -67,7 +67,7 @@
                     </Button>
                 </DockPanel>
             </StackPanel>
-            <Button x:Name="btnOK" Content="{x:Static p:Resources.OK}" Margin="15,10" Grid.Row="1" Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"/>
+            <Button x:Name="btnOK" Content="{x:Static p:Resources.OK}" Margin="15,10" Grid.Row="1" Click="btnOK_Click"/>
         </StackPanel>
     </materialDesign:Card>
 </UserControl>

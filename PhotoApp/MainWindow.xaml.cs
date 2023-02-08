@@ -49,13 +49,16 @@ namespace PhotoApp
         private BackgroundWorker backgroundWorker = null;
         private DateTime backupStart = new DateTime();
 
+        //dialog result
+        public const int DIALOG_SHOW_LIBRARIES = 11;
+        public const int DIALOG_SHOW_CHANGELOG = 12;
 
         //dialog error
-        public static int RESULT_ERROR = -1;
-        public static int RESULT_CANCEL = 0;
-        public static int RESULT_OK = 1;
+        public const int RESULT_ERROR = -1;
+        public const int RESULT_CANCEL = 0;
+        public const int RESULT_OK = 1;
 
-        private static int REQUEST_PROFILE_DELETE = 10;
+        private const int REQUEST_PROFILE_DELETE = 10;
 
         private Border normalBorder = new Border();
         Border errorBorder = new Border();
@@ -109,14 +112,15 @@ namespace PhotoApp
             }
         }
 
-        private void dhDialog_Loaded(object sender, RoutedEventArgs e)
+        private async void dhDialog_Loaded(object sender, RoutedEventArgs e)
         {
             Version currentVersion = Version.Parse(((App)Application.Current).Version);
             Version lastRunVerison = Version.Parse(Properties.Settings.Default.LastVersion);
             if (currentVersion > lastRunVerison)
             {
-                ShowChangelog();
+                await ShowChangelogDialog();
             }
+            await ShowChangelogDialog();
         }
 
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)
@@ -160,16 +164,16 @@ namespace PhotoApp
             ListBoxDevices.SelectedIndex = DeviceList.UpdateDevices(DeviceList.SelectedDevice?.ID);
             if (IsLoaded)
             {
-                FindAllFiles();
+                Task.Run(() => FindAllFiles());
             }
         }
 
         private void Device_FileSearchFinished(object sender, EventArgs e)
         {
-            if (DeviceList.Devices.Any(d => d.FileSearchStatus == Device.DEVICE_FILES_WAITING || d.FileSearchStatus == Device.DEVICE_FILES_NOT_SEARCHED))
-            {
-                FindAllFiles();
-            }
+            //if (DeviceList.Devices.Any(d => d.FileSearchStatus == Device.DEVICE_FILES_WAITING || d.FileSearchStatus == Device.DEVICE_FILES_NOT_SEARCHED))
+            //{
+            //    FindAllFiles();
+            //}
         }
 
         private void GetProfiles(string SelectProfile = "")
@@ -241,7 +245,7 @@ namespace PhotoApp
                 }
                 if (device != null)
                 {
-                    await device?.GetAllFiles();
+                    await device.GetAllFiles();
                     FindAllFiles();
                 }
             }
@@ -476,7 +480,7 @@ namespace PhotoApp
             WorkerResult result = (WorkerResult)e.Result;
             if (result.code == RESULT_ERROR)
             {
-                ErrorDialog(Properties.Resources.FileCheckError);
+                ShowErrorDialog(Properties.Resources.FileCheckError);
                 ListConnectedDevices();
             }
             else if (result.code == RESULT_OK)
@@ -567,48 +571,15 @@ namespace PhotoApp
                     new Point(1,2))
             };
 
-            FolderStructDialog nameDialog = new FolderStructDialog(this, buttonGroups, DownloadSettings.Paths.FolderTags);
-            await DialogHost.Show(nameDialog, "RootDialog");
-
-        }
-
-        //zobrazeni chybove zpravy
-        public void ErrorDialog(string message)
-        {
-            ErrorDialog errorDialog = new ErrorDialog(this, message);
-            DialogHost.Show(errorDialog, "RootDialog");
-        }
-
-        //zavreni dialogu a ziskani vracenych hodnot
-        public void DialogClose(object sender, object result = null, int resultCode = -1, int requestCode = -1)
-        {
-            if (resultCode == RESULT_OK)
+            FolderStructDialog folderDialog = new FolderStructDialog(buttonGroups, DownloadSettings.Paths.FolderTags);
+            DialogResultWithData result = (DialogResultWithData)await DialogHost.Show(folderDialog, "RootDialog", delegate (object o, DialogOpenedEventArgs args)
             {
-                if (sender.GetType() == typeof(FolderStructDialog))
-                {
-                    DownloadSettings.Paths.FolderTags = (List<List<string>>)result;
-                }
-                else if (sender.GetType() == typeof(FileStructDialog))
-                {
-                    DownloadSettings.Paths.FileTags = (List<string>)result;
-                }
-                else if (sender.GetType() == typeof(SaveDialog))
-                {
-                    SaveOptions options = (SaveOptions)result;
-                    DownloadSettings.Save(options);
-                    GetProfiles(options.FileName); // načte nový profil
-                }
-                else if (sender.GetType() == typeof(YesNoDialog))
-                {
-                    if ((int)result == YesNoDialog.RESULT_YES && requestCode == REQUEST_PROFILE_DELETE)
-                    {
-                        DownloadSettings.Delete(cbProfiles.SelectedItem.ToString());
-                        GetProfiles();
-                        OnPropertyChanged("Profiles");
-                    }
-                }
+                folderDialog.Session = args.Session;
+            });
+            if (result.ResultCode == DialogResultWithData.RESULT_OK)
+            {
+                DownloadSettings.Paths.FolderTags = (List<List<string>>)result.Data;
             }
-            DialogHost.CloseDialogCommand.Execute(null, null);
         }
 
         //vytvoreni a zobrazeni dialogu pro nazev souboru
@@ -654,8 +625,15 @@ namespace PhotoApp
                     new Point(1,1))
             };
 
-            FileStructDialog nameDialog = new FileStructDialog(this, buttonGroups, DownloadSettings.Paths.FileTags);
-            await DialogHost.Show(nameDialog, "RootDialog");
+            FileStructDialog fileDialog = new FileStructDialog(buttonGroups, DownloadSettings.Paths.FileTags);
+            DialogResultWithData result = (DialogResultWithData)await DialogHost.Show(fileDialog, "RootDialog", delegate (object o, DialogOpenedEventArgs args)
+            {
+                fileDialog.Session = args.Session;
+            });
+            if (result.ResultCode == DialogResultWithData.RESULT_OK)
+            {
+                DownloadSettings.Paths.FileTags = (List<string>)result.Data;
+            }
         }
 
         // vyber slozek
@@ -790,8 +768,17 @@ namespace PhotoApp
         }
         private async void btnSaveAs_Click(object sender, RoutedEventArgs e)
         {
-            SaveDialog saveDialog = new SaveDialog(this, DownloadSettings.SaveOptions);
-            await DialogHost.Show(saveDialog, "RootDialog");
+            SaveDialog saveDialog = new SaveDialog(DownloadSettings.SaveOptions);
+            DialogResultWithData result = (DialogResultWithData)await DialogHost.Show(saveDialog, "RootDialog", delegate (object o, DialogOpenedEventArgs args)
+            {
+                saveDialog.Session = args.Session;
+            });
+            if(result.ResultCode == DialogResultWithData.RESULT_OK)
+            {
+                SaveOptions options = (SaveOptions)result.Data;
+                DownloadSettings.Save(options);
+                GetProfiles(options.FileName); // načte nový profil
+            }
         }
 
         private void btnLoad_Click(object sender, RoutedEventArgs e)
@@ -801,7 +788,7 @@ namespace PhotoApp
 
         private void btnDeleteProfile_Click(object sender, RoutedEventArgs e)
         {
-            ShowYesNoDialog(string.Format(Properties.Resources.DeleteProfilePrompt, cbProfiles.SelectedItem), REQUEST_PROFILE_DELETE);
+            DeleteSelectedProfile(string.Format(Properties.Resources.DeleteProfilePrompt, cbProfiles.SelectedItem));
         }
 
         private void cbProfiles_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -812,7 +799,7 @@ namespace PhotoApp
 
                 if (!DownloadSettings.Load(cb.SelectedItem.ToString()))
                 {
-                    ShowYesNoDialog(string.Format(Properties.Resources.Profile_Load_Error, cb.SelectedItem), REQUEST_PROFILE_DELETE);
+                    DeleteSelectedProfile(string.Format(Properties.Resources.Profile_Load_Error, cb.SelectedItem));
                 }
                 OnPropertyChanged("DownloadSettings");
 
@@ -824,6 +811,17 @@ namespace PhotoApp
             else
             {
                 btnDeleteProfile.IsEnabled = false;
+            }
+        }
+
+        private async void DeleteSelectedProfile(string message)
+        {
+            var result = await ShowYesNoDialog(message);
+            if (result)
+            {
+                DownloadSettings.Delete(cbProfiles.SelectedItem.ToString());
+                GetProfiles();
+                OnPropertyChanged(nameof(Profiles));
             }
         }
 
@@ -916,60 +914,102 @@ namespace PhotoApp
             }
         }
 
-        private async void btnInfoClick(object sender, RoutedEventArgs e)
+        private void btnInfoClick(object sender, RoutedEventArgs e)
         {
-            var AppInfoDialog = new AppInfoDialog(this);
-            await DialogHost.Show((object)AppInfoDialog, "RootDialog");
+            ShowInfoDialog();
         }
 
-        private async void btnSettings_Click(object sender, RoutedEventArgs e)
+        private async void ShowInfoDialog()
         {
-            var AppSettingsDialog = new AppSettingsDialog(this);
-            await DialogHost.Show(AppSettingsDialog, "RootDialog");
+            var AppInfoDialog = new AppInfoDialog();
+            var result = await DialogHost.Show(AppInfoDialog, "RootDialog", delegate (object o, DialogOpenedEventArgs args)
+            {
+                AppInfoDialog.Session = args.Session;
+            });
+            switch (result)
+            {
+                case DIALOG_SHOW_LIBRARIES:
+                    await ShowLibrariesDialog();
+                    ShowInfoDialog();
+                    break;
+                case DIALOG_SHOW_CHANGELOG:
+                    await ShowChangelogDialog();
+                    ShowInfoDialog();
+                    break;
+            }
         }
 
-        private async void btnFeedback_Click(object sender, RoutedEventArgs e)
+        private void btnSettings_Click(object sender, RoutedEventArgs e)
+        {
+            ShowSettingsDialog();
+        }
+
+        private async void ShowSettingsDialog()
+        {
+            var AppSettingsDialog = new AppSettingsDialog();
+            await DialogHost.Show(AppSettingsDialog, "RootDialog", delegate (object o, DialogOpenedEventArgs args)
+            {
+                AppSettingsDialog.Session = args.Session;
+            });
+        }
+
+        private void btnFeedback_Click(object sender, RoutedEventArgs e)
+        {
+            ShowFeedbackDialog();
+        }
+
+        private async void ShowFeedbackDialog()
         {
             var AppFeedbackDialog = new AppFeedbackDialog(this);
-            await DialogHost.Show(AppFeedbackDialog, "RootDialog");
+            await DialogHost.Show(AppFeedbackDialog, "RootDialog", delegate (object o, DialogOpenedEventArgs args)
+            {
+                AppFeedbackDialog.Session = args.Session;
+            });
         }
 
         private async void ShowUpdateDialog(Octokit.Release release)
         {
-            var UpdateDialog = new UpdateDialog(this, release);
-            await DialogHost.Show(UpdateDialog, "RootDialog");
+            var UpdateDialog = new UpdateDialog(release);
+            await DialogHost.Show(UpdateDialog, "RootDialog", delegate (object o, DialogOpenedEventArgs args)
+            {
+                UpdateDialog.Session = args.Session;
+            });
         }
 
-        private async void ShowYesNoDialog(string message, int request_code)
+        private async Task<bool> ShowYesNoDialog(string message)
         {
-            YesNoDialog ynDialog = new YesNoDialog(this, message, request_code);
-            await DialogHost.Show(ynDialog, "RootDialog");
+            YesNoDialog ynDialog = new YesNoDialog(message);
+            var result = await DialogHost.Show(ynDialog, "RootDialog", delegate (object o, DialogOpenedEventArgs args)
+            {
+                ynDialog.Session = args.Session;
+            });
+            return (bool)result;
         }
 
-        public async void ShowLibraries(object sender = null)
+        public async Task ShowLibrariesDialog()
         {
-            DialogHost.CloseDialogCommand.Execute(null, null);
-
             var LibrariesDialog = new UsedLibraries();
-            await DialogHost.Show(LibrariesDialog, "RootDialog");
-
-            if (sender != null)
+            await DialogHost.Show(LibrariesDialog, "RootDialog", delegate (object o, DialogOpenedEventArgs args)
             {
-                await DialogHost.Show(sender, "RootDialog");
-            }
-
+                LibrariesDialog.Session = args.Session;
+            });
         }
 
-        public async void ShowChangelog(object sender = null)
+        public async Task ShowChangelogDialog()
         {
-            DialogHost.CloseDialogCommand.Execute(null, null);
             var ChangelogDialog = new ChangelogDialog(ActualHeight, ActualWidth);
-            await DialogHost.Show(ChangelogDialog, "RootDialog");
-
-            if (sender != null)
+            await DialogHost.Show(ChangelogDialog, "RootDialog", delegate (object o, DialogOpenedEventArgs args)
             {
-                await DialogHost.Show(sender, "RootDialog");
-            }
+                ChangelogDialog.Session = args.Session;
+            });
+        }
+        public void ShowErrorDialog(string message)
+        {
+            ErrorDialog errorDialog = new ErrorDialog(message);
+            DialogHost.Show(errorDialog, "RootDialog", delegate (object o, DialogOpenedEventArgs args)
+            {
+                errorDialog.Session = args.Session;
+            });
         }
 
         private async void CheckNewVersion()
@@ -991,7 +1031,7 @@ namespace PhotoApp
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            FindAllFiles();
+            //Task.Run(() => FindAllFiles());
         }
 
         private void btnFilesAction_Click(object sender, RoutedEventArgs e)
@@ -1003,7 +1043,7 @@ namespace PhotoApp
                 status == Device.DEVICE_FILES_READY)
             {
                 DeviceList.SelectedDevice.FileSearchStatus = Device.DEVICE_FILES_WAITING;
-                FindAllFiles(DeviceList.SelectedDevice.ID);
+                Task.Run(() => FindAllFiles(DeviceList.SelectedDevice.ID));
             }
             else if (status == Device.DEVICE_FILES_WAITING ||
                      status == Device.DEVICE_FILES_SEARCHING)

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MaterialDesignThemes.Wpf;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -21,6 +22,7 @@ namespace PhotoApp.Dialogs
     /// </summary>
     public partial class UsedLibraries : UserControl
     {
+        public DialogSession Session { private get; set; }
         public UsedLibraries()
         {
             InitializeComponent();
@@ -54,6 +56,11 @@ namespace PhotoApp.Dialogs
         private void btnMediaDevices_Click(object sender, RoutedEventArgs e)
         {
             Process.Start("https://github.com/Bassman2/MediaDevices");
+        }
+
+        private void btnOK_Click(object sender, RoutedEventArgs e)
+        {
+            Session?.Close();
         }
     }
 }

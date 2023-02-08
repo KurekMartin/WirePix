@@ -213,6 +213,7 @@
     </Compile>
     <Compile Include="FileType.cs" />
     <Compile Include="DeviceFileInfo.cs" />
+    <Compile Include="Models\DialogResult.cs" />
     <Compile Include="Models\FileTypeSelection.cs" />
     <Compile Include="Properties\Languages.Designer.cs">
       <AutoGen>True</AutoGen>

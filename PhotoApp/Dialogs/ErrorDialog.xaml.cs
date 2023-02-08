@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using MaterialDesignThemes.Wpf;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace PhotoApp.Dialogs
@@ -8,17 +9,16 @@ namespace PhotoApp.Dialogs
     /// </summary>
     public partial class ErrorDialog : UserControl
     {
-        private MainWindow mainWindow;
-        public ErrorDialog(MainWindow window, string msg)
+public DialogSession Session { private get; set; }
+        public ErrorDialog(string msg)
         {
             InitializeComponent();
-            mainWindow = window;
             lblMessage.Text = msg;
         }
 
         private void btnOK_Click(object sender, RoutedEventArgs e)
         {
-            mainWindow.DialogClose(this, null);
+            Session?.Close();
         }
     }
 }

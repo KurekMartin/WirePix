@@ -8,12 +8,14 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.IO;
 using static PhotoApp.Dialogs.BaseStructDialog;
+using MaterialDesignThemes.Wpf;
+using PhotoApp.Models;
 
 namespace PhotoApp.Dialogs
 {
     public partial class FileStructDialog : UserControl, INotifyPropertyChanged
     {
-        private MainWindow mainWindow;
+        public DialogSession Session {private get; set; }
         private ObservableCollection<string> _fileStructure = new ObservableCollection<string>(); //struktura souboru
         private List<ButtonGroupStruct> _buttons = new List<ButtonGroupStruct>();
         private Point _buttonGridSize = new Point();
@@ -48,11 +50,10 @@ namespace PhotoApp.Dialogs
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        public FileStructDialog(MainWindow window, List<ButtonGroupStruct> buttons, List<string> initStructure = null)
+        public FileStructDialog(List<ButtonGroupStruct> buttons, List<string> initStructure = null)
         {
             DataContext = this;
             InitializeComponent();
-            mainWindow = window;
 
             ButtonGridSize = new Point(buttons.Max(x => x.gridPosition.X) + 1,
                                        buttons.Max(x => x.gridPosition.Y) + 1);
@@ -209,7 +210,8 @@ namespace PhotoApp.Dialogs
         {
             if (ValidCustomText(tbCustomText))
             {
-                mainWindow.DialogClose(this, FileStructure.ToList(), MainWindow.RESULT_OK);
+                var result = FileStructure.ToList();
+                Session?.Close(new DialogResultWithData(result, DialogResultWithData.RESULT_OK));
             }
             else
             {
@@ -219,7 +221,7 @@ namespace PhotoApp.Dialogs
         }
         private void btnCancel_Click(object sender, RoutedEventArgs e)
         {
-            mainWindow.DialogClose(this, resultCode: MainWindow.RESULT_CANCEL);
+            Session?.Close(new DialogResultWithData(null, DialogResultWithData.RESULT_CANCEL));
         }
     }
 }

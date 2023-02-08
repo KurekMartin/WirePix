@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MaterialDesignThemes.Wpf;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
@@ -12,14 +13,13 @@ namespace PhotoApp.Dialogs
     /// </summary>
     public partial class AppSettingsDialog : UserControl
     {
-        private MainWindow mainWindow;
+        public DialogSession Session { private get; set; }
         private List<Tuple<string, string>> languages = new List<Tuple<string, string>>();
         private string origLanguage;
-        public AppSettingsDialog(MainWindow window)
+        public AppSettingsDialog()
         {
             DataContext = Properties.Settings.Default;
             InitializeComponent();
-            mainWindow = window;
             languages = App.GetAvailableLanguages();
             cbLanguages.ItemsSource = cbTagLanguages.ItemsSource = languages.ConvertAll(x => x.Item2);
             cbLanguages.SelectedIndex = cbLanguages.Items.IndexOf(languages.Find(x => x.Item1 == Properties.Settings.Default.Language).Item2);
@@ -34,7 +34,7 @@ namespace PhotoApp.Dialogs
         }
         private void btnOK_Click(object sender, RoutedEventArgs e)
         {
-            mainWindow.DialogClose(this, null);
+            Session?.Close();
         }
 
         private void cbCheckNewVersion_Checked(object sender, RoutedEventArgs e)
