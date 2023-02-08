@@ -387,7 +387,7 @@ namespace PhotoApp
                         OnPropertyChanged(nameof(DeviceFileInfo));
                     });
 
-                    var dirs = currentFolder.EnumerateDirectories().Where(d => !d.Name.StartsWith("."));
+                    var dirs = await Task.FromResult(currentFolder.EnumerateDirectories().Where(d => !d.Name.StartsWith(".")));
 
                     foreach (var dir in dirs)
                     {
