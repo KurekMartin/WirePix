@@ -40,24 +40,27 @@ namespace PhotoApp
             _device = device;
         }
 
-        public void AddFiles(IEnumerable<MediaFileInfo> mediaFiles)
+        public async Task AddFiles(IEnumerable<MediaFileInfo> mediaFiles)
         {
-            try
+            await Task.Run(() =>
             {
-                foreach (var file in mediaFiles)
+                try
                 {
-                    if (!_cancelOperation)
+                    foreach (var file in mediaFiles)
                     {
+                        if (!_cancelOperation)
+                        {
+                            _allFilesInfo.Add(new BaseFileInfo(file.PersistentUniqueId, file.FullName));
+                        }
 
-                        _allFilesInfo.Add(new BaseFileInfo(file.PersistentUniqueId, file.FullName));
                     }
 
                 }
-            }
-            catch (Exception ex)
-            {
-                _cancelOperation = true;
-            }
+                catch (Exception ex)
+                {
+                    _cancelOperation = true;
+                }
+            });
             _isUpdated = false;
         }
 

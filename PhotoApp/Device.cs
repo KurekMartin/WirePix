@@ -360,7 +360,7 @@ namespace PhotoApp
                 {
                     if (cancelRequest) { break; }
                     MediaDirectoryInfo dirInfo = _device.GetDirectoryInfo(mediaDir);
-                    await Task.Run(() => GetAllFilesRecursive(dirInfo));
+                    await GetAllFilesRecursive(dirInfo);
                 }
             }
             catch (Exception ex)
@@ -370,7 +370,7 @@ namespace PhotoApp
             return true;
         }
 
-        private void GetAllFilesRecursive(MediaDirectoryInfo directoryInfo)
+        private async Task GetAllFilesRecursive(MediaDirectoryInfo directoryInfo)
         {
             var folders = new Stack<MediaDirectoryInfo>();
             folders.Push(directoryInfo);
@@ -380,7 +380,7 @@ namespace PhotoApp
                 try
                 {
                     var currentFolder = folders.Pop();
-                    DeviceFileInfo.AddFiles(currentFolder.EnumerateFiles());
+                    await DeviceFileInfo.AddFiles(currentFolder.EnumerateFiles());
 
                     Application.Current.Dispatcher.Invoke(() =>
                     {

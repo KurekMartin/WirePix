@@ -58,8 +58,6 @@ namespace PhotoApp
         public const int RESULT_CANCEL = 0;
         public const int RESULT_OK = 1;
 
-        private const int REQUEST_PROFILE_DELETE = 10;
-
         private Border normalBorder = new Border();
         Border errorBorder = new Border();
         public Style mainTextStyle { get; private set; }
@@ -120,7 +118,6 @@ namespace PhotoApp
             {
                 await ShowChangelogDialog();
             }
-            await ShowChangelogDialog();
         }
 
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)
@@ -164,16 +161,8 @@ namespace PhotoApp
             ListBoxDevices.SelectedIndex = DeviceList.UpdateDevices(DeviceList.SelectedDevice?.ID);
             if (IsLoaded)
             {
-                Task.Run(() => FindAllFiles());
+                FindAllFiles();
             }
-        }
-
-        private void Device_FileSearchFinished(object sender, EventArgs e)
-        {
-            //if (DeviceList.Devices.Any(d => d.FileSearchStatus == Device.DEVICE_FILES_WAITING || d.FileSearchStatus == Device.DEVICE_FILES_NOT_SEARCHED))
-            //{
-            //    FindAllFiles();
-            //}
         }
 
         private void GetProfiles(string SelectProfile = "")
@@ -773,7 +762,7 @@ namespace PhotoApp
             {
                 saveDialog.Session = args.Session;
             });
-            if(result.ResultCode == DialogResultWithData.RESULT_OK)
+            if (result.ResultCode == DialogResultWithData.RESULT_OK)
             {
                 SaveOptions options = (SaveOptions)result.Data;
                 DownloadSettings.Save(options);
@@ -1031,7 +1020,7 @@ namespace PhotoApp
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            //Task.Run(() => FindAllFiles());
+            FindAllFiles();
         }
 
         private void btnFilesAction_Click(object sender, RoutedEventArgs e)
@@ -1043,7 +1032,7 @@ namespace PhotoApp
                 status == Device.DEVICE_FILES_READY)
             {
                 DeviceList.SelectedDevice.FileSearchStatus = Device.DEVICE_FILES_WAITING;
-                Task.Run(() => FindAllFiles(DeviceList.SelectedDevice.ID));
+                FindAllFiles(DeviceList.SelectedDevice.ID);
             }
             else if (status == Device.DEVICE_FILES_WAITING ||
                      status == Device.DEVICE_FILES_SEARCHING)
