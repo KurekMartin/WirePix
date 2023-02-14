@@ -584,18 +584,18 @@
                                                     <materialDesign:PopupBox.ToggleContent>
                                                         <materialDesign:PackIcon Kind="Edit"/>
                                                     </materialDesign:PopupBox.ToggleContent>
-                                                    <dialogs:FileTypeSelectionDialog FileTypeSelection="{Binding DownloadSettings.FileTypeSelection, Mode=TwoWay}"/>
+                                                    <dialogs:FileTypeSelectionDialog FileTypeSelection="{Binding DeviceList.SelectedDevice.FileTypeSelection, Mode=TwoWay}"/>
                                                 </materialDesign:PopupBox>
                                             </DockPanel>
                                             <TextBlock Style="{StaticResource MaterialDesignBody2TextBlock}"
-                                                       Text="{Binding DownloadSettings.FileTypeSelection.FileTypes,Converter={StaticResource ListToString},ConverterParameter=', ',UpdateSourceTrigger=PropertyChanged}"
+                                                       Text="{Binding DeviceList.SelectedDevice.FileTypeSelection.FileTypes,Converter={StaticResource ListToString},ConverterParameter=', ',UpdateSourceTrigger=PropertyChanged}"
                                                        Visibility="{Binding ElementName=cbFileTypeSelection, Path=IsChecked,Converter={StaticResource BoolToVisConverter},UpdateSourceTrigger=PropertyChanged}"
                                                        VerticalAlignment="Top"
                                                        HorizontalAlignment="Left"
                                                        Margin="10,0"
                                                        TextWrapping="Wrap"
                                                        MaxWidth="200"
-                                                       d:Text="JPG, CR2, RAW, PNG, TIFF , CR3, NEF, DNG"/>
+                                                       d:Text="JPG, CR2, RAW, PNG, TIFF, CR3, NEF, DNG"/>
                                         </StackPanel>
                                     </StackPanel>
                                 </StackPanel>

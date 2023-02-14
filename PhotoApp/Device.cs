@@ -50,6 +50,7 @@ namespace PhotoApp
         public int FilesToCopyCount { get; private set; } = 0;
         private double sizeToProcess;
         private DownloadSettings _lastSettings;
+        public FileTypeSelection FileTypeSelection { get; set; } = new FileTypeSelection();
 
         private bool fileCheckDone = false;
         private bool searchingFiles = false;
