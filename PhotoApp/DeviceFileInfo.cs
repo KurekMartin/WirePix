@@ -17,13 +17,17 @@ namespace PhotoApp
     {
         public struct BaseFileInfo
         {
-            public BaseFileInfo(string PersistentUniqueId, string fullPath)
+            public BaseFileInfo(string persistentUniqueId, string fullPath, DateTime creationTime, ulong size)
             {
-                this.PersistentUniqueId = PersistentUniqueId;
-                this.FullPath = fullPath;
+                PersistentUniqueId = persistentUniqueId;
+                FullPath = fullPath;
+                CreationTime= creationTime;
+                Size = size;
             }
             public string PersistentUniqueId;
             public string FullPath;
+            public DateTime CreationTime;
+            public ulong Size;
         }
         private readonly MediaDevice _device;
         private List<BaseFileInfo> _allFilesInfo = new List<BaseFileInfo>();
@@ -50,9 +54,8 @@ namespace PhotoApp
                     {
                         if (!_cancelOperation)
                         {
-                            _allFilesInfo.Add(new BaseFileInfo(file.PersistentUniqueId, file.FullName));
+                            _allFilesInfo.Add(new BaseFileInfo(file.PersistentUniqueId, file.FullName, (DateTime)file.CreationTime, file.Length));
                         }
-
                     }
 
                 }
