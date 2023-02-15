@@ -21,7 +21,7 @@ namespace PhotoApp
             {
                 PersistentUniqueId = persistentUniqueId;
                 FullPath = fullPath;
-                CreationTime= creationTime;
+                CreationTime = creationTime;
                 Size = size;
             }
             public string PersistentUniqueId;
@@ -44,8 +44,9 @@ namespace PhotoApp
             _device = device;
         }
 
-        public async Task AddFiles(IEnumerable<MediaFileInfo> mediaFiles)
+        public async Task<int> AddFiles(IEnumerable<MediaFileInfo> mediaFiles)
         {
+            int count = 0;
             await Task.Run(() =>
             {
                 try
@@ -55,6 +56,7 @@ namespace PhotoApp
                         if (!_cancelOperation)
                         {
                             _allFilesInfo.Add(new BaseFileInfo(file.PersistentUniqueId, file.FullName, (DateTime)file.CreationTime, file.Length));
+                            count++;
                         }
                     }
 
@@ -65,6 +67,7 @@ namespace PhotoApp
                 }
             });
             _isUpdated = false;
+            return count;
         }
 
         public void CancelOperation()
@@ -135,16 +138,32 @@ namespace PhotoApp
             }
         }
 
-        public IEnumerable<BaseFileInfo> FilterByType(FileTypeSelection selection)
+        public IEnumerable<BaseFileInfo> FilterByType(FileTypeSelection selection, IEnumerable<BaseFileInfo> fileList = null)
         {
+            IEnumerable<BaseFileInfo> files = _allFilesInfo;
+            if (fileList != null)
+            {
+                files = fileList;
+            }
+
             if (selection.Mode == ListMode.whitelist)
             {
-                return _allFilesInfo.Where(f => selection.FileTypes.Contains(Path.GetExtension(f.FullPath).TrimStart('.').ToUpper()));
+                return files.Where(f => selection.FileTypes.Contains(Path.GetExtension(f.FullPath).TrimStart('.').ToUpper()));
             }
             else
             {
-                return _allFilesInfo.Where(f => !selection.FileTypes.Contains(Path.GetExtension(f.FullPath).TrimStart('.').ToUpper()));
+                return files.Where(f => !selection.FileTypes.Contains(Path.GetExtension(f.FullPath).TrimStart('.').ToUpper()));
             }
+        }
+        public IEnumerable<BaseFileInfo> FilterByDate(IEnumerable<BaseFileInfo> fileList = null)
+        {
+            IEnumerable<BaseFileInfo> files = _allFilesInfo;
+            if (fileList != null)
+            {
+                files = fileList;
+            }
+            DateRange dateRange = MainWindow.DownloadSettings.Date;
+            return files.Where(f=>f.CreationTime.Date >= dateRange.Start.Date && f.CreationTime.Date <= dateRange.End.Date )
         }
     }
 }

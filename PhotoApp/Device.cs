@@ -15,6 +15,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
+using static PhotoApp.DeviceFileInfo;
 
 namespace PhotoApp
 {
@@ -233,12 +234,12 @@ namespace PhotoApp
         {
             get
             {
-                _device.Connect();
-                int c = filesToCopy.Count();
-                Disconnect();
-                return c;
+                var files = DeviceFileInfo.FilterByType(FileTypeSelection);
+                files = DeviceFileInfo.FilterByDate(fileList: files);
+                return files.Count();//add notification OnPropertyChanged
             }
         }
+
 
         //hledani DCIM
         public List<string> MediaDirectories
@@ -381,12 +382,15 @@ namespace PhotoApp
                 try
                 {
                     var currentFolder = folders.Pop();
-                    await DeviceFileInfo.AddFiles(currentFolder.EnumerateFiles());
+                    var count = await DeviceFileInfo.AddFiles(currentFolder.EnumerateFiles());
 
-                    Application.Current.Dispatcher.Invoke(() =>
+                    if (count > 0)
                     {
-                        OnPropertyChanged(nameof(DeviceFileInfo));
-                    });
+                        Application.Current.Dispatcher.Invoke(() =>
+                        {
+                            OnPropertyChanged(nameof(DeviceFileInfo));
+                        });
+                    }
 
                     var dirs = await Task.FromResult(currentFolder.EnumerateDirectories().Where(d => !d.Name.StartsWith(".")));
 
