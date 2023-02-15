@@ -31,8 +31,6 @@ namespace PhotoApp.Dialogs
             List<string> types = FileTypeSelection.FileTypes.ToList();
             for (int i = 0; i < icItemsGrid.Items.Count; i++)
             {
-                //get text
-                //if text in types -> select
                 ContentPresenter item = icItemsGrid.ItemContainerGenerator.ContainerFromIndex(i) as ContentPresenter;
                 if (item != null)
                 {
