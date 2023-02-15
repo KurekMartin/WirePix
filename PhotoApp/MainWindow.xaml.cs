@@ -40,7 +40,7 @@ namespace PhotoApp
         private readonly string logFolder = Application.Current.Resources[Properties.Keys.LogsFolder].ToString();
         private static readonly string tmpFolder = Application.Current.Resources[Properties.Keys.TempFolder].ToString();
 
-        public DownloadSettings DownloadSettings { get; set; }
+        public static DownloadSettings DownloadSettings { get; set; }
         public List<string> Profiles { get; set; }
 
         public DeviceList DeviceList { get; set; }
