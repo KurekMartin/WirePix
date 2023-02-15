@@ -145,15 +145,18 @@ namespace PhotoApp
             {
                 files = fileList;
             }
-
-            if (selection.Mode == ListMode.whitelist)
+            if (MainWindow.DownloadSettings.FileTypeSelectMode == FileTypeSelectMode.selection)                
             {
-                return files.Where(f => selection.FileTypes.Contains(Path.GetExtension(f.FullPath).TrimStart('.').ToUpper()));
+                if (selection.Mode == ListMode.whitelist)
+                {
+                    return files.Where(f => selection.FileTypes.Contains(Path.GetExtension(f.FullPath).TrimStart('.').ToUpper()));
+                }
+                else
+                {
+                    return files.Where(f => !selection.FileTypes.Contains(Path.GetExtension(f.FullPath).TrimStart('.').ToUpper()));
+                }
             }
-            else
-            {
-                return files.Where(f => !selection.FileTypes.Contains(Path.GetExtension(f.FullPath).TrimStart('.').ToUpper()));
-            }
+            return files;
         }
         public IEnumerable<BaseFileInfo> FilterByDate(IEnumerable<BaseFileInfo> fileList = null)
         {
@@ -162,8 +165,14 @@ namespace PhotoApp
             {
                 files = fileList;
             }
-            DateRange dateRange = MainWindow.DownloadSettings.Date;
-            return files.Where(f=>f.CreationTime.Date >= dateRange.Start.Date && f.CreationTime.Date <= dateRange.End.Date )
+
+            if (MainWindow.DownloadSettings.DownloadSelect == DownloadSelect.dateRange)
+            {
+                DateRange dateRange = MainWindow.DownloadSettings.Date;
+                return files.Where(f => f.CreationTime.Date >= dateRange.Start.Date && f.CreationTime.Date <= dateRange.End.Date);
+            }
+            
+            return files;
         }
     }
 }

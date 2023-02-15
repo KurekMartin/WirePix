@@ -685,10 +685,10 @@ namespace PhotoApp
         private void dpDate_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
         {
             DatePicker dp = sender as DatePicker;
-            if (dp.SelectedDate == null)
-            {
-                dp.SelectedDate = DateTime.Now;
-            }
+            //if (dp.SelectedDate == null)
+            //{
+            //    dp.SelectedDate = DateTime.Now;
+            //}
 
             if (DownloadSettings.Date.Start > DownloadSettings.Date.End)
             {

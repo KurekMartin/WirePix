@@ -681,6 +681,10 @@
                                     <TextBlock x:Name="lblResult" HorizontalAlignment="Left" Margin="10" VerticalAlignment="Top" Height="Auto" Width="Auto" Style="{StaticResource MaterialDesignBody2TextBlock}"
                                                Visibility="Collapsed"
                                                d:Text="Result label"/>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="Files to download:"/>
+                                        <TextBlock Text="{Binding DeviceList.SelectedDevice.FilesToDownloadCount}"/>
+                                    </StackPanel>
                                     <Button x:Name="btnShowLog" Content="{x:Static p:Resources.ShowLog}" Margin="10,10" Visibility="Collapsed" Click="btnShowLog_Click"
                                             d:Visibility="Visible"/>
 

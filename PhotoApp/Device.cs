@@ -86,6 +86,35 @@ namespace PhotoApp
         {
             _device = mediaDevice;
             DeviceFileInfo = new DeviceFileInfo(mediaDevice);
+            MainWindow.DownloadSettings.Date.PropertyChanged += DateRange_PropertyChanged;
+            MainWindow.DownloadSettings.PropertyChanged += DownloadSettings_PropertyChanged;
+            FileTypeSelection.FileTypes.CollectionChanged += FileTypes_CollectionChanged;
+            DeviceFileInfo.PropertyChanged += DeviceFileInfo_PropertyChanged;
+        }
+
+        private void DownloadSettings_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            string property = e.PropertyName;
+            if (property == nameof(DownloadSettings.DownloadSelect) ||
+                property == nameof(DownloadSettings.FileTypeSelectMode))
+            {
+                OnPropertyChanged(nameof(FilesToDownloadCount));
+            }
+        }
+
+        private void DeviceFileInfo_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            OnPropertyChanged(nameof(FilesToDownloadCount));
+        }
+
+        private void FileTypes_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            OnPropertyChanged(nameof(FilesToDownloadCount));
+        }
+
+        private void DateRange_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            OnPropertyChanged(nameof(FilesToDownloadCount));
         }
 
         public string ID
@@ -236,7 +265,7 @@ namespace PhotoApp
             {
                 var files = DeviceFileInfo.FilterByType(FileTypeSelection);
                 files = DeviceFileInfo.FilterByDate(fileList: files);
-                return files.Count();//add notification OnPropertyChanged
+                return files.Count();
             }
         }
 
@@ -389,6 +418,7 @@ namespace PhotoApp
                         Application.Current.Dispatcher.Invoke(() =>
                         {
                             OnPropertyChanged(nameof(DeviceFileInfo));
+                            OnPropertyChanged(nameof(FilesToDownloadCount));
                         });
                     }
 
