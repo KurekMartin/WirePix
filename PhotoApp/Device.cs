@@ -287,7 +287,7 @@ namespace PhotoApp
         {
             get
             {
-                if (_mediaDirList == null)
+                if (_mediaDirList == null || _mediaDirList.Count == 0)
                 {
                     _device.Connect();
                     var drives = _device.GetDrives();
@@ -301,6 +301,10 @@ namespace PhotoApp
                         }
                     }
                     Disconnect();
+                    if(_mediaDirList.Count > 0)
+                    {
+                        OnPropertyChanged(nameof(MediaDirectories));
+                    }                    
                 }
                 return _mediaDirList.Select(dir => { return dir.FullName; }).ToList();
             }
