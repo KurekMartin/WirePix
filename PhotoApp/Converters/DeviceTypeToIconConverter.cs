@@ -1,11 +1,7 @@
 ﻿using MaterialDesignThemes.Wpf;
 using MediaDevices;
 using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Data;
 
 namespace PhotoApp.Converters
@@ -21,6 +17,7 @@ namespace PhotoApp.Converters
                 case DeviceType.Video:
                     return PackIconKind.Camera;
                 case DeviceType.Phone:
+                case DeviceType.MediaPlayer:
                     return PackIconKind.Cellphone;
                 default:
                     return PackIconKind.Help;
