@@ -685,6 +685,10 @@
                                         <TextBlock Text="Files to download:"/>
                                         <TextBlock Text="{Binding DeviceList.SelectedDevice.FilesToDownloadCount}"/>
                                     </StackPanel>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="Estimated date:"/>
+                                        <TextBlock Text="{Binding DeviceList.SelectedDevice.DeviceFileInfo.EstimateDateNum}"/>
+                                    </StackPanel>
                                     <Button x:Name="btnShowLog" Content="{x:Static p:Resources.ShowLog}" Margin="10,10" Visibility="Collapsed" Click="btnShowLog_Click"
                                             d:Visibility="Visible"/>
 

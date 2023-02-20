@@ -38,6 +38,8 @@ namespace PhotoApp
 
         private bool _cancelOperation = false;
         private bool _isUpdated = false;
+        private int _estimateDateNum = 0;
+
 
         public DeviceFileInfo(MediaDevice device)
         {
@@ -55,7 +57,10 @@ namespace PhotoApp
                     {
                         if (!_cancelOperation)
                         {
-                            _allFilesInfo.Add(new BaseFileInfo(file.PersistentUniqueId, file.FullName, (DateTime)file.CreationTime, file.Length));
+                            var dateInfo = FileExif.GetCreationDateTime(_device, file.PersistentUniqueId);
+                            if (!dateInfo.isExact) { EstimateDateNum++; }
+                            BaseFileInfo fileInfo = new BaseFileInfo(file.PersistentUniqueId, file.FullName, dateInfo.date, file.Length);
+                            _allFilesInfo.Add(fileInfo);
                             count++;
                         }
                     }
@@ -80,6 +85,19 @@ namespace PhotoApp
             get
             {
                 return _allFilesInfo.Count;
+            }
+        }
+
+        public int EstimateDateNum
+        {
+            get => _estimateDateNum;
+            private set
+            {
+                if (value != _estimateDateNum)
+                {
+                    _estimateDateNum = value;
+                    OnPropertyChanged();
+                }
             }
         }
 
