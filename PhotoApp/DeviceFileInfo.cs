@@ -203,9 +203,18 @@ namespace PhotoApp
             if (MainWindow.DownloadSettings.DownloadSelect == DownloadSelect.dateRange)
             {
                 DateRange dateRange = MainWindow.DownloadSettings.Date;
-                return files.Where(f => f.CreationTime.Date >= dateRange.Start.Date && f.CreationTime.Date <= dateRange.End.Date);
+                return files.Where(f =>
+                {
+                    if (f.CreationTime.Date == DateTime.MinValue)
+                    {
+                        return f.CreationTime.Date >= dateRange.Start.Date && f.CreationTime.Date <= dateRange.End.Date;
+                    }
+                    else
+                    {
+                        return f.LastWriteTime.Date >= dateRange.Start.Date && f.CreationTime.Date <= dateRange.End.Date;
+                    }
+                });
             }
-
             return files;
         }
     }
