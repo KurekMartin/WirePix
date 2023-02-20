@@ -32,35 +32,6 @@ namespace PhotoApp
             return dt;
         }
 
-        public static (DateTime date, bool isExact) GetCreationDateTime(MediaDevice device, string fileID)
-        {
-            bool isExact = false;
-            bool isConnected = device.IsConnected;
-            if (!isConnected) { device.Connect(); }
-            MediaFileSystemInfo file = device.GetFileSystemInfoFromPersistentUniqueId(fileID);
-            DateTime? dt = file.DateAuthored;
-            if (dt != null && dt != DateTime.MinValue)
-            {
-                isExact= true;
-            }
-            else
-            {
-                dt = file.CreationTime;
-                if (dt == null || dt == DateTime.MinValue)
-                {
-                    dt = file.LastWriteTime;
-                }
-                if (dt == null || dt == DateTime.MinValue)
-                {
-                    dt = new DateTime();
-                }
-            }
-
-            if (!isConnected) { device.Disconnect(); }
-
-            return ((DateTime)dt,isExact);
-        }
-
         public static string GetManufacturer(string path)
         {
             string manufacturer = string.Empty;

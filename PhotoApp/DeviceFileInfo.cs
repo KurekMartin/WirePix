@@ -2,6 +2,7 @@
 using PhotoApp.Models;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -17,33 +18,52 @@ namespace PhotoApp
     {
         public struct BaseFileInfo
         {
-            public BaseFileInfo(string persistentUniqueId, string fullPath, DateTime creationTime, ulong size)
+            public BaseFileInfo(string persistentUniqueId, string fullPath, DateTime creationTime, DateTime lastWriteTime, ulong size)
             {
                 PersistentUniqueId = persistentUniqueId;
                 FullPath = fullPath;
                 CreationTime = creationTime;
+                LastWriteTime = lastWriteTime;
                 Size = size;
             }
             public string PersistentUniqueId;
             public string FullPath;
             public DateTime CreationTime;
+            public DateTime LastWriteTime;
             public ulong Size;
         }
         private readonly MediaDevice _device;
-        private List<BaseFileInfo> _allFilesInfo = new List<BaseFileInfo>();
-        private List<string> _allFileTypes = new List<string>();
+        private ObservableCollection<BaseFileInfo> _allFilesInfo = new ObservableCollection<BaseFileInfo>();
+        private ObservableCollection<string> _allFileTypes = new ObservableCollection<string>();
         private IEnumerable<string> _images;
         private IEnumerable<string> _videos;
         private IEnumerable<string> _others;
 
         private bool _cancelOperation = false;
-        private bool _isUpdated = false;
-        private int _estimateDateNum = 0;
 
 
         public DeviceFileInfo(MediaDevice device)
         {
             _device = device;
+            _allFilesInfo.CollectionChanged += AllFilesInfo_CollectionChanged;
+            _allFileTypes.CollectionChanged += AllFileTypes_CollectionChanged;
+        }
+
+        private void AllFileTypes_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                OnPropertyChanged(nameof(AllFileTypes));
+            });
+        }
+
+        private void AllFilesInfo_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                OnPropertyChanged(nameof(AllFilesCount));
+                OnPropertyChanged(nameof(EstimateDateNum));
+            });
         }
 
         public async Task<int> AddFiles(IEnumerable<MediaFileInfo> mediaFiles)
@@ -57,10 +77,20 @@ namespace PhotoApp
                     {
                         if (!_cancelOperation)
                         {
-                            var dateInfo = FileExif.GetCreationDateTime(_device, file.PersistentUniqueId);
-                            if (!dateInfo.isExact) { EstimateDateNum++; }
-                            BaseFileInfo fileInfo = new BaseFileInfo(file.PersistentUniqueId, file.FullName, dateInfo.date, file.Length);
+                            BaseFileInfo fileInfo = new BaseFileInfo(
+                                file.PersistentUniqueId,
+                                file.FullName,
+                                (DateTime)file.DateAuthored,
+                                (DateTime)file.LastWriteTime,
+                                file.Length);
                             _allFilesInfo.Add(fileInfo);
+
+                            string extenstion = Path.GetExtension(file.Name).ToUpper().TrimStart('.');
+                            if (!AllFileTypes.Contains(extenstion))
+                            {
+                                int index = AllFileTypes.ToList().FindLastIndex(e => string.Compare(e, extenstion) < 0);
+                                AllFileTypes.Insert(index + 1, extenstion);
+                            }
                             count++;
                         }
                     }
@@ -71,7 +101,6 @@ namespace PhotoApp
                     _cancelOperation = true;
                 }
             });
-            _isUpdated = false;
             return count;
         }
 
@@ -90,33 +119,20 @@ namespace PhotoApp
 
         public int EstimateDateNum
         {
-            get => _estimateDateNum;
-            private set
+            get
             {
-                if (value != _estimateDateNum)
-                {
-                    _estimateDateNum = value;
-                    OnPropertyChanged();
-                }
+                return _allFilesInfo.Where(f => f.CreationTime != DateTime.MinValue).Count();
             }
         }
 
-        public List<string> AllFileTypes
+        public ObservableCollection<string> AllFileTypes
         {
-            get
-            {
-                if (AllFilesCount > 0 && !_isUpdated)
-                {
-                    AllFileTypes = _allFilesInfo.Select(f => Path.GetExtension(f.FullPath).ToUpper().TrimStart('.')).Distinct().OrderBy(f => f).ToList();
-                }
-                return _allFileTypes;
-            }
+            get => _allFileTypes;
             private set
             {
                 if (_allFileTypes != value)
                 {
                     _allFileTypes = value;
-                    _isUpdated = true;
                     OnPropertyChanged();
                 }
             }
@@ -163,7 +179,7 @@ namespace PhotoApp
             {
                 files = fileList;
             }
-            if (MainWindow.DownloadSettings.FileTypeSelectMode == FileTypeSelectMode.selection)                
+            if (MainWindow.DownloadSettings.FileTypeSelectMode == FileTypeSelectMode.selection)
             {
                 if (selection.Mode == ListMode.whitelist)
                 {
@@ -189,7 +205,7 @@ namespace PhotoApp
                 DateRange dateRange = MainWindow.DownloadSettings.Date;
                 return files.Where(f => f.CreationTime.Date >= dateRange.Start.Date && f.CreationTime.Date <= dateRange.End.Date);
             }
-            
+
             return files;
         }
     }
