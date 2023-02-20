@@ -162,6 +162,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Converters\DeviceTypeToIconConverter.cs" />
     <Compile Include="Converters\EqualityConverter.cs" />
     <Compile Include="Converters\FileSearchStatusToButtonIconConverter.cs" />
     <Compile Include="Converters\FileSearchStatusToListIconConverter.cs" />

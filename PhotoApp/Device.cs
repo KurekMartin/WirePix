@@ -164,6 +164,18 @@ namespace PhotoApp
             }
         }
 
+        public DeviceType DeviceType
+        {
+            get
+            {
+                bool connected = _device.IsConnected;
+                if (!connected) { _device.Connect(); }
+                DeviceType type = _device.DeviceType;
+                if(!connected) { _device.Disconnect(); }
+                return type;
+            }
+        }
+
         public int FileSearchStatus
         {
             get { return _fileSearchStatus; }

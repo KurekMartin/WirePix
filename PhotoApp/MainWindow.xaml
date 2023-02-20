@@ -32,6 +32,7 @@
         <converters:FileSearchStatusToButtonIconConverter x:Key="FileSearchStatusToButtonIcon"/>
         <converters:FileSearchStatusToToolTipConverter x:Key="FileSearchStatusToToolTip"/>
         <converters:FileSearchStatusToListIconConverter x:Key="FileSearchStatusToListIcon"/>
+        <converters:DeviceTypeToIconConverter x:Key="DeviceTypeToIcon"/>
         <CollectionViewSource x:Key="folderStructure" Source="{Binding Path=DownloadSettings.Paths.FolderTags}"/>
     </Window.Resources>
     <Grid>
@@ -111,6 +112,8 @@
                                         <ListBox.ItemTemplate>
                                             <DataTemplate>
                                                 <DockPanel>
+                                                    <materialDesign:PackIcon Kind="{Binding DeviceType, Converter={StaticResource DeviceTypeToIcon}}"
+                                                                             d:Kind ="Help"/>
                                                     <TextBlock Text="{Binding CustomName}"
                                                                VerticalAlignment="Center"
                                                                Margin="5,0"/>
