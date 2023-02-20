@@ -146,12 +146,12 @@ namespace PhotoApp
 
         private void DeviceAdded(UsbDevice device)
         {
-            Console.WriteLine(device.SerialNumber + " added");
+            Debug.WriteLine(device.SerialNumber + " added");
             ListConnectedDevices();
         }
         private void DeviceRemoved(UsbDevice device)
         {
-            Console.WriteLine(device.SerialNumber + " removed");
+            Debug.WriteLine(device.SerialNumber + " removed");
             ListConnectedDevices();
         }
 
