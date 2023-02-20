@@ -521,8 +521,8 @@
                                                    Style="{StaticResource MaterialDesignBody1TextBlock}"
                                                    FontWeight="Bold"
                                                    VerticalAlignment="Center"/>
-                                        <RadioButton Content="{x:Static p:Resources.DownloadNewFiles}" x:Name="cbNewFiles" IsChecked="{Binding DownloadSettings.DownloadSelect,Converter={StaticResource EnumToBool},ConverterParameter=lastBackup}" Margin="0,2" GroupName="rbgDate" Checked="cbNewFiles_Checked"/>
-                                        <RadioButton Content="{x:Static p:Resources.DownloadDateRange}" x:Name="cbDateRange" Margin="0,2" GroupName="rbgDate" IsChecked="{Binding DownloadSettings.DownloadSelect,Converter={StaticResource EnumToBool},ConverterParameter=dateRange}" Checked="cbDateRange_Checked"/>
+                                        <RadioButton Content="{x:Static p:Resources.DownloadNewFiles}" x:Name="cbNewFiles" IsChecked="{Binding DownloadSettings.DownloadSelect,Converter={StaticResource EnumToBool},ConverterParameter=lastBackup}" Margin="0,2" GroupName="rbgDate"/>
+                                        <RadioButton Content="{x:Static p:Resources.DownloadDateRange}" x:Name="cbDateRange" Margin="0,2" GroupName="rbgDate" IsChecked="{Binding DownloadSettings.DownloadSelect,Converter={StaticResource EnumToBool},ConverterParameter=dateRange}" />
                                         <StackPanel Orientation="Vertical" Margin="15,0" x:Name="spDate" Visibility="{Binding ElementName=cbDateRange, Path=IsChecked,Converter={StaticResource BoolToVisConverter},UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" d:Visibility="Visible">
                                             <StackPanel Orientation="Horizontal" Width="Auto" HorizontalAlignment="Left">
                                                 <FrameworkElement Visibility="Hidden" x:Name="dateElement"/>

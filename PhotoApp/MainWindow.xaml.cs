@@ -841,15 +841,6 @@ namespace PhotoApp
             ClearTemp();
         }
 
-        private void cbNewFiles_Checked(object sender, RoutedEventArgs e)
-        {
-            DownloadSettings.Date = new DateRange();
-            if (DeviceList.SelectedDevice != null)
-            {
-                DownloadSettings.Date.Start = DeviceList.SelectedDevice.LastBackup;
-            }
-        }
-
         private void tbValue_LostFocus(object sender, RoutedEventArgs e)
         {
             if (DownloadSettings.ThumbnailSettings.Value == 0)
@@ -861,16 +852,6 @@ namespace PhotoApp
         private void tbValue_GotFocus(object sender, RoutedEventArgs e)
         {
             tbThumbnailError.Visibility = Visibility.Collapsed;
-        }
-
-        private void cbDateRange_Checked(object sender, RoutedEventArgs e)
-        {
-            DownloadSettings.Date.Start = DownloadSettings.Date.Start.Date;
-            if (DownloadSettings.Date.Start.Date == new DateTime().Date)
-            {
-                DownloadSettings.Date = new DateRange();
-                OnPropertyChanged("DownloadSettings");
-            }
         }
 
         private void btnShowLog_Click(object sender, RoutedEventArgs e)

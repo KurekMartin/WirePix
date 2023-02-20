@@ -62,7 +62,6 @@ namespace PhotoApp
             Application.Current.Dispatcher.Invoke(() =>
             {
                 OnPropertyChanged(nameof(AllFilesCount));
-                OnPropertyChanged(nameof(EstimateDateNum));
             });
         }
 
@@ -205,7 +204,7 @@ namespace PhotoApp
                 DateRange dateRange = MainWindow.DownloadSettings.Date;
                 return files.Where(f =>
                 {
-                    if (f.CreationTime.Date == DateTime.MinValue)
+                    if (f.CreationTime.Date != DateTime.MinValue)
                     {
                         return f.CreationTime.Date >= dateRange.Start.Date && f.CreationTime.Date <= dateRange.End.Date;
                     }
