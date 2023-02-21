@@ -275,9 +275,17 @@ namespace PhotoApp
         {
             get
             {
+                return FilesToDownloadList.Count();
+            }
+        }
+
+        private IEnumerable<BaseFileInfo> FilesToDownloadList
+        {
+            get
+            {
                 var files = DeviceFileInfo.FilterByType(FileTypeSelection);
                 files = DeviceFileInfo.FilterByDate(fileList: files);
-                return files.Count();
+                return files;
             }
         }
 
@@ -450,149 +458,12 @@ namespace PhotoApp
             }
         }
 
-
-        //nalezeni souboru dle data
-        public void GetFilesByDate(BackgroundWorker worker, DoWorkEventArgs e, DownloadSettings settings)
-        {
-            bool _checkDateRange;
-            ProgressUpdateArgs progressArgs = new ProgressUpdateArgs
-            {
-                taskName = Properties.Resources.FileSearch,
-                indeterminateTask = true
-            };
-            worker.ReportProgress(0, progressArgs);
-
-            if (fileCheckDone && _lastSettings.Date == settings.Date)
-            {
-                e.Result = new WorkerResult(MainWindow.RESULT_OK, TaskType.FindFiles);
-                return;
-            }
-
-            fileCheckDone = false;
-            filesToCopy = Enumerable.Empty<MediaFileInfo>();
-            IEnumerable<MediaFileInfo> allFiles = Enumerable.Empty<MediaFileInfo>();
-
-
-            if (settings.Date.Start == new DateTime())
-            {
-                _checkDateRange = false;
-            }
-            else
-            {
-                settings.Date.End = settings.Date.End.AddTicks(-1).AddDays(1); // nastavení konce dne
-                _checkDateRange = true;
-            }
-
-            _device.Connect();
-
-            if (!_log.Running) { _log.Start(); }
-
-            FilesTotal = 0;
-            //hledani souboru ve vsech DCIM slozkach
-            try
-            {
-                //GetAllFiles(worker, e, progressArgs);
-                foreach (MediaDirectoryInfo dir in _mediaDirList)
-                {
-                    allFiles = allFiles.Concat(GetAllFilesList(dir.FullName));
-                }
-                if (_checkDateRange)
-                {
-                    progressArgs.taskName = Properties.Resources.DeviceFileFilterDate;
-                    worker.ReportProgress(0, progressArgs);
-
-                    filesToCopy = allFiles.Where(f => ((DateTime)f.CreationTime) >= settings.Date.Start && ((DateTime)f.CreationTime) <= settings.Date.End);
-                }
-                else
-                {
-                    filesToCopy = allFiles.ToList();
-                }
-
-                FilesToCopyCount = filesToCopy.Count();
-                sizeToProcess = filesToCopy.Sum(f => Convert.ToDouble(f.Length / 1048576));
-            }
-            catch (Exception ex)
-            {
-                var st = new StackTrace();
-                var sf = st.GetFrame(0);
-                var currentMethodName = sf.GetMethod();
-
-                _log.Add(ex.ToString(), LogType.ERROR, currentMethodName.Name);
-                _log.Stop();
-
-                FilesToCopyCount = 0;
-                sizeToProcess = 0;
-
-                e.Result = new WorkerResult(MainWindow.RESULT_ERROR, TaskType.FindFiles);
-
-                Disconnect();
-                return;
-            }
-
-            Disconnect();
-            _lastSettings = new DownloadSettings();
-            _lastSettings.Date.Start = settings.Date.Start;
-            _lastSettings.Date.End = settings.Date.End;
-            fileCheckDone = true;
-            e.Result = new WorkerResult(MainWindow.RESULT_OK, TaskType.FindFiles);
-        }
-
-
-        //rekurzivni prohledani vsech slozek v adresari
-        //vynechani slozek zacinajicich '.'
-        private IEnumerable<MediaFileInfo> GetAllFilesList(string path)
-        {
-            if (!_device.IsConnected) { _device.Connect(); }
-            IEnumerable<MediaFileInfo> files = Enumerable.Empty<MediaFileInfo>();
-            if (!_log.Running) { _log.Start(); }
-            try
-            {
-                //ziskani nazvu vsech souboru ve slozce
-                MediaDirectoryInfo dirInfo = _device.GetDirectoryInfo(path);
-                files = dirInfo.EnumerateFiles("*", SearchOption.TopDirectoryOnly);
-
-                FilesTotal += files.Count();
-
-
-                //prohledani podslozek
-                IEnumerable<string> subdirs = _device.EnumerateDirectories(path);
-                foreach (string dir in subdirs)
-                {
-                    if (!dir.ElementAt(dir.LastIndexOf('\\') + 1).Equals('.')) // vynechani slozek zacinajicich "."
-                    {
-                        var currentFiles = GetAllFilesList(dir);
-                        files = files.Concat(currentFiles);
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                var st = new StackTrace();
-                var sf = st.GetFrame(0);
-                var currentMethodName = sf.GetMethod();
-
-                Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-us");
-                _log.Add(ex.ToString(), LogType.ERROR, currentMethodName.Name);
-                _log.Stop();
-                return Enumerable.Empty<MediaFileInfo>();
-            }
-            return files;
-        }
-
         public async void CopyFiles(BackgroundWorker worker, DoWorkEventArgs e, DownloadSettings settings)
         {
             List<string> filesDone = new List<string>();
             object _lockFilesDone = new object();
 
-            if (FilesToCopyCount == 0 && _lastSettings == settings)
-            {
-                e.Result = new WorkerResult(MainWindow.RESULT_OK, TaskType.CopyFiles);
-                return;
-            }
-            else
-            {
-                GetFilesByDate(worker, e, settings);
-            }
+            IEnumerable<BaseFileInfo> filesToDownload = FilesToDownloadList;
 
             var st = new StackTrace();
             var sf = st.GetFrame(0);
