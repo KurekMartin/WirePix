@@ -14,7 +14,6 @@ using System.Security.Cryptography;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Threading;
 using static PhotoApp.DeviceFileInfo;
 
 namespace PhotoApp
@@ -44,7 +43,6 @@ namespace PhotoApp
         private readonly MediaDevice _device;
         private List<MediaDirectoryInfo> _mediaDirList;
         private double[] _space;
-        private IEnumerable<MediaFileInfo> filesToCopy;
         private DeviceFileInfo _deviceFileInfo;
         private string _customName;
 
@@ -488,13 +486,11 @@ namespace PhotoApp
 
             MainWindow.ClearTemp();
 
-            IEnumerable<MediaFileInfo> sortedFiles = filesToCopy.OrderBy(f => f.CreationTime).ThenBy(f => f.Name);
-
             var addItems = Task.Run(() =>
             {
                 _device.Connect();
                 int i = 0;
-                foreach (MediaFileInfo file in sortedFiles)
+                foreach (BaseFileInfo file in filesToDownload)
                 {
                     try
                     {
@@ -505,7 +501,7 @@ namespace PhotoApp
                         lock (_lockReport)
                         {
                             progressArgs.progressText = string.Format(Properties.Resources.DeviceFilesDoneCount, FilesDoneCount, FilesToCopyCount);
-                            progressArgs.currentTask = String.Format(Properties.Resources.DeviceDownloadingFile, file.FullName);
+                            progressArgs.currentTask = String.Format(Properties.Resources.DeviceDownloadingFile, file.FullPath);
                             worker.ReportProgress(FilesDoneCount * 100 / FilesToCopyCount, progressArgs);
                         }
 
@@ -528,14 +524,14 @@ namespace PhotoApp
                             tmpFile = Path.Combine(tmpFolder, GUID);
                             if (settings.CheckFiles)
                             {
-                                origHash = GetFileHash(file.OpenRead());
+                                origHash = GetFileHash(_device.OpenReadFromPersistentUniqueId(file.PersistentUniqueId));
                             }
 
                             for (i = 0; i < maxAttempts; i++)
                             {
                                 _device.DownloadFileFromPersistentUniqueId(file.PersistentUniqueId, tmpFile);
                                 var thread = Thread.CurrentThread;
-                                Console.WriteLine($"[{thread.ManagedThreadId}] downloaded file {file.Name}");
+                                Console.WriteLine($"[{thread.ManagedThreadId}] downloaded file {Path.GetFileName(file.FullPath)}");
 
                                 if (!settings.CheckFiles || CheckFileHash(origHash, tmpFile))
                                 {
@@ -546,7 +542,7 @@ namespace PhotoApp
                             // soubor se nepodařilo stáhnout ze zařízení -> další soubor
                             if (i == maxAttempts)
                             {
-                                string message = $"could not download file {file.FullName}";
+                                string message = $"could not download file {file.FullPath}";
                                 lock (_lockLog)
                                 {
                                     _log.Add(message, LogType.ERROR, currentMethodName.Name);
@@ -561,13 +557,14 @@ namespace PhotoApp
                                 origHash = GetFileHash(File.OpenRead(tmpFile));
                             }
 
+                            MediaFileSystemInfo fileInfo = _device.GetFileSystemInfoFromPersistentUniqueId(file.PersistentUniqueId);
                             // dosazení hodnot za tagy
-                            string folder = Tags.TagsToValues(settings.Paths.FolderTags, this, file, tmpFile);
-                            string fileName = Tags.TagsToValues(settings.Paths.FileTags, this, file, tmpFile);
-                            fileName += Path.GetExtension(file.Name);
+                            string folder = Tags.TagsToValues(settings.Paths.FolderTags, this, fileInfo, tmpFile);
+                            string fileName = Tags.TagsToValues(settings.Paths.FileTags, this, fileInfo, tmpFile);
+                            fileName += Path.GetExtension(file.FullPath);
                             string destFullName = Path.Combine(folder, fileName);
 
-                            CopyItem item = new CopyItem(tmpFile, destFullName, origHash, file.FullName); //přidat číslo (pořadí) souboru
+                            CopyItem item = new CopyItem(tmpFile, destFullName, origHash, file.FullPath); //přidat číslo (pořadí) souboru
                             filesCollection.Add(item);
 
                             i = 0;
@@ -591,7 +588,7 @@ namespace PhotoApp
                         {
                             Errors++;
                             Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-us");
-                            string message = $"File {file.FullName}\n\t{ex.ToString().Replace(Environment.NewLine, Environment.NewLine + "\t")}";
+                            string message = $"File {file.FullPath}\n\t{ex.ToString().Replace(Environment.NewLine, Environment.NewLine + "\t")}";
                             _log.Add(ex.ToString(), LogType.ERROR, currentMethodName.Name);
                             _log.Stop();
                         }
