@@ -214,6 +214,10 @@ namespace PhotoApp
                     }
                 });
             }
+            else if(MainWindow.DownloadSettings.DownloadSelect == DownloadSelect.newFiles)
+            {
+                //TODO
+            }
             return files;
         }
     }
