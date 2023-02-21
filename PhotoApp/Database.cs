@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data.SQLite;
 using System.IO;
+using System.Security.AccessControl;
 
 namespace PhotoApp
 {
@@ -11,16 +12,31 @@ namespace PhotoApp
         private static string _connectionString = @"URI=file:" + _databaseName;
         public static void Create()
         {
+            Version = 1;
             if (!File.Exists(_databaseName))
             {
                 SQLiteConnection.CreateFile(_databaseName);
             }
-            using (SQLiteConnection connection = new SQLiteConnection(_connectionString))
+            using (var connection = new SQLiteConnection(_connectionString))
             {
                 connection.Open();
                 using (SQLiteCommand cmd = new SQLiteCommand(connection))
                 {
-                    cmd.CommandText = @"CREATE TABLE IF NOT EXISTS Devices(Id INTEGER PRIMARY KEY, OrigName TEXT, CustomName TEXT, SerialNum TEXT, LastBackup TEXT)";
+                    cmd.CommandText = @"CREATE TABLE IF NOT EXISTS Devices(
+                                            Id INTEGER PRIMARY KEY,
+                                            OrigName TEXT, 
+                                            CustomName TEXT, 
+                                            SerialNum TEXT, 
+                                            LastBackup TEXT)";
+                    cmd.ExecuteNonQuery();
+
+                    cmd.CommandText = @"CREATE TABLE IF NOT EXISTS Files(
+                                            Id INTEGER PRIMARY KEY, 
+                                            Hash TEXT, 
+                                            DevicePath TEXT,
+                                            DateTaken TEXT,
+                                            LastWriteTime TEXT,
+                                            PersistentUID TEXT)";
                     cmd.ExecuteNonQuery();
                 }
             }
@@ -28,6 +44,37 @@ namespace PhotoApp
         public static void Connect()
         {
             Create();
+        }
+
+        public static long Version
+        {
+            get
+            {
+                using (var connection = new SQLiteConnection(_connectionString))
+                {
+                    connection.Open();
+                    using (SQLiteCommand cmd = new SQLiteCommand(connection))
+                    {
+                        cmd.CommandText = @"PRAGMA user_version";
+                        using (SQLiteDataReader reader = cmd.ExecuteReader())
+                        {
+                            return reader.GetInt64(0);
+                        }
+                    }
+                }
+            }
+            private set
+            {
+                using (var connection = new SQLiteConnection(_connectionString))
+                {
+                    connection.Open();
+                    using (SQLiteCommand cmd = new SQLiteCommand(connection))
+                    {
+                        cmd.CommandText = $@"PRAGMA user_version = {value}";
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+            }
         }
 
         public static bool DeviceExists(string origName, string serialNum)
@@ -69,7 +116,7 @@ namespace PhotoApp
             }
         }
 
-        public static (string customName,DateTime lastBackup) DeviceGetCustomName(string origName, string serialNum)
+        public static (string customName, DateTime lastBackup) DeviceGetCustomName(string origName, string serialNum)
         {
             string customName = "";
             DateTime lastBackup = new DateTime();
@@ -98,7 +145,7 @@ namespace PhotoApp
             return (customName, lastBackup);
         }
 
-        public static void DeviceEditCustomName(string origName, string serialNum, string customName)
+        public static void DeviceSetCustomName(string origName, string serialNum, string customName)
         {
             using (SQLiteConnection connection = new SQLiteConnection(_connectionString))
             {
@@ -117,14 +164,64 @@ namespace PhotoApp
                 }
             }
         }
+
+        public static DBFileInfo GetFileInfo(string persistentUID)
+        {
+            DBFileInfo fileInfo = null;
+            using (SQLiteConnection connection = new SQLiteConnection(_connectionString))
+            {
+                connection.Open();
+                using (SQLiteCommand cmd = new SQLiteCommand(connection))
+                {
+                    cmd.CommandText = @"SELECT * FROM Files
+                                        WHERE
+                                            PersistentUID = ($persistentUID)";
+                    cmd.Parameters.AddWithValue("$persistentUID", persistentUID);
+                    using(SQLiteDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            fileInfo = new DBFileInfo() { 
+                                Hash = reader.GetFieldValue<string>(reader.GetOrdinal("Hash")),
+                                DevicePath = reader.GetFieldValue<string>(reader.GetOrdinal("DevicePath")),
+                                PersistentUID = reader.GetFieldValue<string>(reader.GetOrdinal("PersistentUID")),
+                                DateTaken = DateTime.Parse(reader.GetFieldValue<string>(reader.GetOrdinal("DateTaken"))),
+                                LastWriteTime = DateTime.Parse(reader.GetFieldValue<string>(reader.GetOrdinal("LastWriteTime"))),
+                            };
+                        }
+                    }
+                }
+            }
+            return fileInfo;
+        }
+
+        public static void InsertFileInfo(DBFileInfo fileInfo)
+        {
+            using (SQLiteConnection connection = new SQLiteConnection(_connectionString))
+            {
+                connection.Open();
+                using (SQLiteCommand cmd = new SQLiteCommand(connection))
+                {
+                    cmd.CommandText = @"INSERT INTO Files(Hash, PersistentUID, DevicePath, DateTaken, LastWriteTime) 
+                                        VALUES ($hash, $persistentUID, $devicePath, $dateTaken, $lastWriteTime)";
+                    cmd.Parameters.AddWithValue("$hash", fileInfo.Hash);
+                    cmd.Parameters.AddWithValue("$persistentUID", fileInfo.PersistentUID);
+                    cmd.Parameters.AddWithValue("$devicePath", fileInfo.DevicePath);
+                    cmd.Parameters.AddWithValue("$dateTaken", fileInfo.DateTaken.ToString());
+                    cmd.Parameters.AddWithValue("$lastWriteTime", fileInfo.LastWriteTime.ToString());
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
     }
 
-    public class DBDeviceInfo
+    public class DBFileInfo
     {
-        public int Id { get; set; }
-        public string OrigName { get; set; }
-        public string CustomName { get; set; }
-        public string SerialNum { get; set; }
-        public DateTime LastBackup { get; set; }
+        public string Hash { get; set; }
+        public string PersistentUID { get; set; }
+        public string DevicePath { get; set; }
+        public DateTime DateTaken { get; set; }
+        public DateTime LastWriteTime { get; set; }
     }
 }
