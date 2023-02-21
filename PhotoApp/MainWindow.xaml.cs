@@ -190,13 +190,6 @@ namespace PhotoApp
             }
         }
 
-        //vyhledani vsech souboru v adresari (hleda i v podadresarich)
-        private void FindFiles(object sender, DoWorkEventArgs e)
-        {
-            BackgroundWorker worker = sender as BackgroundWorker;
-            DeviceList.SelectedDevice.GetFilesByDate(worker, e, DownloadSettings);
-        }
-
         private void CopyFiles(object sender, DoWorkEventArgs e)
         {
             BackgroundWorker worker = sender as BackgroundWorker;
@@ -237,14 +230,6 @@ namespace PhotoApp
                     await device.GetAllFiles();
                     FindAllFiles();
                 }
-            }
-        }
-
-        private void FindFiles_Click(object sender, RoutedEventArgs e)
-        {
-            if (CheckDeviceSelected())
-            {
-                RunWorker(sender, TaskType.FindFiles, true);
             }
         }
 
@@ -415,16 +400,8 @@ namespace PhotoApp
                 progressDialog.btnCancel.Content = Properties.Resources.Cancel;
             }
 
-            if ((bool)cbNewFiles.IsChecked)
-            {
-                DownloadSettings.Date.Start = DeviceList.SelectedDevice.LastBackup;
-            }
-
             switch (task)
             {
-                case TaskType.FindFiles:
-                    backgroundWorker.DoWork += FindFiles;
-                    break;
                 case TaskType.CopyFiles:
                     backgroundWorker.DoWork += CopyFiles;
                     break;
@@ -483,7 +460,7 @@ namespace PhotoApp
                 {
                     lblResult.Text += $"{Properties.Resources.FilesDownloadedTotal}: {downloaded}/{toDownload}\n" +
                                       $"{Properties.Resources.FilesDownloadErrorTotal}: {errors}";
-                    if (DownloadSettings.DownloadSelect == DownloadSelect.lastBackup && downloaded == toDownload)
+                    if (DownloadSettings.DownloadSelect == DownloadSelect.newFiles && downloaded == toDownload)
                     {
                         DeviceList.SelectedDevice.LastBackup = backupStart;
                     }
