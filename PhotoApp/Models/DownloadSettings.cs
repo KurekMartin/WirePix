@@ -9,7 +9,7 @@ namespace PhotoApp
 {
     public enum DownloadSelect
     {
-        lastBackup,
+        newFiles,
         dateRange
     }
 
@@ -31,7 +31,7 @@ namespace PhotoApp
         private bool _deleteFiles = false;
         private bool _backup = false;
         private bool _thumbnail = false;
-        private DownloadSelect _downloadSelect = DownloadSelect.lastBackup;
+        private DownloadSelect _downloadSelect = DownloadSelect.newFiles;
         private FileTypeSelectMode _fileTypeSelectMode = FileTypeSelectMode.all;
         public SaveOptions SaveOptions = new SaveOptions();
         [XmlIgnore]
