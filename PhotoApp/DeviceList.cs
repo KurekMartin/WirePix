@@ -22,7 +22,7 @@ namespace PhotoApp
         {
             foreach (var device in _devices)
             {
-                Database.DeviceSetCustomName(origName: device.Name, serialNum: device.SerialNumber, customName: device.CustomName);
+                Database.DeviceEditCustomName(origName: device.Name, serialNum: device.SerialNumber, customName: device.CustomName);
             }
         }
 

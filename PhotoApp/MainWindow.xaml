@@ -677,7 +677,8 @@
                                     </StackPanel>
 
 
-                                    <StackPanel Orientation="Horizontal" Margin="10,5,10,10">                                        
+                                    <StackPanel Orientation="Horizontal" Margin="10,5,10,10">
+                                        <Button Content="{x:Static p:Resources.FindFiles}" VerticalAlignment="Center" Click="FindFiles_Click" Margin="5,0"/>
                                         <Button x:Name="btnCopyFiles" Content="{x:Static p:Resources.DownloadFiles}" Margin="5,0" Width="Auto"  VerticalAlignment="Center" Click="CopyFiles_Click"/>
                                     </StackPanel>
                                     <TextBlock x:Name="lblResult" HorizontalAlignment="Left" Margin="10" VerticalAlignment="Top" Height="Auto" Width="Auto" Style="{StaticResource MaterialDesignBody2TextBlock}"
