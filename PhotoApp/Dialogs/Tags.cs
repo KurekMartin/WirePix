@@ -1,5 +1,4 @@
-﻿using MaterialDesignThemes.Wpf;
-using MediaDevices;
+﻿using MediaDevices;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -7,7 +6,6 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows;
-using System.Windows.Controls;
 
 namespace PhotoApp
 {
@@ -333,72 +331,6 @@ namespace PhotoApp
             folderTags.ForEach(x => folders.Add(TagsToValues(x, device, file, tmpFile)));
             return string.Join("\\", folders);
         }
-
-        //prevod stringu na strukturu slozek
-        public static string TagsToBlock(string folders, string file, Device device = null)
-        {
-            List<string> tagList = new List<string>();
-            string block = "";
-            int i = 0;
-            while (folders != null && folders.Length > 0)
-            {
-                if (i == 0) { block += "\\"; }
-                if (folders[0] == '\\')
-                {
-                    folders = folders.Trim('\\');
-                    block += "\n" + new string(' ', i) + " └> ";
-                    i++;
-                }
-                string level = Regex.Match(folders, @"[^\\]*").ToString(); //ziskani urovne bez \
-                tagList = TagsToList(level);
-                block += TagsToValues(tagList, device);
-                folders = folders.Remove(0, level.Length);
-            }
-
-            if (file != null && file.Length > 0)
-            {
-                tagList = TagsToList(file);
-                block += "\n" + new string(' ', i + 6);
-                block += TagsToValues(tagList, device) + ".xxx";
-            }
-
-            return block;
-        }
-        public static StackPanel TagsToStackPanel(string folders, string file, Style textStyle, Device device = null)
-        {
-            List<string> tagList = new List<string>();
-            StackPanel spMain = new StackPanel();
-            int i = 1;
-            while (folders != null && folders.Length > 0)
-            {
-                if (folders[0] == '\\')
-                {
-                    i++;
-                    folders = folders.Trim('\\');
-                }
-                string level = Regex.Match(folders, @"[^\\]*").ToString(); //ziskani urovne bez \
-                tagList = TagsToList(level);
-
-                spMain.Children.Add(MainWindow.CreateIconPanel(TagsToValues(tagList, device), PackIconKind.FolderOutline, i, textStyle));
-
-                folders = folders.Remove(0, level.Length);
-            }
-
-            if (file != null && file.Length > 0)
-            {
-                tagList = TagsToList(file);
-                spMain.Children.Add(MainWindow.CreateIconPanel(TagsToValues(tagList, device) + ".xxx", PackIconKind.ImageOutline, i + 1, textStyle));
-            }
-
-            return spMain;
-        }
-
-        public static bool IsValidTag(string text)
-        {
-            return GetTag(visibleText: text).Code != null;
-        }
-
-
     }
 }
 

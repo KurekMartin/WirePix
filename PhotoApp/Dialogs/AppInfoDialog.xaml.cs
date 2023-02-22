@@ -2,11 +2,7 @@
 using System;
 using System.Windows;
 using System.Windows.Controls;
-using System.Linq;
-using System.Net;
-using System.Threading.Tasks;
 using System.Diagnostics;
-using System.IO;
 using MaterialDesignThemes.Wpf;
 
 namespace PhotoApp.Dialogs

@@ -1,5 +1,4 @@
-﻿using PhotoApp.Models;
-using System;
+﻿using System;
 using System.Windows.Data;
 
 namespace PhotoApp.Converters
