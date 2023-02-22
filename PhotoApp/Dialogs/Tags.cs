@@ -140,7 +140,7 @@ namespace PhotoApp
 
 
         //získání hodnot pro zobrazení náhledu výsledného názvu
-        public static string GetSampleValueByTag(string tagCode, MediaFileInfo fileInfo = null, Device device = null, string filePath = null)
+        public static string GetSampleValueByTag(string tagCode, MediaFileSystemInfo fileInfo = null, Device device = null, string filePath = null)
         {
             
             TagStruct tag = GetTag(code: tagCode);
@@ -304,7 +304,7 @@ namespace PhotoApp
         }
 
         //dosadi hodnoty za tagy
-        public static string TagsToValues(List<string> tags, Device device = null, MediaFileInfo fileInfo = null, string filePath = null)
+        public static string TagsToValues(List<string> tags, Device device = null, MediaFileSystemInfo fileInfo = null, string filePath = null)
         {
             string values = "";
             foreach (string tag in tags)
@@ -325,7 +325,7 @@ namespace PhotoApp
             }
             return values;
         }
-        internal static string TagsToValues(List<List<string>> folderTags, Device device, MediaFileInfo file, string tmpFile)
+        internal static string TagsToValues(List<List<string>> folderTags, Device device, MediaFileSystemInfo file, string tmpFile)
         {
             List<string> folders = new List<string>();
             folderTags.ForEach(x => folders.Add(TagsToValues(x, device, file, tmpFile)));
