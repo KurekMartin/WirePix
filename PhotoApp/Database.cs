@@ -164,6 +164,27 @@ namespace PhotoApp
             }
         }
 
+        public static bool FileInfoExists(string persistentUID, string fullPath)
+        {
+            using (SQLiteConnection connection = new SQLiteConnection(_connectionString))
+            {
+                connection.Open();
+                using (SQLiteCommand cmd = new SQLiteCommand(connection))
+                {
+                    cmd.CommandText = @"SELECT * FROM Files
+                                        WHERE
+                                            PersistentUID = ($persistentUID)
+                                        AND DevicePath = ($devicePath)";
+                    cmd.Parameters.AddWithValue("$persistentUID", persistentUID);
+                    cmd.Parameters.AddWithValue("$devicePath", fullPath);
+                    using (SQLiteDataReader reader = cmd.ExecuteReader())
+                    {
+                        return reader.HasRows;
+                    }
+                }
+            }
+        }
+
         public static DBFileInfo GetFileInfo(string persistentUID)
         {
             DBFileInfo fileInfo = null;
