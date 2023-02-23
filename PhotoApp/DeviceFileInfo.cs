@@ -32,11 +32,17 @@ namespace PhotoApp
         private readonly MediaDevice _device;
         private ObservableCollection<BaseFileInfo> _allFilesInfo = new ObservableCollection<BaseFileInfo>();
         private ObservableCollection<string> _allFileTypes = new ObservableCollection<string>();
+
+        private IEnumerable<BaseFileInfo> _filesFilterByDateRange;
+        private IEnumerable<BaseFileInfo> _filesFilterByNew;
+
         private IEnumerable<string> _images;
         private IEnumerable<string> _videos;
         private IEnumerable<string> _others;
 
         private bool _cancelOperation = false;
+        private bool _isFilterByDateRangeValid = false;
+        private bool _isFilterByNewValid = false;
 
 
         public DeviceFileInfo(MediaDevice device)
@@ -88,6 +94,7 @@ namespace PhotoApp
                                 AllFileTypes.Insert(index + 1, extenstion);
                             }
                             count++;
+                            InvalidateFilters();
                         }
                     }
 
@@ -168,6 +175,11 @@ namespace PhotoApp
             }
         }
 
+        private void InvalidateFilters()
+        {
+            _isFilterByNewValid = _isFilterByDateRangeValid = false;
+        }
+
         public IEnumerable<BaseFileInfo> FilterByType(FileTypeSelection selection, IEnumerable<BaseFileInfo> fileList = null)
         {
             IEnumerable<BaseFileInfo> files = _allFilesInfo;
@@ -198,20 +210,25 @@ namespace PhotoApp
 
             if (MainWindow.DownloadSettings.DownloadSelect == DownloadSelect.dateRange)
             {
-                DateRange dateRange = MainWindow.DownloadSettings.Date;
-                return files.Where(f =>
+                if (_filesFilterByDateRange == null || !_isFilterByDateRangeValid)
                 {
-                    if (f.CreationTime.Date != DateTime.MinValue)
+                    DateRange dateRange = MainWindow.DownloadSettings.Date;
+                    _filesFilterByDateRange = files.Where(f =>
                     {
-                        return f.CreationTime.Date >= dateRange.Start.Date && f.CreationTime.Date <= dateRange.End.Date;
-                    }
-                    else
-                    {
-                        return f.LastWriteTime.Date >= dateRange.Start.Date && f.LastWriteTime.Date <= dateRange.End.Date;
-                    }
-                });
+                        if (f.CreationTime.Date != DateTime.MinValue)
+                        {
+                            return f.CreationTime.Date >= dateRange.Start.Date && f.CreationTime.Date <= dateRange.End.Date;
+                        }
+                        else
+                        {
+                            return f.LastWriteTime.Date >= dateRange.Start.Date && f.LastWriteTime.Date <= dateRange.End.Date;
+                        }
+                    });
+                    _isFilterByDateRangeValid = true;
+                }
+                return _filesFilterByDateRange;
             }
-            else if(MainWindow.DownloadSettings.DownloadSelect == DownloadSelect.newFiles)
+            else if (MainWindow.DownloadSettings.DownloadSelect == DownloadSelect.newFiles)
             {
                 //TODO
             }
