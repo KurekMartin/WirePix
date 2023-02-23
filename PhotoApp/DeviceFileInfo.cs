@@ -33,8 +33,9 @@ namespace PhotoApp
         private ObservableCollection<BaseFileInfo> _allFilesInfo = new ObservableCollection<BaseFileInfo>();
         private ObservableCollection<string> _allFileTypes = new ObservableCollection<string>();
 
-        private IEnumerable<BaseFileInfo> _filesFilterByDateRange;
-        private IEnumerable<BaseFileInfo> _filesFilterByNew;
+        private List<BaseFileInfo> _filesFilterByDateRange;
+        private List<BaseFileInfo> _filesFilterByNew;
+        private List<BaseFileInfo> _filesFilterByType;
 
         private IEnumerable<string> _images;
         private IEnumerable<string> _videos;
@@ -43,6 +44,7 @@ namespace PhotoApp
         private bool _cancelOperation = false;
         private bool _isFilterByDateRangeValid = false;
         private bool _isFilterByNewValid = false;
+        private bool _isFilterByTypeValid = false;
 
 
         public DeviceFileInfo(MediaDevice device)
@@ -50,6 +52,12 @@ namespace PhotoApp
             _device = device;
             _allFilesInfo.CollectionChanged += AllFilesInfo_CollectionChanged;
             _allFileTypes.CollectionChanged += AllFileTypes_CollectionChanged;
+            MainWindow.DownloadSettings.Date.PropertyChanged += Date_PropertyChanged;
+        }
+
+        private void Date_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            _isFilterByDateRangeValid = false;
         }
 
         private void AllFileTypes_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
@@ -82,7 +90,7 @@ namespace PhotoApp
                             BaseFileInfo fileInfo = new BaseFileInfo(
                                 file.PersistentUniqueId,
                                 file.FullName,
-                                (DateTime)file.DateAuthored,
+                                (DateTime)file.CreationTime,
                                 (DateTime)file.LastWriteTime,
                                 file.Length);
                             _allFilesInfo.Add(fileInfo);
@@ -124,7 +132,7 @@ namespace PhotoApp
         {
             get
             {
-                return _allFilesInfo.Where(f => f.CreationTime != DateTime.MinValue).Count();
+                return _allFilesInfo.Where(f => f.CreationTime == DateTime.MinValue).Count();
             }
         }
 
@@ -177,7 +185,7 @@ namespace PhotoApp
 
         private void InvalidateFilters()
         {
-            _isFilterByNewValid = _isFilterByDateRangeValid = false;
+            _isFilterByNewValid = _isFilterByDateRangeValid = _isFilterByTypeValid = false;
         }
 
         public IEnumerable<BaseFileInfo> FilterByType(FileTypeSelection selection, IEnumerable<BaseFileInfo> fileList = null)
@@ -189,16 +197,20 @@ namespace PhotoApp
             }
             if (MainWindow.DownloadSettings.FileTypeSelectMode == FileTypeSelectMode.selection)
             {
-                if (selection.Mode == ListMode.whitelist)
+                if (_filesFilterByType == null || !_isFilterByTypeValid)
                 {
-                    return files.Where(f => selection.FileTypes.Contains(Path.GetExtension(f.FullPath).TrimStart('.').ToUpper()));
-                }
-                else
-                {
-                    return files.Where(f => !selection.FileTypes.Contains(Path.GetExtension(f.FullPath).TrimStart('.').ToUpper()));
+                    if (selection.Mode == ListMode.whitelist)
+                    {
+                        _filesFilterByType = files.Where(f => selection.FileTypes.Contains(Path.GetExtension(f.FullPath).TrimStart('.').ToUpper())).ToList();
+                    }
+                    else
+                    {
+                        _filesFilterByType = files.Where(f => !selection.FileTypes.Contains(Path.GetExtension(f.FullPath).TrimStart('.').ToUpper())).ToList();
+                    }
+                    _isFilterByTypeValid = true;
                 }
             }
-            return files;
+            return _filesFilterByType;
         }
         public IEnumerable<BaseFileInfo> FilterByDate(IEnumerable<BaseFileInfo> fileList = null)
         {
@@ -210,29 +222,44 @@ namespace PhotoApp
 
             if (MainWindow.DownloadSettings.DownloadSelect == DownloadSelect.dateRange)
             {
-                if (_filesFilterByDateRange == null || !_isFilterByDateRangeValid)
-                {
-                    DateRange dateRange = MainWindow.DownloadSettings.Date;
-                    _filesFilterByDateRange = files.Where(f =>
-                    {
-                        if (f.CreationTime.Date != DateTime.MinValue)
-                        {
-                            return f.CreationTime.Date >= dateRange.Start.Date && f.CreationTime.Date <= dateRange.End.Date;
-                        }
-                        else
-                        {
-                            return f.LastWriteTime.Date >= dateRange.Start.Date && f.LastWriteTime.Date <= dateRange.End.Date;
-                        }
-                    });
-                    _isFilterByDateRangeValid = true;
-                }
-                return _filesFilterByDateRange;
+                return FilterByDateRange(files);
             }
             else if (MainWindow.DownloadSettings.DownloadSelect == DownloadSelect.newFiles)
             {
-                //TODO
+                return FilterNewFiles(files);
             }
             return files;
+        }
+
+        private IEnumerable<BaseFileInfo> FilterByDateRange(IEnumerable<BaseFileInfo> fileList)
+        {
+            if (_filesFilterByDateRange == null || !_isFilterByDateRangeValid)
+            {
+                DateRange dateRange = MainWindow.DownloadSettings.Date;
+                _filesFilterByDateRange = fileList.Where(f =>
+                {
+                    if (f.CreationTime.Date != DateTime.MinValue)
+                    {
+                        return f.CreationTime.Date >= dateRange.Start.Date && f.CreationTime.Date <= dateRange.End.Date;
+                    }
+                    else
+                    {
+                        return f.LastWriteTime.Date >= dateRange.Start.Date && f.LastWriteTime.Date <= dateRange.End.Date;
+                    }
+                }).ToList();
+                _isFilterByDateRangeValid = true;
+            }
+            return _filesFilterByDateRange;
+        }
+
+        private IEnumerable<BaseFileInfo> FilterNewFiles(IEnumerable<BaseFileInfo> fileList)
+        {
+            if (_filesFilterByNew == null || !_isFilterByNewValid)
+            {
+                _filesFilterByNew = fileList.Where(f => !Database.FileInfoExists(f.PersistentUniqueId, f.FullPath)).ToList();
+                _isFilterByNewValid = true;
+            }
+            return _filesFilterByNew;
         }
     }
 }
