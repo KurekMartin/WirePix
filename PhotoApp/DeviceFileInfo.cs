@@ -207,7 +207,7 @@ namespace PhotoApp
                     }
                     else
                     {
-                        return f.LastWriteTime.Date >= dateRange.Start.Date && f.CreationTime.Date <= dateRange.End.Date;
+                        return f.LastWriteTime.Date >= dateRange.Start.Date && f.LastWriteTime.Date <= dateRange.End.Date;
                     }
                 });
             }
