@@ -22,18 +22,21 @@ namespace PhotoApp
     {
         private struct CopyItem
         {
-            public CopyItem(string tmpFile, string fullDestPath, byte[] origHash, string origFile)
+            public CopyItem(string tmpFile, string fullDestPath, byte[] origHash, string origFile, string persistentUID, DateTime lastWriteTime)
             {
                 this.tmpFile = tmpFile;
                 this.fullDestPath = fullDestPath;
                 this.origHash = origHash;
                 this.origFile = origFile;
+                PersistentUID = persistentUID;
+                LastWriteTime = lastWriteTime;
             }
             public string tmpFile;
             public string fullDestPath;
             public byte[] origHash;
             public string origFile;
-
+            public string PersistentUID;
+            public DateTime LastWriteTime;
         }
 
         public int FilesDoneCount { get; private set; } = 0;
@@ -467,7 +470,7 @@ namespace PhotoApp
 
             IEnumerable<BaseFileInfo> filesToDownload = FilesToDownloadList;
             FilesToCopyCount = filesToDownload.Count();
-            sizeToProcess = filesToDownload.Select(f=>f.Size).Aggregate((a, b) => a + b) / (double)1048576;
+            sizeToProcess = filesToDownload.Select(f => f.Size).Aggregate((a, b) => a + b) / (double)1048576;
 
             var st = new StackTrace();
             var sf = st.GetFrame(0);
@@ -570,7 +573,7 @@ namespace PhotoApp
                             fileName += Path.GetExtension(file.FullPath);
                             string destFullName = Path.Combine(folder, fileName);
 
-                            CopyItem item = new CopyItem(tmpFile, destFullName, origHash, file.FullPath); //přidat číslo (pořadí) souboru
+                            CopyItem item = new CopyItem(tmpFile, destFullName, origHash, file.FullPath, file.PersistentUniqueId, file.LastWriteTime); //přidat číslo (pořadí) souboru
                             filesCollection.Add(item);
 
                             i = 0;
@@ -634,15 +637,31 @@ namespace PhotoApp
                   }
                   bool successSave = SaveFiles(settings, item.fullDestPath, item.tmpFile, item.origFile, item.origHash);
 
-                  if (settings.DeleteFiles && successSave)
+                  if (successSave)
                   {
-                      lock (_lockFilesDone)
+                      if (Database.FileInfoExists(item.PersistentUID, item.origFile))
                       {
-                          filesDone.Add(item.origFile);
-                          Console.WriteLine($"[{thread.ManagedThreadId}] file {item.origFile} added to delete");
+                          DBFileInfo fileInfo = new DBFileInfo()
+                          {
+                              PersistentUID = item.PersistentUID,
+                              DateTaken = FileExif.GetDateTimeOriginal(item.tmpFile),
+                              LastWriteTime = item.LastWriteTime,
+                              DevicePath = item.origFile,
+                              Hash = Convert.ToBase64String(item.origHash)
+                          };
+                          Database.InsertFileInfo(fileInfo);
                       }
 
+                      if (settings.DeleteFiles)
+                      {
+                          lock (_lockFilesDone)
+                          {
+                              filesDone.Add(item.origFile);
+                              Console.WriteLine($"[{thread.ManagedThreadId}] file {item.origFile} added to delete");
+                          }
+                      }
                   }
+
 
                   double size = 0;
                   if (File.Exists(item.tmpFile))
