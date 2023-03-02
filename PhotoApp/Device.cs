@@ -96,22 +96,26 @@ namespace PhotoApp
             if (property == nameof(DownloadSettings.DownloadSelect) ||
                 property == nameof(DownloadSettings.FileTypeSelectMode))
             {
+                DeviceFileInfo.InvalidateFilters();
                 OnPropertyChanged(nameof(FilesToDownloadCount));
             }
         }
 
         private void DeviceFileInfo_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
+            DeviceFileInfo.InvalidateFilters();
             OnPropertyChanged(nameof(FilesToDownloadCount));
         }
 
         private void FileTypes_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
+            DeviceFileInfo.InvalidateFilters();
             OnPropertyChanged(nameof(FilesToDownloadCount));
         }
 
         private void DateRange_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
+            DeviceFileInfo.InvalidateFilters();
             OnPropertyChanged(nameof(FilesToDownloadCount));
         }
 
@@ -169,7 +173,7 @@ namespace PhotoApp
                 bool connected = _device.IsConnected;
                 if (!connected) { _device.Connect(); }
                 DeviceType type = _device.DeviceType;
-                if(!connected) { _device.Disconnect(); }
+                if (!connected) { _device.Disconnect(); }
                 return type;
             }
         }
@@ -307,10 +311,10 @@ namespace PhotoApp
                         }
                     }
                     Disconnect();
-                    if(_mediaDirList.Count > 0)
+                    if (_mediaDirList.Count > 0)
                     {
                         OnPropertyChanged(nameof(MediaDirectories));
-                    }                    
+                    }
                 }
                 return _mediaDirList.Select(dir => { return dir.FullName; }).ToList();
             }
@@ -462,6 +466,8 @@ namespace PhotoApp
             object _lockFilesDone = new object();
 
             IEnumerable<BaseFileInfo> filesToDownload = FilesToDownloadList;
+            FilesToCopyCount = filesToDownload.Count();
+            sizeToProcess = filesToDownload.Select(f=>f.Size).Aggregate((a, b) => a + b) / (double)1048576;
 
             var st = new StackTrace();
             var sf = st.GetFrame(0);
@@ -501,7 +507,7 @@ namespace PhotoApp
                         lock (_lockReport)
                         {
                             progressArgs.progressText = string.Format(Properties.Resources.DeviceFilesDoneCount, FilesDoneCount, FilesToCopyCount);
-                            progressArgs.currentTask = String.Format(Properties.Resources.DeviceDownloadingFile, file.FullPath);
+                            progressArgs.currentTask = string.Format(Properties.Resources.DeviceDownloadingFile, file.FullPath);
                             worker.ReportProgress(FilesDoneCount * 100 / FilesToCopyCount, progressArgs);
                         }
 

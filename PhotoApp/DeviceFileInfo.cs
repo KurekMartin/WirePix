@@ -183,7 +183,7 @@ namespace PhotoApp
             }
         }
 
-        private void InvalidateFilters()
+        public void InvalidateFilters()
         {
             _isFilterByNewValid = _isFilterByDateRangeValid = _isFilterByTypeValid = false;
         }
