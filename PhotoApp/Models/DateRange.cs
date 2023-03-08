@@ -19,7 +19,6 @@ namespace PhotoApp.Models
                 {
                     _start = value;
                     OnPropertyChanged();
-                    OnPropertyChanged(nameof(DateRange));
                 }
             }
         }
@@ -32,7 +31,6 @@ namespace PhotoApp.Models
                 {
                     _end = value;
                     OnPropertyChanged();
-                    OnPropertyChanged(nameof(DateRange));
                 }
             }
         }
