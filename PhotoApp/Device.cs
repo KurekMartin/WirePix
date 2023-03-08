@@ -91,14 +91,7 @@ namespace PhotoApp
             MainWindow.DownloadSettings.Date.PropertyChanged += DateRange_PropertyChanged;
             MainWindow.DownloadSettings.PropertyChanged += DownloadSettings_PropertyChanged;
             FileTypeSelection.FileTypes.CollectionChanged += FileTypes_CollectionChanged;
-            FileTypeSelection.PropertyChanged += FileTypeSelection_PropertyChanged;
             DeviceFileInfo.PropertyChanged += DeviceFileInfo_PropertyChanged;
-        }
-
-        private void FileTypeSelection_PropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            string property = e.PropertyName;
-            //filter whitelist/blacklist
         }
 
         private void DownloadSettings_PropertyChanged(object sender, PropertyChangedEventArgs e)
