@@ -3,6 +3,7 @@ using PhotoApp.Models;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -28,6 +29,11 @@ namespace PhotoApp
             public DateTime CreationTime;
             public DateTime LastWriteTime;
             public ulong Size;
+        }
+
+        public enum FilterType
+        {
+            All, NewFiles, FileTypes, DateRange
         }
         private readonly MediaDevice _device;
         private ObservableCollection<BaseFileInfo> _allFilesInfo = new ObservableCollection<BaseFileInfo>();
@@ -102,7 +108,7 @@ namespace PhotoApp
                                 AllFileTypes.Insert(index + 1, extenstion);
                             }
                             count++;
-                            InvalidateFilters();
+                            InvalidateFilters(DeviceFileInfo.FilterType.All);
                         }
                     }
 
@@ -183,60 +189,76 @@ namespace PhotoApp
             }
         }
 
-        public void InvalidateFilters()
+        public void InvalidateFilters(FilterType type)
         {
-            _isFilterByNewValid = _isFilterByDateRangeValid = _isFilterByTypeValid = false;
+            switch (type)
+            {
+                case FilterType.NewFiles:
+                    _isFilterByNewValid = false;
+                    break;
+                case FilterType.DateRange:
+                    _isFilterByDateRangeValid = false;
+                    break;
+                case FilterType.FileTypes:
+                    _isFilterByTypeValid = false;
+                    break;
+                case FilterType.All:
+                    _isFilterByDateRangeValid = _isFilterByNewValid = _isFilterByTypeValid = false;
+                    break;
+            }
         }
 
-        public IEnumerable<BaseFileInfo> FilterByType(FileTypeSelection selection, IEnumerable<BaseFileInfo> fileList = null)
+        public async Task<IEnumerable<BaseFileInfo>> FilterFiles(FileTypeSelection selection)
+        {
+            IEnumerable<BaseFileInfo> fileFilterByDate = Enumerable.Empty<BaseFileInfo>();
+            switch (MainWindow.DownloadSettings.DownloadSelect)
+            {
+                case DownloadSelect.newFiles:
+                    fileFilterByDate = await FilterNewFiles();
+                    break;
+                case DownloadSelect.dateRange:
+                    fileFilterByDate = await FilterByDateRange();
+                    break;
+            }
+            IEnumerable<BaseFileInfo> fileFilterByType = await FilterByType(selection);
+            return fileFilterByDate.Intersect(fileFilterByType);
+        }
+
+        public async Task<IEnumerable<BaseFileInfo>> FilterByType(FileTypeSelection selection)
         {
             IEnumerable<BaseFileInfo> files = _allFilesInfo;
-            if (fileList != null)
-            {
-                files = fileList;
-            }
+
             if (MainWindow.DownloadSettings.FileTypeSelectMode == FileTypeSelectMode.selection)
             {
                 if (_filesFilterByType == null || !_isFilterByTypeValid)
                 {
+                    Debug.WriteLine("Filtering files by type");
                     if (selection.Mode == ListMode.whitelist)
                     {
-                        _filesFilterByType = files.Where(f => selection.FileTypes.Contains(Path.GetExtension(f.FullPath).TrimStart('.').ToUpper())).ToList();
+                        _filesFilterByType = await Task.FromResult(files.Where(f => selection.FileTypes.Contains(Path.GetExtension(f.FullPath).TrimStart('.').ToUpper())).ToList());
                     }
                     else
                     {
-                        _filesFilterByType = files.Where(f => !selection.FileTypes.Contains(Path.GetExtension(f.FullPath).TrimStart('.').ToUpper())).ToList();
+                        _filesFilterByType = await Task.FromResult(files.Where(f => !selection.FileTypes.Contains(Path.GetExtension(f.FullPath).TrimStart('.').ToUpper())).ToList());
                     }
                     _isFilterByTypeValid = true;
                 }
             }
+            else if (MainWindow.DownloadSettings.FileTypeSelectMode == FileTypeSelectMode.all)
+            {
+                return files.ToList();
+            }
             return _filesFilterByType;
         }
-        public IEnumerable<BaseFileInfo> FilterByDate(IEnumerable<BaseFileInfo> fileList = null)
+
+        private async Task<IEnumerable<BaseFileInfo>> FilterByDateRange()
         {
             IEnumerable<BaseFileInfo> files = _allFilesInfo;
-            if (fileList != null)
-            {
-                files = fileList;
-            }
-
-            if (MainWindow.DownloadSettings.DownloadSelect == DownloadSelect.dateRange)
-            {
-                return FilterByDateRange(files);
-            }
-            else if (MainWindow.DownloadSettings.DownloadSelect == DownloadSelect.newFiles)
-            {
-                return FilterNewFiles(files);
-            }
-            return files;
-        }
-
-        private IEnumerable<BaseFileInfo> FilterByDateRange(IEnumerable<BaseFileInfo> fileList)
-        {
             if (_filesFilterByDateRange == null || !_isFilterByDateRangeValid)
             {
+                Debug.WriteLine("Filtering files by date range");
                 DateRange dateRange = MainWindow.DownloadSettings.Date;
-                _filesFilterByDateRange = fileList.Where(f =>
+                _filesFilterByDateRange = await Task.FromResult(files.Where(f =>
                 {
                     if (f.CreationTime.Date != DateTime.MinValue)
                     {
@@ -246,17 +268,19 @@ namespace PhotoApp
                     {
                         return f.LastWriteTime.Date >= dateRange.Start.Date && f.LastWriteTime.Date <= dateRange.End.Date;
                     }
-                }).ToList();
+                }).ToList());
                 _isFilterByDateRangeValid = true;
             }
             return _filesFilterByDateRange;
         }
 
-        private IEnumerable<BaseFileInfo> FilterNewFiles(IEnumerable<BaseFileInfo> fileList)
+        private async Task<IEnumerable<BaseFileInfo>> FilterNewFiles()
         {
+            IEnumerable<BaseFileInfo> files = _allFilesInfo;
             if (_filesFilterByNew == null || !_isFilterByNewValid)
             {
-                _filesFilterByNew = fileList.Where(f => !Database.FileInfoExists(f.PersistentUniqueId, f.FullPath)).ToList();
+                Debug.WriteLine("Filtering files by new");
+                _filesFilterByNew = await Task.FromResult(files.Where(f => !Database.FileInfoExists(f.PersistentUniqueId, f.FullPath)).ToList());
                 _isFilterByNewValid = true;
             }
             return _filesFilterByNew;

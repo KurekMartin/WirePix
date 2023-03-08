@@ -50,6 +50,7 @@ namespace PhotoApp
         private string _customName;
 
         public int FilesToCopyCount { get; private set; } = 0;
+        private IEnumerable<BaseFileInfo> _filesToDownloadList = Enumerable.Empty<BaseFileInfo>();
         private double sizeToProcess;
         private DownloadSettings _lastSettings;
         public FileTypeSelection FileTypeSelection { get; set; } = new FileTypeSelection();
@@ -90,36 +91,47 @@ namespace PhotoApp
             MainWindow.DownloadSettings.Date.PropertyChanged += DateRange_PropertyChanged;
             MainWindow.DownloadSettings.PropertyChanged += DownloadSettings_PropertyChanged;
             FileTypeSelection.FileTypes.CollectionChanged += FileTypes_CollectionChanged;
+            FileTypeSelection.PropertyChanged += FileTypeSelection_PropertyChanged;
             DeviceFileInfo.PropertyChanged += DeviceFileInfo_PropertyChanged;
+        }
+
+        private void FileTypeSelection_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            string property = e.PropertyName;
+            //filter whitelist/blacklist
         }
 
         private void DownloadSettings_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
+            DownloadSettings settings = sender as DownloadSettings;
             string property = e.PropertyName;
             if (property == nameof(DownloadSettings.DownloadSelect) ||
                 property == nameof(DownloadSettings.FileTypeSelectMode))
             {
-                DeviceFileInfo.InvalidateFilters();
-                OnPropertyChanged(nameof(FilesToDownloadCount));
+                Debug.WriteLine("DownloadSettings changed");
+                GetAsyncFilesToDownloadList();
             }
         }
 
         private void DeviceFileInfo_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            DeviceFileInfo.InvalidateFilters();
-            OnPropertyChanged(nameof(FilesToDownloadCount));
+            DeviceFileInfo.InvalidateFilters(DeviceFileInfo.FilterType.All);
+            Debug.WriteLine("DeviceFileInfo changed");
+            GetAsyncFilesToDownloadList();
         }
 
         private void FileTypes_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
-            DeviceFileInfo.InvalidateFilters();
-            OnPropertyChanged(nameof(FilesToDownloadCount));
+            DeviceFileInfo.InvalidateFilters(DeviceFileInfo.FilterType.FileTypes);
+            Debug.WriteLine("FileTypes changed");
+            GetAsyncFilesToDownloadList();
         }
 
         private void DateRange_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            DeviceFileInfo.InvalidateFilters();
-            OnPropertyChanged(nameof(FilesToDownloadCount));
+            DeviceFileInfo.InvalidateFilters(DeviceFileInfo.FilterType.DateRange);
+            Debug.WriteLine("DateRange changed");
+            GetAsyncFilesToDownloadList();
         }
 
         public string ID
@@ -278,20 +290,29 @@ namespace PhotoApp
 
         public int FilesToDownloadCount
         {
-            get
-            {
-                return FilesToDownloadList.Count();
-            }
+            get => FilesToDownloadList.Count();
         }
 
         private IEnumerable<BaseFileInfo> FilesToDownloadList
         {
-            get
+            get => _filesToDownloadList;
+            set
             {
-                var files = DeviceFileInfo.FilterByType(FileTypeSelection);
-                files = DeviceFileInfo.FilterByDate(fileList: files);
-                return files;
+                if (_filesToDownloadList != value)
+                {
+                    _filesToDownloadList = value;
+                    OnPropertyChanged();
+                    OnPropertyChanged(nameof(FilesToDownloadCount));
+                }
             }
+        }
+
+        private async void GetAsyncFilesToDownloadList()
+        {
+            //var files = await DeviceFileInfo.FilterByType(FileTypeSelection);
+            //files = await DeviceFileInfo.FilterByDate(fileList: files);
+            var files = await DeviceFileInfo.FilterFiles(FileTypeSelection);
+            FilesToDownloadList = files;
         }
 
 
