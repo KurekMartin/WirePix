@@ -33,10 +33,9 @@ namespace PhotoApp.Dialogs
                 if (item != null)
                 {
                     item.ApplyTemplate();
-                    TextBlock tb = item.ContentTemplate.FindName("tbItemText", item) as TextBlock;
-                    if (tb != null && types.Contains(tb.Text))
+                    CheckBox cb = item.ContentTemplate.FindName("cbSelect", item) as CheckBox;
+                    if (cb != null && types.Contains(cb.Content.ToString()))
                     {
-                        CheckBox cb = item.ContentTemplate.FindName("cbSelect", item) as CheckBox;
                         cb.IsChecked = true;
                     }
                 }
@@ -66,33 +65,18 @@ namespace PhotoApp.Dialogs
 
         private void cbSelect_Unchecked(object sender, RoutedEventArgs e)
         {
-            string text = GetItemText(sender as CheckBox);
+            string text = ((CheckBox)sender).Content.ToString();
             FileTypeSelection.FileTypes.Remove(text);
         }
 
         private void cbSelect_Checked(object sender, RoutedEventArgs e)
         {
-            string text = GetItemText(sender as CheckBox);
+            string text = ((CheckBox)sender).Content.ToString();
             if (!FileTypeSelection.FileTypes.Contains(text))
             {
                 int index = FileTypeSelection.FileTypes.ToList().FindLastIndex(f => string.Compare(f, text) < 0);
                 FileTypeSelection.FileTypes.Insert(index + 1, text);
             }
-        }
-
-        private string GetItemText(CheckBox item)
-        {
-            StackPanel sp = VisualTreeHelper.GetParent(item) as StackPanel;
-            TextBlock tb = sp.FindName("tbItemText") as TextBlock;
-            return tb.Text;
-        }
-
-        private void tbItemText_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
-        {
-            TextBlock textBlock = (TextBlock)sender;
-            StackPanel sp = VisualTreeHelper.GetParent(textBlock) as StackPanel;
-            CheckBox cb = sp.FindName("cbSelect") as CheckBox;
-            cb.IsChecked = !cb.IsChecked;
         }
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)

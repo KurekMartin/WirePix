@@ -38,12 +38,8 @@
                     <StackPanel Orientation="Horizontal"
                                 Margin="5,5">
                         <CheckBox VerticalAlignment="Center"
-                                  x:Name="cbSelect" Unchecked="cbSelect_Unchecked" Checked="cbSelect_Checked"/>
-                        <TextBlock Text="{Binding .}"
-                                   VerticalAlignment="Center"
-                                   Margin="5,0"
-                                   x:Name="tbItemText"
-                                   MouseDown="tbItemText_MouseDown"/>
+                                  x:Name="cbSelect" Unchecked="cbSelect_Unchecked" Checked="cbSelect_Checked"
+                                  Content="{Binding .}"/>
                     </StackPanel>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
