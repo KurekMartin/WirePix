@@ -243,7 +243,7 @@ namespace PhotoApp
             {
                 if (_device != null)
                 {
-                    return _device.Description;                    
+                    return _device.Description;
                 }
                 else
                     return string.Empty;
@@ -664,51 +664,69 @@ namespace PhotoApp
                       state.Stop();
                   }
 
-                  if (settings.Thumbnail)
+                  bool skipFile = false;
+                  var dateTaken = FileExif.GetDateTimeOriginal(item.tmpFile);
+                  bool downloaded = false;
+                  if (settings.DownloadSelect == DownloadSelect.dateRange)
                   {
+                      var dateRange = settings.Date;
+                      skipFile = dateTaken.Date >= dateRange.Start.Date && dateTaken.Date <= dateRange.End.Date;
+                  }
+
+                  if (!skipFile)
+                  {
+                      if (settings.Thumbnail)
+                      {
+                          lock (_lockReport)
+                          {
+                              progressArgs.currentTask = string.Format(Properties.Resources.DeviceGeneratingThumbnail, item.origFile);
+                              worker.ReportProgress(FilesDoneCount * 100 / FilesToCopyCount, progressArgs);
+                          }
+                          GenerateThumbnail(settings, item.fullDestPath, item.tmpFile, item.origFile, BitConverter.ToString(item.origHash).Replace("-", string.Empty).ToLowerInvariant());
+                      }
+
                       lock (_lockReport)
                       {
-                          progressArgs.currentTask = string.Format(Properties.Resources.DeviceGeneratingThumbnail, item.origFile);
+                          progressArgs.currentTask = string.Format(Properties.Resources.DeviceSortingFile, item.origFile);
                           worker.ReportProgress(FilesDoneCount * 100 / FilesToCopyCount, progressArgs);
                       }
-                      GenerateThumbnail(settings, item.fullDestPath, item.tmpFile, item.origFile, BitConverter.ToString(item.origHash).Replace("-", string.Empty).ToLowerInvariant());
-                  }
+                      bool successSave = SaveFiles(settings, item.fullDestPath, item.tmpFile, item.origFile, item.origHash);
 
-
-                  lock (_lockReport)
-                  {
-                      progressArgs.currentTask = string.Format(Properties.Resources.DeviceSortingFile, item.origFile);
-                      worker.ReportProgress(FilesDoneCount * 100 / FilesToCopyCount, progressArgs);
-                  }
-                  bool successSave = SaveFiles(settings, item.fullDestPath, item.tmpFile, item.origFile, item.origHash);
-
-                  if (successSave)
-                  {
-                      if (Database.FileInfoExists(item.PersistentUID, item.origFile))
+                      if (successSave)
                       {
-                          DBFileInfo fileInfo = new DBFileInfo()
+                          if (settings.DownloadSelect == DownloadSelect.newFiles)
                           {
-                              PersistentUID = item.PersistentUID,
-                              DateTaken = FileExif.GetDateTimeOriginal(item.tmpFile),
-                              LastWriteTime = item.LastWriteTime,
-                              DevicePath = item.origFile,
-                              Hash = Convert.ToBase64String(item.origHash),
-                              Downloaded = true
+                              downloaded = true;
+                          }
 
-                          };
-                          Database.InsertFileInfo(fileInfo);
-                      }
-
-                      if (settings.DeleteFiles)
-                      {
-                          lock (_lockFilesDone)
+                          if (settings.DeleteFiles)
                           {
-                              filesDone.Add(item.origFile);
-                              Console.WriteLine($"[{thread.ManagedThreadId}] file {item.origFile} added to delete");
+                              lock (_lockFilesDone)
+                              {
+                                  filesDone.Add(item.origFile);
+                                  Console.WriteLine($"[{thread.ManagedThreadId}] file {item.origFile} added to delete");
+                              }
                           }
                       }
                   }
 
+                  if (!Database.FileInfoExists(persistentUID: item.PersistentUID, fullPath: item.origFile))
+                  {
+                      DBFileInfo fileInfo = new DBFileInfo()
+                      {
+                          PersistentUID = item.PersistentUID,
+                          LastWriteTime = item.LastWriteTime,
+                          DevicePath = item.origFile,
+                          DateTaken = dateTaken,
+                          Hash = Convert.ToBase64String(item.origHash),
+                          Downloaded = downloaded
+                      };
+                      Database.InsertFileInfo(fileInfo);
+                  }
+                  else if (downloaded)
+                  {
+                      Database.FileSetDownloadedStatus(persistentUID: item.PersistentUID, fullPath: item.origFile);
+                  }
 
                   double size = 0;
                   if (File.Exists(item.tmpFile))
