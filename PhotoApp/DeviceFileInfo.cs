@@ -52,6 +52,8 @@ namespace PhotoApp
         private bool _isFilterByNewValid = false;
         private bool _isFilterByTypeValid = false;
 
+        private int _estimatedDateCount = 0;
+
 
         public DeviceFileInfo(MediaDevice device)
         {
@@ -136,9 +138,14 @@ namespace PhotoApp
 
         public int EstimateDateNum
         {
-            get
+            get => _estimatedDateCount;
+            set
             {
-                return _allFilesInfo.Where(f => f.CreationTime == DateTime.MinValue).Count();
+                if (_estimatedDateCount != value)
+                {
+                    _estimatedDateCount = value;
+                    OnPropertyChanged();
+                }
             }
         }
 
@@ -258,6 +265,7 @@ namespace PhotoApp
             {
                 Debug.WriteLine("Filtering files by date range");
                 DateRange dateRange = MainWindow.DownloadSettings.Date;
+                EstimateDateNum = 0;
                 _filesFilterByDateRange = await Task.FromResult(files.Where(f =>
                 {
                     if (f.CreationTime.Date != DateTime.MinValue)
@@ -273,6 +281,10 @@ namespace PhotoApp
                         }
                         else
                         {
+                            if (f.LastWriteTime.Date >= dateRange.Start.Date)
+                            {
+                                EstimateDateNum++;
+                            }
                             return f.LastWriteTime.Date >= dateRange.Start.Date && f.LastWriteTime.Date <= dateRange.End.Date;
                         }
                     }
