@@ -266,7 +266,15 @@ namespace PhotoApp
                     }
                     else
                     {
-                        return f.LastWriteTime.Date >= dateRange.Start.Date && f.LastWriteTime.Date <= dateRange.End.Date;
+                        if (Database.FileInfoExists(persistentUID: f.PersistentUniqueId, fullPath: f.FullPath))
+                        {
+                            var dateTaken = Database.GetFileInfo(persistentUID: f.PersistentUniqueId, fullPath: f.FullPath).DateTaken;
+                            return dateTaken.Date >= dateRange.Start.Date && dateTaken.Date <= dateRange.End.Date;
+                        }
+                        else
+                        {
+                            return f.LastWriteTime.Date >= dateRange.Start.Date && f.LastWriteTime.Date <= dateRange.End.Date;
+                        }
                     }
                 }).ToList());
                 _isFilterByDateRangeValid = true;
