@@ -38,7 +38,8 @@ namespace PhotoApp
                                             DevicePath TEXT,
                                             DateTaken TEXT,
                                             LastWriteTime TEXT,
-                                            PersistentUID TEXT)";
+                                            PersistentUID TEXT,
+                                            Downloaded INTEGER NOT NULL)";
                     cmd.ExecuteNonQuery();
                 }
             }
@@ -225,6 +226,7 @@ namespace PhotoApp
                                 PersistentUID = reader.GetFieldValue<string>(reader.GetOrdinal("PersistentUID")),
                                 DateTaken = DateTime.Parse(reader.GetFieldValue<string>(reader.GetOrdinal("DateTaken"))),
                                 LastWriteTime = DateTime.Parse(reader.GetFieldValue<string>(reader.GetOrdinal("LastWriteTime"))),
+                                Downloaded = reader.GetFieldValue<int>(reader.GetOrdinal("Downloaded")) != 0
                             };
                         }
                     }
@@ -240,13 +242,14 @@ namespace PhotoApp
                 connection.Open();
                 using (SQLiteCommand cmd = new SQLiteCommand(connection))
                 {
-                    cmd.CommandText = @"INSERT INTO Files(Hash, PersistentUID, DevicePath, DateTaken, LastWriteTime) 
-                                        VALUES ($hash, $persistentUID, $devicePath, $dateTaken, $lastWriteTime)";
+                    cmd.CommandText = @"INSERT INTO Files(Hash, PersistentUID, DevicePath, DateTaken, LastWriteTime, Downloaded) 
+                                        VALUES ($hash, $persistentUID, $devicePath, $dateTaken, $lastWriteTime, $downloaded)";
                     cmd.Parameters.AddWithValue("$hash", fileInfo.Hash);
                     cmd.Parameters.AddWithValue("$persistentUID", fileInfo.PersistentUID);
                     cmd.Parameters.AddWithValue("$devicePath", fileInfo.DevicePath);
                     cmd.Parameters.AddWithValue("$dateTaken", fileInfo.DateTaken.ToString());
                     cmd.Parameters.AddWithValue("$lastWriteTime", fileInfo.LastWriteTime.ToString());
+                    cmd.Parameters.AddWithValue("$downloaded", Convert.ToInt32(fileInfo.Downloaded));
                     cmd.ExecuteNonQuery();
                 }
             }
@@ -261,6 +264,7 @@ namespace PhotoApp
         public string DevicePath { get; set; } = "";
         public DateTime DateTaken { get; set; }
         public DateTime LastWriteTime { get; set; }
+        public bool Downloaded { get; set; }
     }
 
     public class DBDeviceInfo

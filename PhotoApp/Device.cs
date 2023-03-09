@@ -106,6 +106,7 @@ namespace PhotoApp
                     OrigName = Name,
                     Manufacturer = Manufacturer,
                     SerialNum = SerialNumber,
+                    CustomName = CustomName
                 };
                 Database.InsertDevice(deviceInfo);
             }
@@ -116,7 +117,7 @@ namespace PhotoApp
                 LastBackup = deviceData.LastBackup;
                 if (deviceData.CustomType != string.Empty)
                 {
-                    _useCustomType = Enum.TryParse(deviceData.CustomType, out _customType);                    
+                    _useCustomType = Enum.TryParse(deviceData.CustomType, out _customType);
                 }
             }
         }
@@ -242,8 +243,7 @@ namespace PhotoApp
             {
                 if (_device != null)
                 {
-                    string name = _device.Description;
-                    return name;
+                    return _device.Description;                    
                 }
                 else
                     return string.Empty;
@@ -256,6 +256,10 @@ namespace PhotoApp
                 if (_customName != string.Empty)
                 {
                     return _customName;
+                }
+                else if (_device.FriendlyName != string.Empty)
+                {
+                    return _device.FriendlyName;
                 }
                 else
                 {
@@ -688,7 +692,9 @@ namespace PhotoApp
                               DateTaken = FileExif.GetDateTimeOriginal(item.tmpFile),
                               LastWriteTime = item.LastWriteTime,
                               DevicePath = item.origFile,
-                              Hash = Convert.ToBase64String(item.origHash)
+                              Hash = Convert.ToBase64String(item.origHash),
+                              Downloaded = true
+
                           };
                           Database.InsertFileInfo(fileInfo);
                       }
