@@ -203,6 +203,26 @@ namespace PhotoApp
             }
         }
 
+        public static void FileSetDownloadedStatus(string persistentUID, string fullPath)
+        {
+            using (SQLiteConnection connection = new SQLiteConnection(_connectionString))
+            {
+                connection.Open();
+                using (SQLiteCommand cmd = new SQLiteCommand(connection))
+                {
+                    cmd.CommandText = @"UPDATE Files
+                                        SET Downloaded = ($downloaded)
+                                        WHERE 
+                                            PersistentUID = ($persistentUID)
+                                        AND DevicePath = ($devicePath)";
+                    cmd.Parameters.AddWithValue("$downloaded", Convert.ToInt32(true));
+                    cmd.Parameters.AddWithValue("$persistentUID", persistentUID);
+                    cmd.Parameters.AddWithValue("$devicePath", fullPath);
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
         public static bool FileDownloaded(string persistentUID, string fullPath)
         {
             using (SQLiteConnection connection = new SQLiteConnection(_connectionString))
