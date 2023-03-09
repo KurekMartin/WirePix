@@ -280,7 +280,7 @@ namespace PhotoApp
             if (_filesFilterByNew == null || !_isFilterByNewValid)
             {
                 Debug.WriteLine("Filtering files by new");
-                _filesFilterByNew = await Task.FromResult(files.Where(f => !Database.FileInfoExists(f.PersistentUniqueId, f.FullPath)).ToList());
+                _filesFilterByNew = await Task.FromResult(files.Where(f => !Database.FileDownloaded(f.PersistentUniqueId, f.FullPath)).ToList());
                 _isFilterByNewValid = true;
             }
             return _filesFilterByNew;

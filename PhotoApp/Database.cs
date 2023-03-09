@@ -203,7 +203,33 @@ namespace PhotoApp
             }
         }
 
-        public static DBFileInfo GetFileInfo(string persistentUID)
+        public static bool FileDownloaded(string persistentUID, string fullPath)
+        {
+            using (SQLiteConnection connection = new SQLiteConnection(_connectionString))
+            {
+                connection.Open();
+                using (SQLiteCommand cmd = new SQLiteCommand(connection))
+                {
+                    cmd.CommandText = @"SELECT * FROM Files
+                                        WHERE
+                                            PersistentUID = ($persistentUID)
+                                        AND DevicePath = ($devicePath)";
+                    cmd.Parameters.AddWithValue("$persistentUID", persistentUID);
+                    cmd.Parameters.AddWithValue("$devicePath", fullPath);
+                    using (SQLiteDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.HasRows)
+                        {
+                            reader.Read();
+                            return reader.GetFieldValue<int>(reader.GetOrdinal("Downloaded")) != 0;
+                        }
+                        return false;
+                    }
+                }
+            }
+        }
+
+        public static DBFileInfo GetFileInfo(string persistentUID, string fullPath)
         {
             DBFileInfo fileInfo = null;
             using (SQLiteConnection connection = new SQLiteConnection(_connectionString))
@@ -213,8 +239,10 @@ namespace PhotoApp
                 {
                     cmd.CommandText = @"SELECT * FROM Files
                                         WHERE
-                                            PersistentUID = ($persistentUID)";
+                                            PersistentUID = ($persistentUID)
+                                        AND DevicePath = ($devicePath)";
                     cmd.Parameters.AddWithValue("$persistentUID", persistentUID);
+                    cmd.Parameters.AddWithValue("$devicePath", fullPath);
                     using (SQLiteDataReader reader = cmd.ExecuteReader())
                     {
                         if (reader.Read())
