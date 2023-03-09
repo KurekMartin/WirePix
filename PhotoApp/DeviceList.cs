@@ -20,7 +20,7 @@ namespace PhotoApp
         {
             foreach (var device in _devices)
             {
-                Database.DeviceSetCustomName(origName: device.Name, serialNum: device.SerialNumber, customName: device.CustomName);
+                Database.DeviceSetCustomName(origName: device.Name, manufacturer: device.Manufacturer, serialNum: device.SerialNumber, customName: device.CustomName);
             }
         }
 
@@ -50,14 +50,6 @@ namespace PhotoApp
             foreach (MediaDevice mediaDevice in newDevices)
             {
                 Device device = new Device(mediaDevice);
-
-                if (!Database.DeviceExists(device.Name, device.SerialNumber))
-                {
-                    Database.DeviceInsert(device.Name, device.SerialNumber);
-                }
-                var deviceData = Database.DeviceGetCustomName(device.Name, device.SerialNumber);
-                device.CustomName = deviceData.customName;
-                device.LastBackup = deviceData.lastBackup;
                 Devices.Add(device);
                 Devices = new ObservableCollection<Device>(Devices.OrderBy(d => d.Name));
             }

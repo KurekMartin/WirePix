@@ -47,7 +47,9 @@ namespace PhotoApp
         private List<MediaDirectoryInfo> _mediaDirList;
         private double[] _space;
         private DeviceFileInfo _deviceFileInfo;
-        private string _customName;
+        private string _customName = "";
+        private DeviceType _customType;
+        private bool _useCustomType = false;
 
         public int FilesToCopyCount { get; private set; } = 0;
         private IEnumerable<BaseFileInfo> _filesToDownloadList = Enumerable.Empty<BaseFileInfo>();
@@ -92,6 +94,31 @@ namespace PhotoApp
             MainWindow.DownloadSettings.PropertyChanged += DownloadSettings_PropertyChanged;
             FileTypeSelection.FileTypes.CollectionChanged += FileTypes_CollectionChanged;
             DeviceFileInfo.PropertyChanged += DeviceFileInfo_PropertyChanged;
+            LoadFromDatabase();
+        }
+
+        private void LoadFromDatabase()
+        {
+            if (!Database.DeviceExists(origName: Name, manufacturer: Manufacturer, serialNum: SerialNumber))
+            {
+                DBDeviceInfo deviceInfo = new DBDeviceInfo()
+                {
+                    OrigName = Name,
+                    Manufacturer = Manufacturer,
+                    SerialNum = SerialNumber,
+                };
+                Database.InsertDevice(deviceInfo);
+            }
+            else
+            {
+                DBDeviceInfo deviceData = Database.GetDevice(origName: Name, manufacturer: Manufacturer, serialNum: SerialNumber);
+                CustomName = deviceData.CustomName;
+                LastBackup = deviceData.LastBackup;
+                if (deviceData.CustomType != string.Empty)
+                {
+                    _useCustomType = Enum.TryParse(deviceData.CustomType, out _customType);                    
+                }
+            }
         }
 
         private void DownloadSettings_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -180,7 +207,7 @@ namespace PhotoApp
             {
                 bool connected = _device.IsConnected;
                 if (!connected) { _device.Connect(); }
-                DeviceType type = _device.DeviceType;
+                DeviceType type = _useCustomType ? _customType : _device.DeviceType;
                 if (!connected) { _device.Disconnect(); }
                 return type;
             }
