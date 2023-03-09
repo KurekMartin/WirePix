@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data.SQLite;
 using System.IO;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace PhotoApp
 {
@@ -22,11 +23,13 @@ namespace PhotoApp
                 using (SQLiteCommand cmd = new SQLiteCommand(connection))
                 {
                     cmd.CommandText = @"CREATE TABLE IF NOT EXISTS Devices(
-                                            Id INTEGER PRIMARY KEY,
-                                            OrigName TEXT, 
-                                            CustomName TEXT, 
-                                            SerialNum TEXT, 
-                                            LastBackup TEXT)";
+                                            OrigName TEXT NOT NULL,
+                                            Manufacturer TEXT NOT NULL,
+                                            SerialNum TEXT NOT NULL, 
+                                            LastBackup TEXT,
+                                            CustomName TEXT,
+                                            CustomType TEXT,                                            
+                                            PRIMARY KEY(OrigName, Manufacturer, SerialNum))";
                     cmd.ExecuteNonQuery();
 
                     cmd.CommandText = @"CREATE TABLE IF NOT EXISTS Files(
@@ -76,7 +79,7 @@ namespace PhotoApp
             }
         }
 
-        public static bool DeviceExists(string origName, string serialNum)
+        public static bool DeviceExists(string origName, string manufacturer, string serialNum)
         {
             using (SQLiteConnection connection = new SQLiteConnection(_connectionString))
             {
@@ -86,8 +89,10 @@ namespace PhotoApp
                     cmd.CommandText = @"SELECT * FROM Devices 
                                         WHERE 
                                             OrigName = ($origName) 
+                                        AND Manufacturer = ($manufacturer)
                                         AND SerialNum = ($serialNum)";
                     cmd.Parameters.AddWithValue("$origName", origName);
+                    cmd.Parameters.AddWithValue("$manufacturer", manufacturer);
                     cmd.Parameters.AddWithValue("$serialNum", serialNum);
                     using (SQLiteDataReader reader = cmd.ExecuteReader())
                     {
@@ -97,28 +102,29 @@ namespace PhotoApp
             }
         }
 
-        public static void DeviceInsert(string origName, string serialNum, string customName = "", DateTime lastBackup = new DateTime())
+        public static void InsertDevice(DBDeviceInfo deviceInfo)
         {
             using (SQLiteConnection connection = new SQLiteConnection(_connectionString))
             {
                 connection.Open();
                 using (SQLiteCommand cmd = new SQLiteCommand(connection))
                 {
-                    cmd.CommandText = @"INSERT INTO Devices(OrigName, CustomName, SerialNum, LastBackup) 
-                                        VALUES ($origName, $customName, $serialNum, $lastBackup)";
-                    cmd.Parameters.AddWithValue("$origName", origName);
-                    cmd.Parameters.AddWithValue("$customName", customName);
-                    cmd.Parameters.AddWithValue("$serialNum", serialNum);
-                    cmd.Parameters.AddWithValue("$lastBackup", lastBackup.ToString());
+                    cmd.CommandText = @"INSERT INTO Devices(OrigName, CustomName, CustomType, Manufacturer, SerialNum, LastBackup) 
+                                        VALUES ($origName, $customName, $customType, $manufacturer, $serialNum, $lastBackup)";
+                    cmd.Parameters.AddWithValue("$origName", deviceInfo.OrigName);
+                    cmd.Parameters.AddWithValue("$customName", deviceInfo.CustomName);
+                    cmd.Parameters.AddWithValue("$customType", deviceInfo.CustomType);
+                    cmd.Parameters.AddWithValue("$manufacturer", deviceInfo.Manufacturer);
+                    cmd.Parameters.AddWithValue("$serialNum", deviceInfo.SerialNum);
+                    cmd.Parameters.AddWithValue("$lastBackup", deviceInfo.LastBackup.ToString());
                     cmd.ExecuteNonQuery();
                 }
             }
         }
 
-        public static (string customName, DateTime lastBackup) DeviceGetCustomName(string origName, string serialNum)
+        public static DBDeviceInfo GetDevice(string origName, string manufacturer, string serialNum)
         {
-            string customName = "";
-            DateTime lastBackup = new DateTime();
+            DBDeviceInfo deviceInfo = new DBDeviceInfo();
             using (SQLiteConnection connection = new SQLiteConnection(_connectionString))
             {
                 connection.Open();
@@ -127,24 +133,33 @@ namespace PhotoApp
                     cmd.CommandText = @"SELECT * FROM Devices 
                                         WHERE 
                                             OrigName = ($origName) 
+                                        AND Manufacturer = ($manufacturer)
                                         AND SerialNum = ($serialNum)";
                     cmd.Parameters.AddWithValue("$origName", origName);
+                    cmd.Parameters.AddWithValue("$manufacturer", manufacturer);
                     cmd.Parameters.AddWithValue("$serialNum", serialNum);
                     using (SQLiteDataReader reader = cmd.ExecuteReader())
                     {
                         if (reader.HasRows)
                         {
                             reader.Read();
-                            customName = reader.GetFieldValue<string>(reader.GetOrdinal("CustomName"));
-                            lastBackup = DateTime.Parse(reader.GetFieldValue<string>(reader.GetOrdinal("LastBackup")));
+                            deviceInfo = new DBDeviceInfo()
+                            {
+                                OrigName = origName,
+                                CustomName = reader.GetFieldValue<string>(reader.GetOrdinal("CustomName")),
+                                CustomType = reader.GetFieldValue<string>(reader.GetOrdinal("CustomType")),
+                                Manufacturer = manufacturer,
+                                SerialNum = serialNum,
+                                LastBackup = DateTime.Parse(reader.GetFieldValue<string>(reader.GetOrdinal("LastBackup")))
+                            };
                         }
                     }
                 }
             }
-            return (customName, lastBackup);
+            return deviceInfo;
         }
 
-        public static void DeviceSetCustomName(string origName, string serialNum, string customName)
+        public static void DeviceSetCustomName(string origName, string manufacturer, string serialNum, string customName)
         {
             using (SQLiteConnection connection = new SQLiteConnection(_connectionString))
             {
@@ -155,9 +170,11 @@ namespace PhotoApp
                                         SET CustomName = ($customName)
                                         WHERE 
                                             OrigName = ($origName)
+                                        AND Manufacturer = ($manufacturer) 
                                         AND SerialNum = ($serialNum)";
                     cmd.Parameters.AddWithValue("$customName", customName);
                     cmd.Parameters.AddWithValue("$origName", origName);
+                    cmd.Parameters.AddWithValue("$manufacturer", manufacturer);
                     cmd.Parameters.AddWithValue("$serialNum", serialNum);
                     cmd.ExecuteNonQuery();
                 }
@@ -197,11 +214,12 @@ namespace PhotoApp
                                         WHERE
                                             PersistentUID = ($persistentUID)";
                     cmd.Parameters.AddWithValue("$persistentUID", persistentUID);
-                    using(SQLiteDataReader reader = cmd.ExecuteReader())
+                    using (SQLiteDataReader reader = cmd.ExecuteReader())
                     {
                         if (reader.Read())
                         {
-                            fileInfo = new DBFileInfo() { 
+                            fileInfo = new DBFileInfo()
+                            {
                                 Hash = reader.GetFieldValue<string>(reader.GetOrdinal("Hash")),
                                 DevicePath = reader.GetFieldValue<string>(reader.GetOrdinal("DevicePath")),
                                 PersistentUID = reader.GetFieldValue<string>(reader.GetOrdinal("PersistentUID")),
@@ -238,10 +256,20 @@ namespace PhotoApp
 
     public class DBFileInfo
     {
-        public string Hash { get; set; }
-        public string PersistentUID { get; set; }
-        public string DevicePath { get; set; }
+        public string Hash { get; set; } = "";
+        public string PersistentUID { get; set; } = "";
+        public string DevicePath { get; set; } = "";
         public DateTime DateTaken { get; set; }
         public DateTime LastWriteTime { get; set; }
+    }
+
+    public class DBDeviceInfo
+    {
+        public string OrigName { get; set; } = "";
+        public string CustomName { get; set; } = "";
+        public string CustomType { get; set; } = "";
+        public string Manufacturer { get; set; } = "";
+        public string SerialNum { get; set; } = "";
+        public DateTime LastBackup { get; set; }
     }
 }
