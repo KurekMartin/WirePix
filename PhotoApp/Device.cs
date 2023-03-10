@@ -331,7 +331,7 @@ namespace PhotoApp
             }
         }
 
-        private async void GetAsyncFilesToDownloadList()
+        public async void GetAsyncFilesToDownloadList()
         {
             //var files = await DeviceFileInfo.FilterByType(FileTypeSelection);
             //files = await DeviceFileInfo.FilterByDate(fileList: files);

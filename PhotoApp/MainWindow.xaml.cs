@@ -227,9 +227,15 @@ namespace PhotoApp
                 if (device != null)
                 {
                     await device.GetAllFiles();
+                    UpdateFilterResult();
                     FindAllFiles();
                 }
             }
+        }
+
+        private void UpdateFilterResult()
+        {
+            DeviceList.SelectedDevice.GetAsyncFilesToDownloadList();
         }
 
         private void CopyFiles_Click(object sender, RoutedEventArgs e)

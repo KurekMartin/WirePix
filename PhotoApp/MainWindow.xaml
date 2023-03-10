@@ -685,7 +685,8 @@
                                                d:Text="Result label"/>
                                     <StackPanel Orientation="Horizontal">
                                         <TextBlock Text="Files to download:"/>
-                                        <TextBlock Text="{Binding DeviceList.SelectedDevice.FilesToDownloadCount}"/>
+                                        <TextBlock x:Name="tbFilesToDownloadCount"
+                                                   Text="{Binding DeviceList.SelectedDevice.FilesToDownloadCount}"/>
                                     </StackPanel>
                                     <StackPanel Orientation="Horizontal">
                                         <TextBlock Text="Estimated date:"/>
